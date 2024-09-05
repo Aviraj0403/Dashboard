@@ -10,6 +10,8 @@ import FallbackPage from './pages/FallBack.jsx';
 import DishList from './components/ManageFoodItem/DishList.jsx';
 import OffersList from './pages/Promo/OffersList.jsx';
 import AddOffer from './pages/Promo/AddOffer.jsx';
+import SecondarySidebar from './pages/Setting/secondarySidebar.jsx';
+
 
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -25,8 +27,9 @@ const router = createBrowserRouter(
       <Route path="/manage-item" element={<DishList />} />
       <Route path="/offersList" element={<OffersList />} />
       <Route path="/add-offer" element={<AddOffer />} />
+      <Route path="/settings" element={<SecondarySidebar />} />
       {/* <Route path="/offersList/AddOffer" element={<AddOffer />} /> */}
-      <Route path='dinning/table/:id' element={<BarCode />} />
+      <Route path='dinning/table/:id' element={<BarCode />} /> {/* <Route path='/settings' element={< SecondarySidebar />} /> */}
       <Route path='*' element={<PageNotFound />} />
     </Route>
   )

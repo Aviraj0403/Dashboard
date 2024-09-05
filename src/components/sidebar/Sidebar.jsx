@@ -1,5 +1,6 @@
 import React from "react";
-import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends, FaUtensils,FaCog} from "react-icons/fa";
+import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends, FaUtensils,FaCog } from "react-icons/fa";
+import { MdSettings } from 'react-icons/md';
 import { MdBookmark, MdCabin, MdClose, MdDashboard, MdDining, MdEmojiPeople, MdGroup, MdLocalOffer, MdTranscribe } from "react-icons/md";
 import { NavLink, Link } from "react-router-dom";
 function Sidebar({ className, toggleSidebar }) {
@@ -217,6 +218,16 @@ function Sidebar({ className, toggleSidebar }) {
         </NavLink>
       
       </div>
+      <div className=" titles">
+        <h2 className=" text-gray-400 uppercase">Setup</h2>
+      </div>
+      <NavLink
+        to="/settings"
+        onClick={() => onCategorySelect('settings')}
+        className={({ isActive }) => `block px-4 py-2 rounded-md flex items-center gap-2 ${isActive ? "bg-gray-700 shadow-sm" : "hover:bg-gray-700 hover:shadow-none"}`}
+      >
+        <MdSettings /> Settings
+      </NavLink>
     </aside>
   );
 }
