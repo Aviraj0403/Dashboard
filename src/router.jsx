@@ -12,6 +12,7 @@ import OffersList from './pages/Promo/OffersList.jsx';
 import AddOffer from './pages/Promo/AddOffer.jsx';
 import PosContainer from './components/POS/PosContainer.jsx';
 import SecondarySidebar from './pages/Setting/secondarySidebar.jsx';
+import TransactionDashboard from './pages/Accounts/TransactionDashBoard.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -29,6 +30,7 @@ const router = createBrowserRouter(
       <Route path="/add-offer" element={<AddOffer />} />
       <Route path="/pos" element={<PosContainer />} />
       <Route path="/settings" element={<SecondarySidebar />} />
+      <Route path="/transcations" element={<TransactionDashboard />} />
       {/* <Route path="/offersList/AddOffer" element={<AddOffer />} /> */}
       <Route path='dinning/table/:id' element={<BarCode />} /> {/* <Route path='/settings' element={< SecondarySidebar />} /> */}
       <Route path='*' element={<PageNotFound />} />
