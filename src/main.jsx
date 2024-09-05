@@ -16,6 +16,7 @@ import PageNotFound from './components/404Page/PageNotFound.jsx';
 import BarCode from './components/dashboard/table/BarCode.jsx';
 import FallbackPage from './pages/FallBack.jsx';
 import WindowContextProvider from './context/windowContext.jsx';
+import PosContainer from './components/POS/PosContainer.jsx';
 const router = createBrowserRouter(
   createRoutesFromChildren(
     <Route path='/' element={<Layout/>} >
@@ -27,6 +28,7 @@ const router = createBrowserRouter(
      <Route path='dinning' element={<DiningTable/>} />
      <Route path='dinning/table' element={<DiningTable/>} />
      <Route path='dinning/table/:id' element={<BarCode/>} />
+     <Route path='pos' element={<PosContainer/>} />
      <Route path='*' element={<PageNotFound/>} />
     </Route>
   )

@@ -52,7 +52,7 @@ function Sidebar({ className, toggleSidebar }) {
       </div>
       <div className=" flex flex-col  px-2 ">
         <NavLink
-          to={"/d"}
+          to={"/pos"}
           className={({ isActive }) =>
             ` ${
               isActive ? " bg-gray-700  shadow-sm" : " hover:shadow-none hover:bg-gray-700"
@@ -63,7 +63,7 @@ function Sidebar({ className, toggleSidebar }) {
           <MdBookmark /> POS
         </NavLink>
         <NavLink
-          to={"/e"}
+          to={"/pos/orders"}
           className={({ isActive }) =>
             ` ${
               isActive ? " bg-gray-700 shadow-sm " : " hover:shadow-none hover:bg-gray-700"
