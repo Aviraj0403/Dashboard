@@ -8,6 +8,8 @@ import BarCode from './components/dashboard/table/BarCode.jsx';
 import AddItem from './components/addItem/addItem.jsx';
 import FallbackPage from './pages/FallBack.jsx';
 import DishList from './components/ManageFoodItem/DishList.jsx';
+import OffersList from './pages/Promo/OffersList.jsx';
+import AddOffer from './pages/Promo/AddOffer.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -21,6 +23,9 @@ const router = createBrowserRouter(
       <Route path='dinning/table' element={<DiningTable />} />
       <Route path="/add-item" element={<AddItem />} />
       <Route path="/manage-item" element={<DishList />} />
+      <Route path="/offersList" element={<OffersList />} />
+      <Route path="/add-offer" element={<AddOffer />} />
+      {/* <Route path="/offersList/AddOffer" element={<AddOffer />} /> */}
       <Route path='dinning/table/:id' element={<BarCode />} />
       <Route path='*' element={<PageNotFound />} />
     </Route>
