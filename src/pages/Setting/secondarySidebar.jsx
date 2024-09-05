@@ -1,4 +1,3 @@
-// SecondarySidebar.jsx
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { MdHome, MdSettings, MdMail, MdNotifications, MdBarChart, MdPalette } from 'react-icons/md';
@@ -25,14 +24,10 @@ const settingsOptions = [
   { to: '/settings/license', label: 'License', icon: <MdSettings /> },
 ];
 
-const SecondarySidebar = ({ category }) => {
-    // console.log(setting);
-  // if (category !== 'settings') return null;
-
+const SecondarySidebar = () => {
   return (
-    <div className="w-64 bg-gray-800 text-white h-full mt-16 overflow-y-auto">
+    <div className="w-64 bg-gray-800 text-white h-[91vh] mt-[9vh] fixed top-[9vh] left-30 z-20 overflow-y-auto"> {/* Changed right-0 to left-0 */}
       <div className="p-6">
-        {/* <p>Secondary Sidebar is rendering!</p> */}
         <ul>
           {settingsOptions.map((option) => (
             <li key={option.to}>
