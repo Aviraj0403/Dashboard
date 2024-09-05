@@ -14,8 +14,10 @@ const Dashboard = React.lazy(()=>import('./components/dashboard/Dashboard.jsx'))
 import DiningTable from './components/dashboard/dinningTable/DinningTable.jsx';
 import PageNotFound from './components/404Page/PageNotFound.jsx';
 import BarCode from './components/dashboard/table/BarCode.jsx';
+import AddItem from './components/addItem/addItem.jsx';
 import FallbackPage from './pages/FallBack.jsx';
 import WindowContextProvider from './context/windowContext.jsx';
+
 const router = createBrowserRouter(
   createRoutesFromChildren(
     <Route path='/' element={<Layout/>} >
@@ -26,6 +28,7 @@ const router = createBrowserRouter(
      </Route>
      <Route path='dinning' element={<DiningTable/>} />
      <Route path='dinning/table' element={<DiningTable/>} />
+     <Route path="/add-item" element={<AddItem />} />
      <Route path='dinning/table/:id' element={<BarCode/>} />
      <Route path='*' element={<PageNotFound/>} />
     </Route>

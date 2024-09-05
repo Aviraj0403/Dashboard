@@ -1,5 +1,5 @@
 import React from "react";
-import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends } from "react-icons/fa";
+import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends, FaUtensils } from "react-icons/fa";
 import { MdBookmark, MdCabin, MdClose, MdDashboard, MdDining, MdEmojiPeople, MdGroup, MdLocalOffer, MdTranscribe } from "react-icons/md";
 import { NavLink, Link } from "react-router-dom";
 function Sidebar({ className, toggleSidebar }) {
@@ -35,6 +35,18 @@ function Sidebar({ className, toggleSidebar }) {
           {" "}
           <FaAdn /> Items
         </NavLink>
+        {/* Add Item */}
+        <NavLink
+      to={"/add-item"} // Adjust the route path as necessary
+      className={({ isActive }) =>
+        ` ${
+          isActive ? "bg-gray-700" : "hover:shadow-none hover:bg-gray-700"
+        } mb-1 border-gray-500 shadow-white px-4 py-2 rounded-md flex items-center gap-2`
+      }
+       >
+      <FaUtensils /> Add Item
+    </NavLink>
+
         <NavLink
           to={"/dinning"}
           className={({ isActive }) =>
