@@ -31,7 +31,7 @@ function Layout() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   return (
-    <div className="flex h-screen overflow-hidden ">
+    <div className="flex h-screen overflow-hidden select-none ">
        <ToastContainer/>
       {/* left part  */}
       <Sidebar

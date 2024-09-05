@@ -17,25 +17,30 @@ import BarCode from './components/dashboard/table/BarCode.jsx';
 import FallbackPage from './pages/FallBack.jsx';
 import WindowContextProvider from './context/windowContext.jsx';
 import PosContainer from './components/POS/PosContainer.jsx';
-const router = createBrowserRouter(
-  createRoutesFromChildren(
-    <Route path='/' element={<Layout/>} >
-     <Route path='' element={<Suspense fallback={<FallbackPage/>}>
-      <Dashboard/>
-     </Suspense>} >
-        {/* <Route path='/dinning' element={<DiningTable/>} /> */}
-     </Route>
-     <Route path='dinning' element={<DiningTable/>} />
-     <Route path='dinning/table' element={<DiningTable/>} />
-     <Route path='dinning/table/:id' element={<BarCode/>} />
-     <Route path='pos' element={<PosContainer/>} />
-     <Route path='*' element={<PageNotFound/>} />
-    </Route>
-  )
-)
+import { OffersProvider } from './context/OffersContext.jsx';
+import router from './router.jsx';
+// const router = createBrowserRouter(
+//   createRoutesFromChildren(
+//     <Route path='/' element={<Layout/>} >
+//      <Route path='' element={<Suspense fallback={<FallbackPage/>}>
+//       <Dashboard/>
+//      </Suspense>} >
+//         {/* <Route path='/dinning' element={<DiningTable/>} /> */}
+//      </Route>
+//      <Route path='dinning' element={<DiningTable/>} />
+//      <Route path='dinning/table' element={<DiningTable/>} />
+//      <Route path='dinning/table/:id' element={<BarCode/>} />
+//      <Route path='pos' element={<PosContainer/>} />
+//      <Route path='*' element={<PageNotFound/>} />
+//     </Route>
+//   )
+// )
 createRoot(document.getElementById('root')).render(
-   <WindowContextProvider>
-     <RouterProvider router={router} />
-   </WindowContextProvider>
   
-)
+    <WindowContextProvider>
+      <OffersProvider> {/* Wrap with OffersProvider */}
+        <RouterProvider router={router} />
+      </OffersProvider>
+    </WindowContextProvider>
+ 
+);

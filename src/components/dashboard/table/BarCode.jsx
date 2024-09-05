@@ -25,7 +25,7 @@ const BarCode = () => {
           bgColor="#FFFFFF"
           fgColor="#000000"
           title="Scan This QR Code to order directly with your mobile."
-          value="Welcome to Br Tech we provide best online foods over the India \nClick on the Link\nhttps://youtube.com"
+          value="Welcome to Br Tech we provide best online foods over the India \nClick on the Link\https://www.brtechsolution.com/"
         />
         <h2 className=" p-4">Table {id}</h2>
         <p>Please scan & send quick order</p>

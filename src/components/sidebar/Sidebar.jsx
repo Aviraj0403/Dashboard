@@ -1,5 +1,5 @@
 import React from "react";
-import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends } from "react-icons/fa";
+import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends, FaUtensils,FaCog} from "react-icons/fa";
 import { MdBookmark, MdCabin, MdClose, MdDashboard, MdDining, MdEmojiPeople, MdGroup, MdLocalOffer, MdTranscribe } from "react-icons/md";
 import { NavLink, Link } from "react-router-dom";
 function Sidebar({ className, toggleSidebar }) {
@@ -35,6 +35,28 @@ function Sidebar({ className, toggleSidebar }) {
           {" "}
           <FaAdn /> Items
         </NavLink>
+        {/* Add Item */}
+        <NavLink
+      to={"/add-item"} // Adjust the route path as necessary
+      className={({ isActive }) =>
+        ` ${
+          isActive ? "bg-gray-700" : "hover:shadow-none hover:bg-gray-700"
+        } mb-1 border-gray-500 shadow-white px-4 py-2 rounded-md flex items-center gap-2`
+      }
+       >
+      <FaUtensils /> Add Item
+    </NavLink>
+      {/* Manage List  */}
+      <NavLink
+      to={"/manage-item"} // Adjust the route path as necessary
+      className={({ isActive }) =>
+        ` ${
+          isActive ? "bg-gray-700" : "hover:shadow-none hover:bg-gray-700"
+        } mb-1 border-gray-500 shadow-white px-4 py-2 rounded-md flex items-center gap-2`
+      }
+       >
+      <FaCog /> Manage List
+    </NavLink>
         <NavLink
           to={"/dinning"}
           className={({ isActive }) =>
@@ -90,7 +112,7 @@ function Sidebar({ className, toggleSidebar }) {
       </div>
       <div className=" flex flex-col  px-2 ">
         <NavLink
-          to={"/n"}
+          to={"/OffersList"}
           className={({ isActive }) =>
             ` ${
               isActive ? " bg-gray-700  shadow-sm" : " hover:shadow-none hover:bg-gray-700"
