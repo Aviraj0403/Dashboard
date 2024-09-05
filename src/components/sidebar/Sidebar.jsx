@@ -97,7 +97,7 @@ function Sidebar({ className, toggleSidebar }) {
           <FaFirstOrder /> POS Orders
         </NavLink>
         <NavLink
-          to={"/c"}
+          to={"/table-orders"}
           className={({ isActive }) =>
             ` ${
               isActive ? " bg-gray-700 shadow-sm " : " hover:shadow-none hover:bg-gray-700"

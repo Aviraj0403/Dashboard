@@ -13,6 +13,8 @@ import AddOffer from './pages/Promo/AddOffer.jsx';
 import PosContainer from './components/POS/PosContainer.jsx';
 import SecondarySidebar from './pages/Setting/secondarySidebar.jsx';
 import TransactionDashboard from './pages/Accounts/TransactionDashBoard.jsx';
+import TableOrders from './pages/TableOrders/TableOrders.jsx';
+import OrderDetails from './pages/TableOrders/OrderDetails.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -31,6 +33,8 @@ const router = createBrowserRouter(
       <Route path="/pos" element={<PosContainer />} />
       <Route path="/settings" element={<SecondarySidebar />} />
       <Route path="/transcations" element={<TransactionDashboard />} />
+      <Route path="/table-orders" element={<TableOrders />} />
+      <Route path="/table-orders/:id" element={<OrderDetails />} />
       {/* <Route path="/offersList/AddOffer" element={<AddOffer />} /> */}
       <Route path='dinning/table/:id' element={<BarCode />} /> {/* <Route path='/settings' element={< SecondarySidebar />} /> */}
       <Route path='*' element={<PageNotFound />} />
