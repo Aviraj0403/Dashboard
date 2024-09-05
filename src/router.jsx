@@ -7,6 +7,7 @@ import PageNotFound from './components/404Page/PageNotFound.jsx';
 import BarCode from './components/dashboard/table/BarCode.jsx';
 import AddItem from './components/addItem/addItem.jsx';
 import FallbackPage from './pages/FallBack.jsx';
+import DishList from './components/ManageFoodItem/DishList.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -19,6 +20,7 @@ const router = createBrowserRouter(
       <Route path='dinning' element={<DiningTable />} />
       <Route path='dinning/table' element={<DiningTable />} />
       <Route path="/add-item" element={<AddItem />} />
+      <Route path="/manage-item" element={<DishList />} />
       <Route path='dinning/table/:id' element={<BarCode />} />
       <Route path='*' element={<PageNotFound />} />
     </Route>
