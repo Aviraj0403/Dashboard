@@ -10,7 +10,7 @@ export default function WindowContextProvider({ children }) {
   const [progressWidth, setProgressWidth] = useState(0);
   const divRef = useRef(null);
 
-const handleScroll = () => {
+  const handleScroll = () => {
     const scrollDiv = divRef.current;
 
     if (scrollDiv) {
@@ -23,16 +23,14 @@ const handleScroll = () => {
   };
 
   useEffect(() => {
-    
-      if (divRef.current) {
-        const divScroll = divRef.current;
+    if (divRef.current) {
+      const divScroll = divRef.current;
       console.log(divScroll);
-      
+
       divScroll.addEventListener("scroll", handleScroll);
       // Cleanup event listener on component unmount
       return () => divScroll.removeEventListener("scroll", handleScroll);
-      }
-    
+    }
   }, []); // Empty dependency array ensures the event listener is added once
 
   return (

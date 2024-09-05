@@ -8,6 +8,8 @@ import { Outlet } from "react-router-dom";
 import RouterCumb from "./components/router/RouterCumb";
 import { useWindowContext } from "./context/windowContext";
 import ProgressBar from "./components/progressbar/ProgressBar";
+import {ToastContainer} from "react-toastify"
+import 'react-toastify/dist/ReactToastify.css';
 function Layout() {
   const [openSidebar, setOpenSidebar] = useState(true);
   const { divRef, progressWidth } = useWindowContext();
@@ -29,7 +31,8 @@ function Layout() {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
   return (
-    <div className="flex h-screen overflow-hidden ">
+    <div className="flex h-screen overflow-hidden select-none ">
+       <ToastContainer/>
       {/* left part  */}
       <Sidebar
         className={`lg:fixed absolute top-0 left-0 z-30 w-64 h-full bg-gray-800 transition-transform duration-300 ease-in-out ${
