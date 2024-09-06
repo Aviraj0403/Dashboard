@@ -21,6 +21,9 @@ const ItemsReport = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
 
+
+
+  
 //     LOGIC FOR BACKEND
 
 // useEffect(() => {
@@ -38,7 +41,6 @@ const ItemsReport = () => {
 //   }, []);
 
    
-
 
   // Filter data based on both category and type
   const filteredData = sampleData.filter(item => {
@@ -58,12 +60,25 @@ const ItemsReport = () => {
     setCurrentPage(pageNumber);
   };
 
+  const handlePrint = () => {
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Print</title>');
+    printWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid black; padding: 8px; text-align: left; } thead { background-color: #f4f4f4; }</style>');
+    printWindow.document.write('</head><body >');
+    printWindow.document.write('<h1>Items Report</h1>');
+    printWindow.document.write(document.querySelector('table').outerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  };
+
   return (
     <div className="p-4 max-w-full mx-auto">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4">
         <div className="flex flex-col sm:flex-row sm:space-x-4 mb-4 sm:mb-0">
           <button
-            onClick={() => window.print()}
+            onClick={handlePrint}
             className="px-3 py-1 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors text-sm sm:text-base"
           >
             Print
