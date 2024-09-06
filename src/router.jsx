@@ -15,6 +15,7 @@ import SecondarySidebar from './pages/Setting/secondarySidebar.jsx';
 import TransactionDashboard from './pages/Accounts/TransactionDashBoard.jsx';
 import TableOrders from './pages/TableOrders/TableOrders.jsx';
 import OrderDetails from './pages/TableOrders/OrderDetails.jsx';
+import SalesReport from './pages/Reports/SaleReport.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -35,6 +36,7 @@ const router = createBrowserRouter(
       <Route path="/transcations" element={<TransactionDashboard />} />
       <Route path="/table-orders" element={<TableOrders />} />
       <Route path="/table-orders/:id" element={<OrderDetails />} />
+      <Route path="/sales-report" element={<SalesReport/>} />
       {/* <Route path="/offersList/AddOffer" element={<AddOffer />} /> */}
       <Route path='dinning/table/:id' element={<BarCode />} /> {/* <Route path='/settings' element={< SecondarySidebar />} /> */}
       <Route path='*' element={<PageNotFound />} />

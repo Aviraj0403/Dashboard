@@ -206,7 +206,7 @@ function Sidebar({ className, toggleSidebar }) {
       </div>
       <div className=" flex flex-col  px-2 ">
         <NavLink
-          to={"/transcations"}
+          to={"/sales-report"}
           className={({ isActive }) =>
             ` ${
               isActive ? " bg-gray-700  shadow-sm" : " hover:shadow-none hover:bg-gray-700"

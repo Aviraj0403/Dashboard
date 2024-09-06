@@ -1,5 +1,3 @@
-// src/OrderDetails.js
-
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom'; // For fetching order ID from URL params
 
@@ -25,6 +23,12 @@ const sampleOrderDetails = {
   }
 };
 
+// Restaurant information can be part of props or context
+const restaurantInfo = {
+  name: 'BR Tech Restaurant',
+  address: 'Gannipur Muzaffarpur, Bihar'
+};
+
 const OrderDetails = () => {
   const { orderId } = useParams(); // Get the order ID from URL params
   const [order, setOrder] = useState(sampleOrderDetails); // Replace with fetched data
@@ -34,8 +38,78 @@ const OrderDetails = () => {
   const handlePaymentStatusChange = (event) => setPaymentStatus(event.target.value);
   const handleFoodStatusChange = (event) => setFoodStatus(event.target.value);
 
+  const generatePrintContent = () => {
+    return `
+      <html>
+        <head>
+          <title>Invoice</title>
+          <style>
+            body { font-family: Arial, sans-serif; }
+            .container { padding: 20px; }
+            .header { text-align: center; margin-bottom: 20px; }
+            .header h1 { margin: 0; }
+            .header p { margin: 5px 0; }
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+            th, td { border: 1px solid black; padding: 8px; text-align: left; }
+            th { background-color: #f4f4f4; }
+            .footer { text-align: center; margin-top: 20px; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>${restaurantInfo.name}</h1>
+              <p>${restaurantInfo.address}</p>
+              <h2>Invoice - Order #${order.id}</h2>
+            </div>
+            <p><strong>Payment Status:</strong> ${paymentStatus}</p>
+            <p><strong>Food Status:</strong> ${foodStatus}</p>
+            <p><strong>Order Type:</strong> ${order.orderType}</p>
+            <p><strong>Delivery Time:</strong> ${order.deliveryTime}</p>
+            <p><strong>Table Name:</strong> ${order.tableName}</p>
+
+            <h3>Order Items</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Item</th>
+                  <th>Quantity/Size</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${order.items.map(item => `
+                  <tr>
+                    <td>${item.name}</td>
+                    <td>${item.quantity || item.size}</td>
+                    <td>${item.price}</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+
+            <p><strong>Subtotal:</strong> ${order.subtotal}</p>
+            <p><strong>Total:</strong> ${order.total}</p>
+
+            <h3>Customer Information</h3>
+            <p><strong>Name:</strong> ${order.customer.name}</p>
+            <p><strong>Email:</strong> ${order.customer.email}</p>
+            <p><strong>Phone:</strong> ${order.customer.phone}</p>
+
+            <div class="footer">Thank you for your order!</div>
+          </div>
+        </body>
+      </html>
+    `;
+  };
+
   const handlePrintInvoice = () => {
-    window.print();
+    const printWindow = window.open('', '', 'height=800,width=600');
+    printWindow.document.open();
+    printWindow.document.write(generatePrintContent());
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
   };
 
   return (
