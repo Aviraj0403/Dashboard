@@ -1,6 +1,7 @@
 import React from "react";
-import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends, FaUtensils,FaCog } from "react-icons/fa";
+import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends, FaUtensils,FaCog,FaFileAlt } from "react-icons/fa";
 import { MdSettings } from 'react-icons/md';
+// import { ShoppingCartIcon } from '@heroicons/react/solid'; 
 import { MdBookmark, MdCabin, MdClose, MdDashboard, MdDining, MdEmojiPeople, MdGroup, MdLocalOffer, MdTranscribe } from "react-icons/md";
 import { NavLink, Link } from "react-router-dom";
 function Sidebar({ className, toggleSidebar }) {
@@ -216,6 +217,17 @@ function Sidebar({ className, toggleSidebar }) {
           {" "}
           <MdTranscribe /> Sales Report
         </NavLink>
+
+        {/* Item Report */}
+        <NavLink
+      to="/items-report"
+      className={({ isActive }) =>
+        `${isActive ? "bg-gray-700 shadow-sm" : "hover:shadow-none hover:bg-gray-700"} mb-1 border-gray-500 shadow-white px-4 py-2 rounded-md flex items-center gap-2`
+      }
+    >
+      <FaFileAlt className="w-5 h-5 text-gray-400" /> {/* Use the icon here */}
+      Items Report
+    </NavLink>
       
       </div>
       <div className=" titles">
