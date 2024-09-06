@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+// src/OrderDetails.js
+
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'; // For fetching order ID from URL params
 
 const sampleOrderDetails = {
@@ -26,7 +28,7 @@ const sampleOrderDetails = {
 // Restaurant information can be part of props or context
 const restaurantInfo = {
   name: 'BR Tech Restaurant',
-  address: 'Gannipur Muzaffarpur, Bihar'
+  address: 'Gannipur Muzaffarpur, '
 };
 
 const OrderDetails = () => {
@@ -34,6 +36,26 @@ const OrderDetails = () => {
   const [order, setOrder] = useState(sampleOrderDetails); // Replace with fetched data
   const [paymentStatus, setPaymentStatus] = useState(order.paymentStatus);
   const [foodStatus, setFoodStatus] = useState(order.foodStatus);
+
+  useEffect(() => {
+    // TODO: Fetch data from backend using the orderId
+    // Uncomment and modify the following code when integrating with backend
+    /*
+    const fetchOrderDetails = async () => {
+      try {
+        const response = await fetch(`/api/orders/${orderId}`);
+        const data = await response.json();
+        setOrder(data);
+        setPaymentStatus(data.paymentStatus);
+        setFoodStatus(data.foodStatus);
+      } catch (error) {
+        console.error('Error fetching order details:', error);
+      }
+    };
+
+    fetchOrderDetails();
+    */
+  }, [orderId]);
 
   const handlePaymentStatusChange = (event) => setPaymentStatus(event.target.value);
   const handleFoodStatusChange = (event) => setFoodStatus(event.target.value);

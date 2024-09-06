@@ -1,5 +1,5 @@
 import React from "react";
-import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends, FaUtensils,FaCog,FaFileAlt } from "react-icons/fa";
+import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends, FaUtensils,FaCog,FaFileAlt ,FaFileInvoice} from "react-icons/fa";
 import { MdSettings } from 'react-icons/md';
 // import { ShoppingCartIcon } from '@heroicons/react/solid'; 
 import { MdBookmark, MdCabin, MdClose, MdDashboard, MdDining, MdEmojiPeople, MdGroup, MdLocalOffer, MdTranscribe } from "react-icons/md";
@@ -228,7 +228,17 @@ function Sidebar({ className, toggleSidebar }) {
       <FaFileAlt className="w-5 h-5 text-gray-400" /> {/* Use the icon here */}
       Items Report
     </NavLink>
-      
+      {/* GST */}
+      <NavLink
+        to="/gst-report"
+        className={({ isActive }) =>
+          `${isActive ? "bg-gray-700 shadow-sm" : "hover:shadow-none hover:bg-gray-700"} mb-1 border-gray-500 shadow-white px-4 py-2 rounded-md flex items-center gap-2`
+        }
+      >
+        <FaFileInvoice className="w-5 h-5 text-gray-400" /> {/* Use the icon here */}
+        GST Report
+      </NavLink>
+
       </div>
       <div className=" titles">
         <h2 className=" text-gray-400 uppercase">Setup</h2>

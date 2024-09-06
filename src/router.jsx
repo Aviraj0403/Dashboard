@@ -17,6 +17,7 @@ import TableOrders from './pages/TableOrders/TableOrders.jsx';
 import OrderDetails from './pages/TableOrders/OrderDetails.jsx';
 import SalesReport from './pages/Reports/SaleReport.jsx';
 import ItemsReport from './pages/Reports/ItemsReport.jsx';
+import GstReport from './pages/Reports/GSTReport.jsx';
 
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -40,7 +41,7 @@ const router = createBrowserRouter(
      {/* REPORT */}
       <Route path="/sales-report" element={<SalesReport/>} />
       <Route path="/items-report" element={<ItemsReport/>} />
-
+      <Route path="/gst-report" element={<GstReport/>} />
       <Route path="/offersList/AddOffer" element={<AddOffer />} />
       <Route path='dinning/table/:id' element={<BarCode />} /> {/* <Route path='/settings' element={< SecondarySidebar />} /> */}
       <Route path='*' element={<PageNotFound />} />
