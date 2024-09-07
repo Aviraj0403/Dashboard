@@ -1,4 +1,5 @@
 import React from "react";
+<<<<<<< HEAD
 import {
   FaAdn,
   FaFirstOrder,
@@ -19,6 +20,12 @@ import {
   MdLocalOffer,
   MdTranscribe,
 } from "react-icons/md";
+=======
+import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends, FaUtensils,FaCog,FaFileAlt ,FaFileInvoice} from "react-icons/fa";
+import { MdSettings } from 'react-icons/md';
+// import { ShoppingCartIcon } from '@heroicons/react/solid'; 
+import { MdBookmark, MdCabin, MdClose, MdDashboard, MdDining, MdEmojiPeople, MdGroup, MdLocalOffer, MdTranscribe } from "react-icons/md";
+>>>>>>> beb4ea88cffcfe4fbb83fabc7f983894f3ac94da
 import { NavLink, Link } from "react-router-dom";
 function Sidebar({ className, toggleSidebar }) {
   return (
@@ -250,7 +257,11 @@ function Sidebar({ className, toggleSidebar }) {
       </div>
       <div className=" flex flex-col  px-2 ">
         <NavLink
+<<<<<<< HEAD
           to={"transactions"}
+=======
+          to={"/sales-report"}
+>>>>>>> beb4ea88cffcfe4fbb83fabc7f983894f3ac94da
           className={({ isActive }) =>
             ` ${
               isActive
@@ -262,6 +273,31 @@ function Sidebar({ className, toggleSidebar }) {
           {" "}
           <MdTranscribe size={24} /> Sales Report
         </NavLink>
+<<<<<<< HEAD
+=======
+
+        {/* Item Report */}
+        <NavLink
+      to="/items-report"
+      className={({ isActive }) =>
+        `${isActive ? "bg-gray-700 shadow-sm" : "hover:shadow-none hover:bg-gray-700"} mb-1 border-gray-500 shadow-white px-4 py-2 rounded-md flex items-center gap-2`
+      }
+    >
+      <FaFileAlt className="w-5 h-5 text-gray-400" /> {/* Use the icon here */}
+      Items Report
+    </NavLink>
+      {/* GST */}
+      <NavLink
+        to="/gst-report"
+        className={({ isActive }) =>
+          `${isActive ? "bg-gray-700 shadow-sm" : "hover:shadow-none hover:bg-gray-700"} mb-1 border-gray-500 shadow-white px-4 py-2 rounded-md flex items-center gap-2`
+        }
+      >
+        <FaFileInvoice className="w-5 h-5 text-gray-400" /> {/* Use the icon here */}
+        GST Report
+      </NavLink>
+
+>>>>>>> beb4ea88cffcfe4fbb83fabc7f983894f3ac94da
       </div>
       <div className=" titles">
         <h2 className=" text-gray-400 uppercase">Setup</h2>

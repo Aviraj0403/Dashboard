@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaChartLine, FaClipboardList, FaUser } from "react-icons/fa";
 import { MdMenuBook } from "react-icons/md";
 import BookingChart from "../chart/BookingChart";
@@ -16,53 +16,93 @@ const items = [
   { id: 7, name: 'Roasted Salmon Salad', image: 'https://demo.foodscan.xyz/storage/75/conversions/roasted_salmon_salad-thumb.png' },
   { id: 8, name: 'Yemete Kudasai Chicken', image: 'https://demo.foodscan.xyz/storage/62/conversions/yemete_kudasai_chicken-thumb.png' },
 ];
+
 function Dashboard() {
-  console.log('hello dashboard');
-  
-  const [currentTime,setCurrentTime] = useState(new Date().toLocaleTimeString().split(" ")[1])
+  const [currentTime, setCurrentTime] = useState(new Date().toLocaleTimeString());
+
+  useEffect(() => {
+    // Update the time every minute
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }, 60000);
+
+    // Cleanup on component unmount
+    return () => clearInterval(timer);
+  }, []);
+
+  const hours = new Date().getHours();
+
+  let greetingMessage;
+  let textColor;
+
+  if (hours < 12) {
+    greetingMessage = "Good Morning!";
+    textColor = "text-blue-600";
+  } else if (hours < 18) {
+    greetingMessage = "Good Afternoon!";
+    textColor = "text-orange-500";
+  } else {
+    greetingMessage = "Good Evening!";
+    textColor = "text-purple-600"; // Adjust color if needed
+  }
+
   return (
     <main className="flex-grow p-4 overflow-scroll ">
       {/* Heading or notification bar  */}
+<<<<<<< HEAD
       <div className=" rounded-sm shadow-md  bg-red-100 px-3 py-2 mb-1 ">
         <h2 className=" text-xl font-semibold">
+=======
+      <div className="rounded-sm shadow-md bg-red-100 px-3 py-2 mb-1">
+        <h2 className="text-xl font-semibold">
+>>>>>>> beb4ea88cffcfe4fbb83fabc7f983894f3ac94da
           Heading of Notification or Alert
         </h2>
-        <p>For Notification purpose </p>
+        <p>For Notification purpose</p>
       </div>
+<<<<<<< HEAD
       {/* greeting bars  */}
       <div className="  px-3 py-2 mb-1 ">
         <h2 className={` ${currentTime==='AM'?"text-blue-600":"text-orange-500"} text-2xl font-bold`}>
           {new Date().toLocaleTimeString().split(" ")[1] === "AM"
             ? "Good Morning!"
             : "Good Afternoon"}
+=======
+
+      {/* Greeting bar */}
+      <div className="px-3 py-2 mb-1">
+        <h2 className={`text-2xl font-bold ${textColor}`}>
+          {greetingMessage}
+>>>>>>> beb4ea88cffcfe4fbb83fabc7f983894f3ac94da
         </h2>
-        <p>For greeting purpose </p>
+        <p>For greeting purpose</p>
       </div>
-      {/* overview pannel  */}
+
+      {/* Overview panel */}
       <h2 className="text-2xl font-bold mb-4">Overview</h2>
       <div className="grid md:grid-cols-2 grid-cols-1 gap-4 text-white">
-        <div className="bg-[#FF4F99] p-4 max-sm:justify-start max-sm:gap-4 rounded shadow flex items-center justify-between px-6">
+        <div className="bg-[#FF4F99] p-4 rounded shadow flex items-center justify-between px-6">
           <FaChartLine size={38} />
           <div>
             <h3 className="text-xl font-bold mb-2">Total Sales</h3>
             <p className="text-3xl font-bold">$0.00</p>
           </div>
         </div>
-        <div className="bg-[#8262FE] p-4 max-sm:justify-start max-sm:gap-4 rounded shadow flex items-center justify-between px-6">
+        <div className="bg-[#8262FE] p-4 rounded shadow flex items-center justify-between px-6">
           <FaClipboardList size={38} />
           <div>
             <h3 className="text-xl font-bold mb-2">Total Orders</h3>
             <p className="text-3xl font-bold">0</p>
           </div>
         </div>
-        <div className="bg-[#567DFF] p-4 max-sm:justify-start max-sm:gap-4 rounded shadow flex items-center justify-between px-6">
+        <div className="bg-[#567DFF] p-4 rounded shadow flex items-center justify-between px-6">
           <MdMenuBook size={38} />
           <div>
             <h3 className="text-xl font-bold mb-2">Total Customers</h3>
             <p className="text-3xl font-bold">0</p>
           </div>
         </div>
-        <div className="bg-[#A953FF] p-4 max-sm:justify-start max-sm:gap-4 rounded shadow flex items-center justify-between px-6">
+        <div className="bg-[#A953FF] p-4 rounded shadow flex items-center justify-between px-6">
           <FaUser size={38} />
           <div>
             <h3 className="text-xl font-bold mb-2">Total Menu Items</h3>
@@ -70,14 +110,16 @@ function Dashboard() {
           </div>
         </div>
       </div>
-      {/* charts pannel  */}
-      <div className=" grid lg:grid-cols-2 sm:grid-cols-1 gap-2 py-3  ">
+
+      {/* Charts panel */}
+      <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-2 py-3">
         <BookingChart title={"Sales Report"} url={"/ticket/tickets/all"} />
         <BookingChart title={"Sales Report"} url={"/ticket/tickets/all"} />
-      <FeaturedItem title={"Featured Items"} data={items}/>
-      <FeaturedItem title={"Most Popular Items"} data={items}/>
+        <FeaturedItem title={"Featured Items"} data={items} />
+        <FeaturedItem title={"Most Popular Items"} data={items} />
       </div>
-      <Outlet/>
+
+      <Outlet />
     </main>
   );
 }

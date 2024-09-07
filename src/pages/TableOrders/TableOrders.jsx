@@ -6,7 +6,7 @@ import { HiEye } from 'react-icons/hi'; // Eye icon from react-icons
 import { useNavigate } from 'react-router-dom';
 
 const sampleOrders = [
-  { id: '1507244', type: 'Dining Table', customer: 'Will Smith', amount: '6.50', date: '03:21 PM, 15-07-2024', status: 'Accept' },
+  { id: '1507244', type: 'Dining Table', customer: 'Avi Raj', amount: '6.50', date: '03:21 PM, 15-07-2024', status: 'Accept' },
   { id: '1507243', type: 'Dining Table', customer: 'Will Smith', amount: '8.50', date: '03:21 PM, 15-07-2024', status: 'Delivered' },
   // Add more sample data if needed
 ];
