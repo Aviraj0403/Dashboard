@@ -9,7 +9,7 @@ const OffersList = () => {
   const navigate = useNavigate();
 
   const handleAddOffer = () => {
-    navigate('/add-offer');
+    navigate('/admin/add-offer');
   };
 
   if (isLoading) return <div>Loading...</div>;
