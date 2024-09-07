@@ -29,6 +29,8 @@ import Landing from "./pages/Landin/LandingPage.jsx";
 import SalesReport from "./pages/Reports/SaleReport.jsx"
 import ItemsReport from "./pages/Reports/ItemsReport.jsx"
 import GstReport from "./pages//Reports/GSTReport.jsx"
+import EmployeeTable from "./pages/Employee/EmployeeTable.jsx";
+import AddEmployee from "./pages/Employee/AddEmployee.jsx";
 // Corrected router setup
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -75,6 +77,10 @@ const router = createBrowserRouter(
           <Route path="sales-report" element={<SalesReport />} />
           <Route path="items-report" element={<ItemsReport />} />
           <Route path="gst-report" element={<GstReport />} />
+          {/* USER */}
+          <Route path="employee" element={<EmployeeTable />} />
+          <Route path="add-employee" element={<AddEmployee />} />
+         
           {/* Setting  */}
            <Route path="settings" element={<SecondarySidebar />}>
             <Route path="" element={<CompanyForm />} />

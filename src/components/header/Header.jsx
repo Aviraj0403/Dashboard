@@ -27,7 +27,7 @@ function Header({ toggleSidebar, openSidebar }) {
               onClick={() => setIsOpenProfile(!isOpenProfile)}
               className="bg-orange-700 flex items-center gap-1 text-white px-3 py-2 rounded"
             >
-              <FaUserAstronaut /> Aman
+              <FaUserAstronaut /> Br Tech
             </button>
             {isOpenProfile && <Profile />}
           </div>
