@@ -44,7 +44,7 @@ const DishList = () => {
       <div className="flex items-center justify-between mb-6">
         <h4 className="text-2xl font-semibold text-gray-800">Dishes List</h4>
         <NavLink
-          to="/add-item"
+          to="/admin/add-item"
           className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors"
         >
           <svg
