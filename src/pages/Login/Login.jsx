@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/userContext';
 import { Navigate } from 'react-router-dom';
 
 const LoginPage = () => {
-  const { handleLogin, isAdmin } = useAuth();
+  const { handleLogin, isAdmin, isLoggedIn } = useAuth();
   const [formData, setFormData] = useState({ username: "", password: "" });
   const [redirectToAdmin, setRedirectToAdmin] = useState(false); 
+  const [loginError, setLoginError] = useState("");
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      if (isAdmin) {
+        setRedirectToAdmin(true);
+      }
+    }
+  }, [isLoggedIn, isAdmin]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -18,17 +27,15 @@ const LoginPage = () => {
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
-    await handleLogin(formData);
+    const success = await handleLogin(formData);
     
+    if (!success) {
+      setLoginError("Invalid username or password.");
+    }
 
     setFormData({ username: '', password: '' });
-
-    if (isAdmin) {
-      setRedirectToAdmin(true);  // Trigger navigation
-    }
   };
 
-  // Redirect to admin if login is successful and user is admin
   if (redirectToAdmin) {
     return <Navigate to="/admin" replace />;
   }
@@ -42,17 +49,16 @@ const LoginPage = () => {
         {/* Form */}
         <form className="space-y-6" onSubmit={handleLoginSubmit}>
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">Username</label>
+            <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
             <input
-              type="email"
-              id="email"
+              type="text"
+              id="username"
               name='username'
               value={formData.username}
               onChange={handleChange}
               className="w-full p-3 border border-red-500 rounded-md focus:outline-none focus:border-blue-500"
-              placeholder="Email"
+              placeholder="Username"
             />
-            {/* <p className="text-red-500 text-sm mt-1">The email field is required.</p> */}
           </div>
 
           <div>
@@ -66,8 +72,9 @@ const LoginPage = () => {
               className="w-full p-3 border border-red-500 rounded-md focus:outline-none focus:border-blue-500"
               placeholder="Password"
             />
-            {/* <p className="text-red-500 text-sm mt-1">The password field is required.</p> */}
           </div>
+
+          {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
 
           <div className="flex justify-between items-center">
             <label className="inline-flex items-center">
@@ -89,13 +96,33 @@ const LoginPage = () => {
       <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8 mt-8">
         <h3 className="text-center text-lg font-medium text-gray-700 mb-4">For quick demo login click below</h3>
         <div className="flex justify-center space-x-4">
-          <button className="px-4 py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600">Admin</button>
-          <button className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600">Branch Manager</button>
-          <button className="px-4 py-2 bg-purple-500 text-white font-semibold rounded-md hover:bg-purple-600">Pos Operator</button>
+          <button
+            onClick={() => handleDemoLogin("admin@12", "admin")}
+            className="px-4 py-2 bg-orange-500 text-white font-semibold rounded-md hover:bg-orange-600"
+          >
+            Admin
+          </button>
+          <button
+            onClick={() => handleDemoLogin("manager@12", "manager")}
+            className="px-4 py-2 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600"
+          >
+            Branch Manager
+          </button>
+          <button
+            onClick={() => handleDemoLogin("pos@12", "pos")}
+            className="px-4 py-2 bg-purple-500 text-white font-semibold rounded-md hover:bg-purple-600"
+          >
+            Pos Operator
+          </button>
         </div>
       </div>
     </div>
   );
+
+  function handleDemoLogin(username, password) {
+    setFormData({ username, password });
+    handleLogin({ username, password });
+  }
 };
 
 export default LoginPage;
