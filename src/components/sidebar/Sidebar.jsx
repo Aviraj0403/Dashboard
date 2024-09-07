@@ -6,6 +6,8 @@ import {
   FaUserFriends,
   FaUtensils,
   FaCog,
+  FaFileAlt ,
+  FaFileInvoice
 } from "react-icons/fa";
 import { MdCurrencyBitcoin, MdCurrencyRupee, MdSettings } from "react-icons/md";
 import {
@@ -249,6 +251,8 @@ function Sidebar({ className, toggleSidebar }) {
         <h2 className=" text-gray-400 uppercase">reports</h2>
       </div>
       <div className=" flex flex-col  px-2 ">
+
+        {/* REPORT */}
         <NavLink
           to={"sales-report"}
           className={({ isActive }) =>
@@ -273,7 +277,7 @@ function Sidebar({ className, toggleSidebar }) {
           }
         >
           {" "}
-          <MdTranscribe size={24} /> Items Report
+          <FaFileAlt size={24} /> Items Report
         </NavLink>
         <NavLink
           to={"gst-report"}
@@ -286,8 +290,9 @@ function Sidebar({ className, toggleSidebar }) {
           }
         >
           {" "}
-          <MdTranscribe size={24} /> GST Report
+          <FaFileInvoice size={24} /> GST Report
         </NavLink>
+
       </div>
       <div className=" titles">
         <h2 className=" text-gray-400 uppercase">Setup</h2>
