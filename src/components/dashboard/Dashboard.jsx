@@ -58,9 +58,10 @@ function Dashboard() {
       {/* greeting bars  */}
       <div className="  px-3 py-2 mb-1 ">
         <h2 className={` ${currentTime==='AM'?"text-blue-600":"text-orange-500"} text-2xl font-bold`}>
-          {new Date().toLocaleTimeString().split(" ")[1] === "AM"
+          {/* {new Date().toLocaleTimeString().split(" ")[1] === "AM"
             ? "Good Morning!"
-            : "Good Afternoon"}
+            : "Good Afternoon"} */}
+            {greetingMessage}
         </h2>
         <p>For greeting purpose</p>
       </div>
