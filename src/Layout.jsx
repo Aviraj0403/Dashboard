@@ -29,13 +29,9 @@ const Layout = () => {
     <div className="flex h-screen overflow-hidden select-none">
       <ToastContainer />
       <Sidebar
-<<<<<<< HEAD
         className={`lg:fixed absolute top-0 left-0 z-50 w-64 h-full  bg-white  transition-transform duration-300 ease-in-out ${
           openSidebar ? "translate-x-0 " : "-translate-x-full "
         }`}
-=======
-        className={`lg:fixed absolute top-0 left-0 z-30 w-64 bg-gray-800 transition-transform duration-300 ease-in-out ${openSidebar ? "translate-x-0" : "-translate-x-full"}`}
->>>>>>> beb4ea88cffcfe4fbb83fabc7f983894f3ac94da
         toggleSidebar={toggleSidebar}
       />
       <div className={`flex flex-col flex-grow transition-all duration-300 ease-in-out ${openSidebar ? "lg:ml-64" : "ml-0"}`}>
@@ -44,12 +40,8 @@ const Layout = () => {
           <ProgressBar progressWidth={progressWidth} />
           <RouterCumb />
         </div>
-<<<<<<< HEAD
         {/* main outlet for dynamic routing */}
         <main ref={divRef?divRef:null} className="flex-grow p-4 overflow-y-scroll bg-orange-100/30 ">
-=======
-        <main ref={divRef} className="flex-grow p-4 overflow-y-auto">
->>>>>>> beb4ea88cffcfe4fbb83fabc7f983894f3ac94da
           <Outlet />
         </main>
         {/* <Footer /> */}

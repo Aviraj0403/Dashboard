@@ -49,31 +49,18 @@ function Dashboard() {
   return (
     <main className="flex-grow p-4 overflow-scroll ">
       {/* Heading or notification bar  */}
-<<<<<<< HEAD
       <div className=" rounded-sm shadow-md  bg-red-100 px-3 py-2 mb-1 ">
         <h2 className=" text-xl font-semibold">
-=======
-      <div className="rounded-sm shadow-md bg-red-100 px-3 py-2 mb-1">
-        <h2 className="text-xl font-semibold">
->>>>>>> beb4ea88cffcfe4fbb83fabc7f983894f3ac94da
           Heading of Notification or Alert
         </h2>
         <p>For Notification purpose</p>
       </div>
-<<<<<<< HEAD
       {/* greeting bars  */}
       <div className="  px-3 py-2 mb-1 ">
         <h2 className={` ${currentTime==='AM'?"text-blue-600":"text-orange-500"} text-2xl font-bold`}>
           {new Date().toLocaleTimeString().split(" ")[1] === "AM"
             ? "Good Morning!"
             : "Good Afternoon"}
-=======
-
-      {/* Greeting bar */}
-      <div className="px-3 py-2 mb-1">
-        <h2 className={`text-2xl font-bold ${textColor}`}>
-          {greetingMessage}
->>>>>>> beb4ea88cffcfe4fbb83fabc7f983894f3ac94da
         </h2>
         <p>For greeting purpose</p>
       </div>
