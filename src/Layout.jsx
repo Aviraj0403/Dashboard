@@ -29,7 +29,7 @@ const Layout = () => {
     <div className="flex h-screen overflow-hidden select-none">
       <ToastContainer />
       <Sidebar
-        className={`lg:fixed absolute top-0 left-0 z-50 w-64 h-full  bg-white  transition-transform duration-300 ease-in-out ${
+        className={`lg:fixed absolute top-0 left-0 z-30 w-64   bg-white  transition-transform duration-300 ease-in-out ${
           openSidebar ? "translate-x-0 " : "-translate-x-full "
         }`}
         toggleSidebar={toggleSidebar}

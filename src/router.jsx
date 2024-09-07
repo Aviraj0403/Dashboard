@@ -75,7 +75,8 @@ const router = createBrowserRouter(
           <Route path="sales-report" element={<SalesReport />} />
           <Route path="items-report" element={<ItemsReport />} />
           <Route path="gst-report" element={<GstReport />} />
-          <Route path="settings" element={<SecondarySidebar />}>
+          {/* Setting  */}
+           <Route path="settings" element={<SecondarySidebar />}>
             <Route path="" element={<CompanyForm />} />
             <Route path="company" element={<CompanyForm />} />
             <Route path="branches" element={<Branch />} />
