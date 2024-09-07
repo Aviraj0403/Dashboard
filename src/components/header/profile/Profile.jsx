@@ -31,17 +31,17 @@ function Profile() {
             </div>
           </div>
           <div className="lower-links px-3 py-3 flex flex-col gap-2">
-            <Link className=" flex items-center gap-3 text-gray-600 hover:text-blue-500">
+            <Link className=" flex items-center gap-3 text-gray-600 hover:text-orange-500">
               <MdEdit /> Edit Profile
             </Link>
             <hr />
-            <Link className=" flex items-center gap-3 text-gray-600 hover:text-blue-500">
+            <Link className=" flex items-center gap-3 text-gray-600 hover:text-orange-500">
               <MdKey /> Change Password
             </Link>
             <hr />
             <Link
               onClick={() => setAdmin(!isAdmin)}
-              className=" flex items-center gap-3 text-gray-600 hover:text-blue-500"
+              className=" flex items-center gap-3 text-gray-600 hover:text-orange-500"
             >
               <MdOutlineLogout className=" rotate-180" /> Logout
             </Link>

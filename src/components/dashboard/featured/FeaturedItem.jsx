@@ -1,7 +1,7 @@
 
 function FeaturedItem({ title, data }) {
   return (
-    <div className="rounded-md shadow-md w-full p-4 mx-auto">
+    <div className="rounded-md shadow-md w-full p-4 mx-auto bg-white">
         <h2 className="text-xl font-bold opacity-60 text-center sm:text-left">
           {title}
         </h2>

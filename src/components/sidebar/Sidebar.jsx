@@ -1,11 +1,30 @@
 import React from "react";
-import { FaAdn, FaFirstOrder, FaUserCircle, FaUserFriends, FaUtensils,FaCog } from "react-icons/fa";
-import { MdSettings } from 'react-icons/md';
-import { MdBookmark, MdCabin, MdClose, MdDashboard, MdDining, MdEmojiPeople, MdGroup, MdLocalOffer, MdTranscribe } from "react-icons/md";
+import {
+  FaAdn,
+  FaFirstOrder,
+  FaUserCircle,
+  FaUserFriends,
+  FaUtensils,
+  FaCog,
+} from "react-icons/fa";
+import { MdCurrencyBitcoin, MdCurrencyRupee, MdSettings } from "react-icons/md";
+import {
+  MdBookmark,
+  MdCabin,
+  MdClose,
+  MdDashboard,
+  MdDining,
+  MdEmojiPeople,
+  MdGroup,
+  MdLocalOffer,
+  MdTranscribe,
+} from "react-icons/md";
 import { NavLink, Link } from "react-router-dom";
 function Sidebar({ className, toggleSidebar }) {
   return (
-    <aside className={`${className}  bg-gray-900 text-white p-4 h-[91vh] mt-[9vh] overflow-y-scroll`}>
+    <aside
+      className={`${className} backdrop-blur-md   text-gray-800 p-4 h-[89vh] mt-[10vh] overflow-y-scroll`}
+    >
       <div className=" relative lg:hidden  hover:shadow-sm">
         <MdClose
           onClick={toggleSidebar}
@@ -15,59 +34,69 @@ function Sidebar({ className, toggleSidebar }) {
       </div>
       <div className=" flex flex-col  px-2 ">
         <NavLink
-          to={"/"}
+          to={"dashboard"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700  " : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? " bg-gray-200 text-orange-400  "
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
           {" "}
-          <MdDashboard /> Dashboard
+          <MdDashboard size={24} /> Dashboard
         </NavLink>
         <NavLink
-          to={"/b"}
+          to={"items"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700 " : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? " bg-gray-200  text-orange-400"
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
           {" "}
-          <FaAdn /> Items
+          <FaAdn size={24} /> Items
         </NavLink>
         {/* Add Item */}
         <NavLink
-      to={"/add-item"} // Adjust the route path as necessary
-      className={({ isActive }) =>
-        ` ${
-          isActive ? "bg-gray-700" : "hover:shadow-none hover:bg-gray-700"
-        } mb-1 border-gray-500 shadow-white px-4 py-2 rounded-md flex items-center gap-2`
-      }
-       >
-      <FaUtensils /> Add Item
-    </NavLink>
-      {/* Manage List  */}
-      <NavLink
-      to={"/manage-item"} // Adjust the route path as necessary
-      className={({ isActive }) =>
-        ` ${
-          isActive ? "bg-gray-700" : "hover:shadow-none hover:bg-gray-700"
-        } mb-1 border-gray-500 shadow-white px-4 py-2 rounded-md flex items-center gap-2`
-      }
-       >
-      <FaCog /> Manage List
-    </NavLink>
-        <NavLink
-          to={"/dinning"}
+          to={"add-item"} // Adjust the route path as necessary
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700  " : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? "bg-gray-200 text-orange-400"
+                : "hover:shadow-none hover:bg-gray-200"
+            } mb-1 border-gray-500 shadow-white px-4 py-2 rounded-md flex items-center gap-2`
+          }
+        >
+          <FaUtensils size={24} /> Add Item
+        </NavLink>
+        {/* Manage List  */}
+        <NavLink
+          to={"manage-item"} // Adjust the route path as necessary
+          className={({ isActive }) =>
+            ` ${
+              isActive
+                ? "bg-gray-200 text-orange-400"
+                : "hover:shadow-none hover:bg-gray-200"
+            } mb-1 border-gray-500 shadow-white px-4 py-2 rounded-md flex items-center gap-2`
+          }
+        >
+          <FaCog size={24} /> Manage List
+        </NavLink>
+        <NavLink
+          to={"dining"}
+          className={({ isActive }) =>
+            ` ${
+              isActive
+                ? " bg-gray-200 text-orange-400  "
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
           {" "}
-          <MdDining /> Dinning Tables
+          <MdDining size={24} /> Dinning Tables
         </NavLink>
       </div>
       <div className=" titles pb-1">
@@ -75,37 +104,43 @@ function Sidebar({ className, toggleSidebar }) {
       </div>
       <div className=" flex flex-col  px-2 ">
         <NavLink
-          to={"/pos"}
+          to={"pos"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700  shadow-sm" : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? " bg-gray-200   text-orange-400"
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
           {" "}
-          <MdBookmark /> POS
+          <MdBookmark size={24} /> POS
         </NavLink>
         <NavLink
-          to={"/pos/orders"}
+          to={"pos/orders"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700 shadow-sm " : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? " bg-gray-200  text-orange-400"
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
           {" "}
-          <FaFirstOrder /> POS Orders
+          <FaFirstOrder size={24} /> POS Orders
         </NavLink>
         <NavLink
-          to={"/table-orders"}
+          to={"table-orders"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700 shadow-sm " : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? " bg-gray-200 text-orange-400 "
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
           {" "}
-          <MdCabin /> Table Orders
+          <MdCabin size={24} /> Table Orders
         </NavLink>
       </div>
       <div className=" titles pb-1">
@@ -113,10 +148,12 @@ function Sidebar({ className, toggleSidebar }) {
       </div>
       <div className=" flex flex-col  px-2 ">
         <NavLink
-          to={"/OffersList"}
+          to={"OffersList"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700  shadow-sm" : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? " bg-gray-200  text-orange-400"
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
@@ -127,7 +164,7 @@ function Sidebar({ className, toggleSidebar }) {
           to={"/b"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700 shadow-sm " : " hover:shadow-none hover:bg-gray-700"
+              isActive ? " bg-gray-200 shadow-sm " : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
@@ -138,7 +175,7 @@ function Sidebar({ className, toggleSidebar }) {
           to={"/c"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700 shadow-sm " : " hover:shadow-none hover:bg-gray-700"
+              isActive ? " bg-gray-200 shadow-sm " : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
@@ -151,37 +188,43 @@ function Sidebar({ className, toggleSidebar }) {
       </div>
       <div className=" flex flex-col  px-2 ">
         <NavLink
-          to={"/administrator"}
+          to={"administrator"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700  shadow-sm" : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? " bg-gray-200 text-orange-400  "
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
           {" "}
-          <FaUserCircle /> Administrators
+          <FaUserCircle size={24} /> Administrators
         </NavLink>
         <NavLink
-          to={"/customer"}
+          to={"customer"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700 shadow-sm " : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? " bg-gray-200 text-orange-400 "
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
           {" "}
-          <MdGroup /> Customers
+          <MdGroup  size={24}/> Customers
         </NavLink>
         <NavLink
-          to={"/employee"}
+          to={"employee"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700 shadow-sm " : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? " bg-gray-200 text-orange-400 "
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
           {" "}
-          <FaUserFriends /> Employees
+          <FaUserFriends  size={24}/> Employees
         </NavLink>
       </div>
       <div className=" titles pb-1">
@@ -189,45 +232,55 @@ function Sidebar({ className, toggleSidebar }) {
       </div>
       <div className=" flex flex-col  px-2 ">
         <NavLink
-          to={"/transcations"}
+          to={"transactions"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700  shadow-sm" : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? " bg-gray-200  text-orange-400"
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
           {" "}
-          <MdTranscribe /> Transcations
+          <MdCurrencyRupee size={24} /> Transcations
         </NavLink>
-      
       </div>
       <div className=" titles">
         <h2 className=" text-gray-400 uppercase">reports</h2>
       </div>
       <div className=" flex flex-col  px-2 ">
         <NavLink
-          to={"/transcations"}
+          to={"transactions"}
           className={({ isActive }) =>
             ` ${
-              isActive ? " bg-gray-700  shadow-sm" : " hover:shadow-none hover:bg-gray-700"
+              isActive
+                ? " bg-gray-200  shadow-sm"
+                : " hover:shadow-none hover:bg-gray-200"
             }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
           }
         >
           {" "}
-          <MdTranscribe /> Sales Report
+          <MdTranscribe size={24} /> Sales Report
         </NavLink>
-      
       </div>
       <div className=" titles">
         <h2 className=" text-gray-400 uppercase">Setup</h2>
       </div>
-      <NavLink
-        to="/settings"
-        onClick={() => onCategorySelect('settings')}
-        className={({ isActive }) => `block px-4 py-2 rounded-md flex items-center gap-2 ${isActive ? "bg-gray-700 shadow-sm" : "hover:bg-gray-700 hover:shadow-none"}`}
-      >
-        <MdSettings /> Settings
-      </NavLink>
+      <div className=" flex flex-col  px-2 ">
+        <NavLink
+          to={"settings"}
+          // onClick={() => onCategorySelect("settings")}
+          className={({ isActive }) =>
+            ` px-4 py-2 rounded-md flex items-center gap-2 ${
+              isActive
+                ? "bg-gray-200 text-orange-400"
+                : "hover:bg-gray-200 hover:shadow-none"
+            }`
+          }
+        >
+          <MdSettings size={24} /> Settings
+        </NavLink>
+      </div>
     </aside>
   );
 }

@@ -35,7 +35,7 @@ function Layout() {
        <ToastContainer/>
       {/* left part  */}
       <Sidebar
-        className={`lg:fixed absolute top-0 left-0 z-30 w-64 h-full bg-gray-800 transition-transform duration-300 ease-in-out ${
+        className={`lg:fixed absolute top-0 left-0 z-50 w-64 h-full  bg-white  transition-transform duration-300 ease-in-out ${
           openSidebar ? "translate-x-0 " : "-translate-x-full "
         }`}
         toggleSidebar={toggleSidebar}
@@ -53,11 +53,11 @@ function Layout() {
           <RouterCumb />
         </div>
         {/* main outlet for dynamic routing */}
-        <main ref={divRef?divRef:null} className="flex-grow p-4 overflow-y-scroll ">
+        <main ref={divRef?divRef:null} className="flex-grow p-4 overflow-y-scroll bg-orange-100/30 ">
           <Outlet />
           {/* Uncomment the footer if needed */}
         </main>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </div>
   );

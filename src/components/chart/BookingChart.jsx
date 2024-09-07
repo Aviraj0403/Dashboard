@@ -217,7 +217,7 @@ const BookingChart = ({ title, url }) => {
   };
 
   return (
-    <div className="rounded-md shadow-md w-full ">
+    <div className="rounded-md shadow-md w-full bg-white">
       <div className="p-4 flex flex-col sm:flex-row justify-between border-b-2 items-center mb-4">
         <h2 className="text-lg sm:text-xl font-bold text-center sm:text-left">
           {title}

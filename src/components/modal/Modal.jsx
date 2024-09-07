@@ -27,7 +27,7 @@ const Modal = ({ children, isOpen, onClose,title='' }) => {
         }`}
         onClick={(e) => e.stopPropagation()}
       >  <div className=" px-4 py-2 text-xl font-semibold text-gray-600">{title}</div>
-        <div onClick={onClose} className=" absolute z-30  top-2 right-2 cursor-pointer hover:border text-red-500">{<MdClose size={28} />}</div>
+        <div onClick={onClose} className=" absolute z-30  top-2 right-2 cursor-pointer hover:border hover:bg-red-500 hover:text-white duration-300 text-red-500">{<MdClose size={28} />}</div>
         {isVisible && children}
       </div>
     </div>

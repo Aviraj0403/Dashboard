@@ -5,6 +5,7 @@ import BookingChart from "../chart/BookingChart";
 import FeaturedItem from "./featured/FeaturedItem";
 import { Outlet } from "react-router-dom";
 
+
 const items = [
   { id: 1, name: 'Sesame Chicken', image: 'https://demo.foodscan.xyz/storage/61/conversions/sweet_&_sour_chicken-thumb.png' },
   { id: 2, name: 'Sweet & Sour Chicken', image: 'https://demo.foodscan.xyz/storage/61/conversions/sweet_&_sour_chicken-thumb.png' },
@@ -20,16 +21,16 @@ function Dashboard() {
   
   const [currentTime,setCurrentTime] = useState(new Date().toLocaleTimeString().split(" ")[1])
   return (
-    <main className="flex-grow p-4 overflow-scroll">
+    <main className="flex-grow p-4 overflow-scroll ">
       {/* Heading or notification bar  */}
-      <div className=" rounded-sm shadow-md  bg-red-100 px-3 py-2 mb-1">
+      <div className=" rounded-sm shadow-md  bg-red-100 px-3 py-2 mb-1 ">
         <h2 className=" text-xl font-semibold">
           Heading of Notification or Alert
         </h2>
         <p>For Notification purpose </p>
       </div>
       {/* greeting bars  */}
-      <div className="  px-3 py-2 mb-1">
+      <div className="  px-3 py-2 mb-1 ">
         <h2 className={` ${currentTime==='AM'?"text-blue-600":"text-orange-500"} text-2xl font-bold`}>
           {new Date().toLocaleTimeString().split(" ")[1] === "AM"
             ? "Good Morning!"

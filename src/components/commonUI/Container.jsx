@@ -1,9 +1,9 @@
 import React from 'react'
 import Button from './Button'
 
-const Container = ({children,title='',btn='',btnClick=()=>{}}) => {
+const Container = ({children,title='',btn='',btnClick=()=>{},className=''}) => {
   return (
-    <div className="rounded-md shadow-md w-full p-4 mx-auto">
+    <div className={`${className} rounded-md shadow-md w-full p-4 mx-auto`}>
         <div className=' flex justify-between items-center'>
         <h2 className="text-xl font-bold opacity-60 text-center sm:text-left">
           {title}

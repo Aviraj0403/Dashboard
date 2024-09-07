@@ -77,7 +77,7 @@ const TableOrders = () => {
   };
   // Handle View 
   const handleViewDetails = (orderId) => {
-    navigate(`/Table-orders/${orderId}`); // Navigate to the OrderDetails page
+    navigate(`${orderId}`); // Navigate to the OrderDetails page
   };
 
 

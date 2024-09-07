@@ -255,7 +255,7 @@ const DiningTable = () => {
                   <div className="relative">
                     <button
                       onClick={() => {
-                        navigate("/dinning/table/" + table.id);
+                        navigate("table/" + table.id);
                       }}
                       onMouseEnter={() => handleHovered("VIEW", table.id)}
                       onMouseLeave={handleMouseLeave}
