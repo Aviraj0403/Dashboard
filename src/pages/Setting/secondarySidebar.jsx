@@ -12,7 +12,7 @@ const settingsOptions = [
   { to: 'notification-alert', label: 'Notification Alert', icon: <MdNotifications /> },
   { to: 'analytics', label: 'Analytics', icon: <MdBarChart /> },
   { to: 'theme', label: 'Theme', icon: <MdPalette /> },
-  { to: 'currencies', label: 'Currencies', icon: <MdSettings /> },
+  { to: 'currency', label: 'Currencies', icon: <MdSettings /> },
   { to: 'item-categories', label: 'Item Categories', icon: <MdSettings /> },
   { to: 'item-attributes', label: 'Item Attributes', icon: <MdSettings /> },
   { to: 'taxes', label: 'Taxes', icon: <MdSettings /> },
