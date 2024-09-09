@@ -33,7 +33,11 @@ import EmployeeTable from "./pages/Employee/EmployeeTable.jsx";
 import AddEmployee from "./pages/Employee/AddEmployee.jsx";
 import Site from "./pages/Setting/Site/Site.jsx";
 import MailSettings from "./pages/Setting/Mail/MailSetting.jsx";
+import FirebaseNotification from "./pages/Setting/Notification/Notification.jsx";
+import NotificationAlert from "./pages/Setting/Notification/NotificationAlert.jsx";
+import Theme from "./pages/Setting/Theme/Theme.jsx";
 import Otp from "./pages/Setting/OTP/OTP.jsx";
+
 // Corrected router setup
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -92,6 +96,9 @@ const router = createBrowserRouter(
             <Route path="site" element={< Site/>} />
             <Route path="mail" element={< MailSettings/>} />
             <Route path="otp" element={< Otp/>} />
+            <Route path="notification" element={< FirebaseNotification/>} />
+            < Route path="notification-alert" element={<NotificationAlert/>}/>
+            <Route path="theme" element={< Theme/>} />
             <Route path="*" element={<PageNotFound />} />
             <Route />
           </Route>
