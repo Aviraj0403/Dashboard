@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import ReactToPrint from 'react-to-print';
 import { CSVLink } from 'react-csv';
 import { useNavigate } from 'react-router-dom';
+import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa';
 
 // Dummy data; this will be fetched from the backend in the future
 const employees = [
@@ -14,10 +15,11 @@ const employees = [
 
 const EmployeeTable = () => {
   const [filter, setFilter] = useState('');
+  const [employeesList, setEmployeesList] = useState(employees);
   const navigate = useNavigate();
 
   // Filter employees based on the filter state
-  const filteredEmployees = employees.filter(employee =>
+  const filteredEmployees = employeesList.filter(employee =>
     employee.name.toLowerCase().includes(filter.toLowerCase()) ||
     employee.email.toLowerCase().includes(filter.toLowerCase()) ||
     employee.phone.includes(filter) ||
@@ -31,7 +33,7 @@ const EmployeeTable = () => {
     // Example:
     // const response = await fetch('/api/employees');
     // const data = await response.json();
-    // setEmployees(data);
+    // setEmployeesList(data);
   };
 
   // Call fetchEmployees on component mount
@@ -42,6 +44,23 @@ const EmployeeTable = () => {
   // Handle navigation to AddEmployee page
   const handleAddEmployeeClick = () => {
     navigate('/admin/add-employee');
+  };
+
+  // Handle view, edit, and delete actions
+  const handleView = (employee) => {
+    // Navigate to the employee detail page or show a modal with employee details
+    console.log('View details for', employee);
+  };
+
+  const handleEdit = (employee) => {
+    // Navigate to the edit page or show an edit form
+    console.log('Edit', employee);
+  };
+
+  const handleDelete = (employee) => {
+    // Remove the employee from the list
+    setEmployeesList(employeesList.filter(e => e !== employee));
+    console.log('Deleted', employee);
   };
 
   return (
@@ -100,9 +119,39 @@ const EmployeeTable = () => {
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.phone}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.role}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.status}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  <button className="text-indigo-600 hover:text-indigo-900">Edit</button>
+                <td className="px-6 py-4 whitespace-nowrap text-sm">
+                  <span
+                    className={`${
+                      employee.status.toLowerCase() === "active"
+                        ? "bg-green-100 text-green-700"
+                        : "bg-red-100 text-red-700"
+                    } text-sm px-2 py-1 rounded-full`}
+                  >
+                    {employee.status}
+                  </span>
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 flex gap-3">
+                  <button
+                    onClick={() => handleView(employee)}
+                    className="text-blue-500 hover:text-blue-700"
+                    aria-label="View"
+                  >
+                    <FaEye />
+                  </button>
+                  <button
+                    onClick={() => handleEdit(employee)}
+                    className="text-green-500 hover:text-green-700"
+                    aria-label="Edit"
+                  >
+                    <FaEdit />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(employee)}
+                    className="text-red-500 hover:text-red-700"
+                    aria-label="Delete"
+                  >
+                    <FaTrashAlt />
+                  </button>
                 </td>
               </tr>
             ))}

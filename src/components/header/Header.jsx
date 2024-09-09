@@ -12,7 +12,7 @@ function Header({ toggleSidebar, openSidebar }) {
       <div className="container mx-auto flex justify-between">
         <img src={logo} alt="" className=" w-14 h-12 rounded-full scale-150" />
         <div className="flex items-center space-x-4">
-          <p className="text-sm max-sm:hidden">Branch: Hajipur (Main)</p>
+          <p className="text-sm max-sm:hidden">Branch: Dwarka (Main)</p>
           <select className="border rounded px-2 py-1 text-black max-sm:hidden">
             <option value="english">English</option>
             <option value="bengali">Bengali</option>

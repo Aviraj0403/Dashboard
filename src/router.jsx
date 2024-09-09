@@ -31,6 +31,7 @@ import ItemsReport from "./pages/Reports/ItemsReport.jsx"
 import GstReport from "./pages//Reports/GSTReport.jsx"
 import EmployeeTable from "./pages/Employee/EmployeeTable.jsx";
 import AddEmployee from "./pages/Employee/AddEmployee.jsx";
+import Site from "./pages/Setting/Site/Site.jsx";
 // Corrected router setup
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -86,6 +87,7 @@ const router = createBrowserRouter(
             <Route path="" element={<CompanyForm />} />
             <Route path="company" element={<CompanyForm />} />
             <Route path="branches" element={<Branch />} />
+            <Route path="site" element={< Site/>} />
             <Route path="*" element={<PageNotFound />} />
             <Route />
           </Route>
