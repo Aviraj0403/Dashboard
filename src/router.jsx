@@ -32,6 +32,8 @@ import GstReport from "./pages//Reports/GSTReport.jsx"
 import EmployeeTable from "./pages/Employee/EmployeeTable.jsx";
 import AddEmployee from "./pages/Employee/AddEmployee.jsx";
 import Site from "./pages/Setting/Site/Site.jsx";
+import MailSettings from "./pages/Setting/Mail/MailSetting.jsx";
+import Otp from "./pages/Setting/OTP/OTP.jsx";
 // Corrected router setup
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -88,6 +90,8 @@ const router = createBrowserRouter(
             <Route path="company" element={<CompanyForm />} />
             <Route path="branches" element={<Branch />} />
             <Route path="site" element={< Site/>} />
+            <Route path="mail" element={< MailSettings/>} />
+            <Route path="otp" element={< Otp/>} />
             <Route path="*" element={<PageNotFound />} />
             <Route />
           </Route>
