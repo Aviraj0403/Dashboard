@@ -2,6 +2,10 @@ import React, { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
+import '../styles/global.css';
+import '../styles/themes.css';
+
+
 import {
   Route,
   RouterProvider,

@@ -1,0 +1,20 @@
+/* Light Theme Variables */
+:root {
+    --background-color: #ffffff;
+    --text-color: #000000;
+    --primary-color: #007bff;
+    --secondary-color: #6c757d;
+    --border-color: #dddddd;
+    --header-background: #f8f9fa;
+  }
+  
+  /* Dark Theme Variables */
+  [data-theme='dark'] {
+    --background-color: #121212;
+    --text-color: #e0e0e0;
+    --primary-color: #1d72b8;
+    --secondary-color: #adb5bd;
+    --border-color: #343a40;
+    --header-background: #1e1e1e;
+  }
+  

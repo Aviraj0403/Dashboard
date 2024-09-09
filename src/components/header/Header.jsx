@@ -15,7 +15,7 @@ function Header({ toggleSidebar, openSidebar }) {
           <p className="text-sm max-sm:hidden">Branch: Dwarka (Main)</p>
           <select className="border rounded px-2 py-1 text-black max-sm:hidden">
             <option value="english">English</option>
-            <option value="bengali">Bengali</option>
+            <option value="Hindi">Hindi</option>
           </select>
           {openSidebar ? (
             <FaAlignLeft size={26} onClick={toggleSidebar} />
