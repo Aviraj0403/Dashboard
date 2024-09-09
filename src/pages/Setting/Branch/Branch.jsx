@@ -19,7 +19,7 @@ function Branch() {
         {/* <RouterCumb /> */}
 
         <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-600">Dining Tables</h3>
+          <h3 className="text-lg font-semibold text-gray-600">Branches</h3>
           <div className="flex space-x-2">
            
             <button

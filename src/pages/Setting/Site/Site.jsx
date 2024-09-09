@@ -20,7 +20,7 @@ const Site = () => {
   // Handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // TODO: Implement backend API call to save settings
     // Example:
     // fetch('/api/save-settings', {
@@ -46,7 +46,7 @@ const Site = () => {
     //   // Handle error
     //   console.error('Error saving settings:', error);
     // });
-    
+
     console.log('Form Submitted', {
       timeFormat,
       dateFormat,
@@ -58,9 +58,12 @@ const Site = () => {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-4 py-8 bg-white shadow-md border border-gray-300 rounded-md">
+    <div className="w-full mx-auto px-4 py-8 bg-white shadow-md rounded-md">
       <h2 className="text-2xl font-semibold mb-6">Site Settings</h2>
-      <form className="grid grid-cols-1 sm:grid-cols-2 gap-6" onSubmit={handleSubmit}>
+      <form
+        className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+        onSubmit={handleSubmit}
+      >
         {/* Date Format */}
         <div className="flex flex-col">
           <label className="mb-2 font-medium">Date Format</label>
@@ -72,7 +75,6 @@ const Site = () => {
             <option value="d-m-Y">d-m-Y (09-09-2024)</option>
             <option value="Y-m-d">Y-m-d (2024-09-09)</option>
             <option value="m-d-Y">m-d-Y (09-09-2024)</option>
-            {/* TODO: Add more date formats as needed */}
           </select>
         </div>
 
@@ -86,7 +88,6 @@ const Site = () => {
           >
             <option value="12-hour">12 Hour (5:43 PM)</option>
             <option value="24-hour">24 Hour (17:43)</option>
-            {/* TODO: Add more time formats if required */}
           </select>
         </div>
 
@@ -101,7 +102,6 @@ const Site = () => {
             <option value="Asia/Kolkata">Asia/Kolkata (India)</option>
             <option value="America/New_York">America/New_York (New York)</option>
             <option value="Europe/London">Europe/London (London)</option>
-            {/* TODO: Add more timezones as needed */}
           </select>
         </div>
 
@@ -126,7 +126,6 @@ const Site = () => {
             <option value="English">English</option>
             <option value="Hindi">Hindi</option>
             <option value="Bengali">Bengali</option>
-            {/* TODO: Add more languages as needed */}
           </select>
         </div>
 
@@ -181,7 +180,6 @@ const Site = () => {
             <option value="INR">Indian Rupee (₹)</option>
             <option value="USD">US Dollar ($)</option>
             <option value="EUR">Euro (€)</option>
-            {/* TODO: Add more currencies as needed */}
           </select>
         </div>
 
