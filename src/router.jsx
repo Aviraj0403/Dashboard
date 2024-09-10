@@ -39,6 +39,7 @@ import Theme from "./pages/Setting/Theme/Theme.jsx";
 import Otp from "./pages/Setting/OTP/OTP.jsx";
 import Currencies from "./pages/Setting/Currency/Currency.jsx";
 import Currency from "./pages/Setting/Currency/Currency.jsx";
+import ItemCategory from "./pages/Setting/ItemCategory/ItemCategory.jsx";
 
 
 // Corrected router setup
@@ -103,6 +104,7 @@ const router = createBrowserRouter(
             < Route path="notification-alert" element={<NotificationAlert/>}/>
             <Route path="theme" element={< Theme/>} />
             <Route path="currency" element={< Currency/>} />
+            <Route path="item-categories" element={< ItemCategory/>} />
             <Route path="*" element={<PageNotFound />} />
             <Route />
           </Route>

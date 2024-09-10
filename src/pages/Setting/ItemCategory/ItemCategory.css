@@ -1,0 +1,66 @@
+/* Ensure the main container and modal are relative and centered */
+.relative {
+    position: relative;
+  }
+  
+  /* Blur effect for the background content */
+  .blurred {
+    filter: blur(4px);
+    transition: filter 0.3s ease;
+  }
+  
+  /* Modal overlay styles */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 40; /* Below the modal content */
+  }
+  
+  /* Modal content styles */
+  .modal-content {
+    position: relative;
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 100%;
+    margin: auto;
+    z-index: 50; /* Above the overlay */
+    transform: translateY(-30%);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+  
+  /* Show modal with transitions */
+  .modal-content-show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  /* Responsive design for smaller screens */
+  @media (max-width: 640px) {
+    .modal-content {
+      max-width: 90%;
+      padding: 16px;
+    }
+  }
+  
+  /* Adjust the image size in the modal */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Ensure table and other elements fit well on smaller screens */
+  @media (max-width: 640px) {
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      padding: 8px;
+      font-size: 14px;
+    }
+  }
+  
