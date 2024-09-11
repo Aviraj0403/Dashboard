@@ -48,6 +48,10 @@ function Dashboard() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [persons, setPersons] = useState(1);
+  
+
+  // Notification state
+  const [notification, setNotification] = useState(null);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -80,6 +84,8 @@ function Dashboard() {
         });
         return updatedData;
       });
+       // Show notification
+       setNotification(`Order updated for Table ${data.tableId}`);
     });
 
     socketConnection.on("tableUpdate", (data) => {
@@ -105,6 +111,10 @@ function Dashboard() {
       socketConnection.off("tableStatusUpdate");
     };
   }, [selectedTable]);
+  
+  const handleNotificationClose = () => {
+    setNotification(null);
+  };
 
   const hours = new Date().getHours();
   let greetingMessage;
@@ -244,11 +254,52 @@ function Dashboard() {
           ))}
         </div>
       </div>
-
+          {/* Notification Snackbar */}
+      {notification && (
+        <Snackbar
+          open={Boolean(notification)}
+          autoHideDuration={6000}
+          onClose={handleNotificationClose}
+          message={notification}
+          action={
+            <Button color="inherit" onClick={handleNotificationClose}>
+              Close
+            </Button>
+          }
+        />
+      )}
+      
       {/* Table Specific Orders */}
       {selectedTable && (
         <div className="mb-4">
           <h2 className="text-2xl font-bold mb-4">Orders for Table {selectedTable}</h2>
+          <div className="mb-4">
+            <Typography variant="h6" className="font-bold mb-2">Manage Orders</Typography>
+            <div className="flex gap-2 mb-4">
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => setShowMenu(true)}
+              >
+                Add Item to Order
+              </Button>
+              <Button
+                variant="contained"
+                color="success"
+                onClick={handleGenerateBill}
+              >
+                Generate Bill
+              </Button>
+              <Button
+                variant="contained"
+                color="warning"
+                onClick={() => updateTableStatus('completed', 'delivered')}
+              >
+                Mark as Completed
+              </Button>
+            </div>
+            <Typography variant="h6" className="mb-2">Total Price (INR): ₹{calculateTotalPriceINR().toFixed(2)}</Typography>
+          </div>
           <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4 py-3">
             {tableOrders.map(order => (
               <Card key={order.id} className="shadow-lg">
@@ -259,30 +310,6 @@ function Dashboard() {
                 </CardContent>
               </Card>
             ))}
-          </div>
-          <div className="flex gap-2 mt-4">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setShowMenu(true)}
-            >
-              Add Item to Order
-            </Button>
-            <Typography variant="h6" className="flex items-center mt-2">Total Price (INR): ₹{calculateTotalPriceINR().toFixed(2)}</Typography>
-            <Button
-              variant="contained"
-              color="success"
-              onClick={handleGenerateBill}
-            >
-              Generate Bill
-            </Button>
-            <Button
-              variant="contained"
-              color="warning"
-              onClick={() => updateTableStatus('completed', 'delivered')}
-            >
-              Mark as Completed
-            </Button>
           </div>
         </div>
       )}
