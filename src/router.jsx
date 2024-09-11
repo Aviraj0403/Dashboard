@@ -39,7 +39,7 @@ import Theme from "./pages/Setting/Theme/Theme.jsx";
 import Otp from "./pages/Setting/OTP/OTP.jsx";
 import Currencies from "./pages/Setting/Currency/Currency.jsx";
 import Currency from "./pages/Setting/Currency/Currency.jsx";
-import ItemCategory from "./pages/Setting/ItemCategory/ItemCategory.jsx";
+import ItemCategory from "./pages/Setting/Ca/ItemCategory.jsx";
 
 
 // Corrected router setup
