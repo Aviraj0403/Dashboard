@@ -41,6 +41,9 @@ import Currencies from "./pages/Setting/Currency/Currency.jsx";
 import Currency from "./pages/Setting/Currency/Currency.jsx";
 import ItemCategory from "./pages/Setting/ItemCategory/ItemCategory.jsx";
 import RolePermissions from "./pages/Setting/RolePermission/RolePermissions.jsx";
+import TaxManagement from "./pages/Setting/Taxes/TaxManagement.jsx";
+import PaymentGateway from "./pages/Setting/PaymentGateway/PaymentGateway.jsx";
+
 
 
 // Corrected router setup
@@ -107,6 +110,8 @@ const router = createBrowserRouter(
             <Route path="currency" element={< Currency/>} />
             <Route path="item-categories" element={< ItemCategory/>} />
             <Route path="role-permissions" element={<RolePermissions/>} />
+            <Route path="taxes" element={<TaxManagement/>} />
+            <Route path="payment-gateway" element={<PaymentGateway />} />
             <Route path="*" element={<PageNotFound />} />
             <Route />
           </Route>
