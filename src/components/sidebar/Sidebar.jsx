@@ -203,7 +203,7 @@ function Sidebar({ className, toggleSidebar }) {
           <FaUserCircle size={24} /> Administrators
         </NavLink>
         <NavLink
-          to={"customer"}
+          to={"emp-sal"}
           className={({ isActive }) =>
             ` ${
               isActive
@@ -214,6 +214,32 @@ function Sidebar({ className, toggleSidebar }) {
         >
           {" "}
           <MdGroup  size={24}/> Customers
+        </NavLink>
+        <NavLink
+          to={"emp-Att"}
+          className={({ isActive }) =>
+            ` ${
+              isActive
+                ? " bg-gray-200 text-orange-400 "
+                : " hover:shadow-none hover:bg-gray-200"
+            }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
+          }
+        >
+          {" "}
+          <MdGroup  size={24}/> Attendance
+        </NavLink>
+        <NavLink
+          to={"emp-dash"}
+          className={({ isActive }) =>
+            ` ${
+              isActive
+                ? " bg-gray-200 text-orange-400 "
+                : " hover:shadow-none hover:bg-gray-200"
+            }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
+          }
+        >
+          {" "}
+          <MdGroup  size={24}/> Dashboard
         </NavLink>
         <NavLink
           to={"employee"}

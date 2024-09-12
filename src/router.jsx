@@ -43,6 +43,10 @@ import ItemCategory from "./pages/Setting/ItemCategory/ItemCategory.jsx";
 import RolePermissions from "./pages/Setting/RolePermission/RolePermissions.jsx";
 import TaxManagement from "./pages/Setting/Taxes/TaxManagement.jsx";
 import PaymentGateway from "./pages/Setting/PaymentGateway/PaymentGateway.jsx";
+import Administrators from "./pages/Adminstrators/Adminstrators.jsx";
+import EmployeeSalary from "./pages/Employee/EmployeeSalary.jsx";
+import EmployeeAttendance from "./pages/Employee/EmployeeAttendance.jsx";
+import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
 
 
 
@@ -94,6 +98,11 @@ const router = createBrowserRouter(
           <Route path="gst-report" element={<GstReport />} />
           {/* USER */}
           <Route path="employee" element={<EmployeeTable />} />
+          <Route path="administrator" element={<Administrators />} />
+          <Route path="emp-sal" element={<EmployeeSalary />} />
+          <Route path="emp-Att" element={<EmployeeAttendance />} />
+          <Route path="emp-Att/:name" element={<EmployeeAttendance />} />
+          <Route path="emp-dash" element={<EmployeeDashboard />} />
           {/* <Route path="add-employee" element={<AddEmployee />} /> */}
          
           {/* Setting  */}
@@ -113,6 +122,7 @@ const router = createBrowserRouter(
             <Route path="taxes" element={<TaxManagement/>} />
             <Route path="payment-gateway" element={<PaymentGateway />} />
             <Route path="*" element={<PageNotFound />} />
+            {/* <Route path="test" element={<PageNotFound />} /> */}
             <Route />
           </Route>
           {/* 404 Not Found */}
