@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 
 // Sample data for attendance; replace with actual data from your backend
 const attendanceData = [
-  { name: 'Avi Raj', date: '2024-09-01', inTime: '09:00 AM', outTime: '05:00 PM', present: true },
-  { name: 'Farha Israt', date: '2024-09-01', inTime: '09:10 AM', outTime: '05:10 PM', present: true },
-  { name: 'Sunny Bhaiya', date: '2024-09-01', inTime: '09:05 AM', outTime: '05:00 PM', present: true },
+  { name: 'Avi Raj', date: '2024-09-01', inTime: '09:00 AM', outTime: '05:00 PM', present: true, location: { lat: 23.8103, lon: 90.4125 } },
+  { name: 'Farha Israt', date: '2024-09-01', inTime: '09:10 AM', outTime: '05:10 PM', present: false, location: { lat: 23.8104, lon: 90.4126 } },
+  { name: 'Sunny Bhaiya', date: '2024-09-01', inTime: '09:05 AM', outTime: '05:00 PM', present: false, location: { lat: 23.8100, lon: 90.4120 } },
 ];
 
 const EmployeeAttendance = () => {
@@ -23,7 +23,7 @@ const EmployeeAttendance = () => {
   };
 
   // Check if the employee was present based on location
-  const checkProximity = (inTime, outTime) => {
+  const checkProximity = (location) => {
     if (currentLocation) {
       // Simulate proximity check (within 100 meters of restaurant)
       const restaurantLocation = { lat: 23.8103, lon: 90.4125 }; // Example coordinates (Dhaka)
@@ -81,10 +81,10 @@ const EmployeeAttendance = () => {
               <td className="px-6 py-4 whitespace-nowrap text-sm">
                 <span
                   className={`${
-                    attendance.present ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
+                    checkProximity(attendance.location) ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
                   } text-sm px-2 py-1 rounded-full`}
                 >
-                  {attendance.present ? 'Yes' : 'No'}
+                  {checkProximity(attendance.location) ? 'Yes' : 'No'}
                 </span>
               </td>
               <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -110,7 +110,7 @@ const EmployeeAttendance = () => {
                 <div className="font-medium">{attendance.date}</div>
                 <div>In Time: {attendance.inTime}</div>
                 <div>Out Time: {attendance.outTime}</div>
-                <div>Present: {checkProximity(attendance.inTime, attendance.outTime) ? 'Yes' : 'No'}</div>
+                <div>Present: {checkProximity(attendance.location) ? 'Yes' : 'No'}</div>
               </li>
             ))}
           </ul>

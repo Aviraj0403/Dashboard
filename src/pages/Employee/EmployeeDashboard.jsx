@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState } from 'react'; 
+import { Button, Select, MenuItem, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, Paper } from '@mui/material';
 
 // Sample data for salaries and attendance
 const salaryData = [
-  { name: 'Avi Raj', baseSalary: 3000 },
-  { name: 'Farha Israt', baseSalary: 2800 },
-  { name: 'Sunny Bhaiya', baseSalary: 3500 },
+  { name: 'Avi Raj', baseSalary: 3000, role: 'Manager' },
+  { name: 'Rajnish', baseSalary: 2800, role: 'Cook' },
+  { name: 'Sunny Bhaiya', baseSalary: 3500, role: 'Admin' },
+  { name: 'Sunny Bhaiya', baseSalary: 3500, role: 'Admin' },
+  // Add more data as needed
 ];
 
 const attendanceData = [
@@ -46,85 +49,116 @@ const EmployeeDashboard = () => {
     setSelectedMonth(e.target.value);
   };
 
-  return (
-    <div className="p-4">
-      <h2 className="text-lg font-semibold mb-4">Employee Dashboard</h2>
+  // Get role-wise employee list
+  const getRoleWiseEmployees = (role) => {
+    return salaryData.filter(employee => employee.role === role);
+  };
 
+  return (
+    <div className="p-6 max-w-4xl mx-auto">
+      <Typography variant="h4" gutterBottom>
+        Employee Dashboard
+      </Typography>
       {/* Month Selector */}
       <div className="mb-4">
-        <label htmlFor="month" className="mr-2">Select Month:</label>
-        <select
-          id="month"
+        <Typography variant="h6" gutterBottom>
+          Select Month:
+        </Typography>
+        <Select
           value={selectedMonth}
           onChange={handleMonthChange}
-          className="border border-gray-300 rounded p-2"
+          fullWidth
+          variant="outlined"
         >
-          <option value="09">September</option>
-          <option value="10">October</option>
+          <MenuItem value="09">September</MenuItem>
+          <MenuItem value="10">October</MenuItem>
           {/* Add more months as needed */}
-        </select>
+        </Select>
       </div>
-
-      {/* Employee List */}
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold">Employee List</h3>
-        <ul>
-          {salaryData.map((salary, index) => (
-            <li key={index} className="py-2">
-              <button
-                onClick={() => setSelectedEmployee(salary.name)}
-                className="text-blue-500 hover:text-blue-700"
-              >
-                {salary.name}
-              </button>
-            </li>
+      {/* Employee List by Role */}
+      <div className="mb-6">
+        <Typography variant="h6" gutterBottom>
+          Employee List by Role
+        </Typography>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {['Admin', 'Cook', 'Waiter', 'Manager', 'POS Operator', 'Others'].map((role) => (
+            <Paper key={role} className="p-4">
+              <Typography variant="h6" gutterBottom>
+                {role}
+              </Typography>
+              <ul>
+                {getRoleWiseEmployees(role).map((employee, index) => (
+                  <li key={index} className="py-2">
+                    <Button
+                      onClick={() => setSelectedEmployee(employee.name)}
+                      className="text-blue-500 hover:text-blue-700"
+                    >
+                      {employee.name}
+                    </Button>
+                  </li>
+                ))}
+              </ul>
+            </Paper>
           ))}
-        </ul>
+        </div>
       </div>
-
       {/* Display Salary and Attendance Details */}
       {selectedEmployee && (
         <div className="mt-4 p-4 bg-gray-100 rounded shadow">
-          <h3 className="text-lg font-semibold">Details for {selectedEmployee}</h3>
-
+          <Typography variant="h6" gutterBottom>
+            Details for {selectedEmployee}
+          </Typography>
           {/* Display Salary */}
           <div className="mb-4">
-            <h4 className="font-medium">Calculated Salary for {selectedMonth}:</h4>
-            <p>${calculateSalary(selectedEmployee).toFixed(2)}</p>
+            <Typography variant="body1" gutterBottom>
+              Calculated Salary for {selectedMonth}:
+            </Typography>
+            <Typography variant="h6">
+              ₹{calculateSalary(selectedEmployee).toFixed(2)}
+            </Typography>
           </div>
-
           {/* Display Attendance */}
-          <h4 className="font-medium">Attendance Details for {selectedMonth}:</h4>
-          <table className="min-w-full divide-y divide-gray-200 bg-white shadow-md rounded-lg">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">In Time</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Out Time</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Present</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {getAttendanceDetails(selectedEmployee, selectedMonth).map((attendance, index) => (
-                <tr key={index}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.date}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.inTime}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{attendance.outTime}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span
-                      className={`${
-                        attendance.present ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"
-                      } text-sm px-2 py-1 rounded-full`}
-                    >
-                      {attendance.present ? 'Yes' : 'No'}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Typography variant="body1" gutterBottom>
+            Attendance Details for {selectedMonth}:
+          </Typography>
+          <TableContainer component={Paper} className="mt-4">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Date</TableCell>
+                  <TableCell>In Time</TableCell>
+                  <TableCell>Out Time</TableCell>
+                  <TableCell>Present</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {getAttendanceDetails(selectedEmployee, selectedMonth).map((attendance, index) => (
+                  <TableRow key={index}>
+                    <TableCell>{attendance.date}</TableCell>
+                    <TableCell>{attendance.inTime}</TableCell>
+                    <TableCell>{attendance.outTime}</TableCell>
+                    <TableCell>
+                      <span
+                        className={`${
+                          attendance.present ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
+                        } text-sm px-2 py-1 rounded-full`}
+                      >
+                        {attendance.present ? 'Yes' : 'No'}
+                      </span>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </div>
       )}
+      {/* TODO: Integrate Backend */}
+      {/* 
+      1. Set up backend to manage employees and attendance data.
+      2. Implement API endpoints for fetching employee and attendance data.
+      3. Handle data synchronization between frontend and backend.
+      */}
     </div>
   );
 };

@@ -98,6 +98,7 @@ const router = createBrowserRouter(
           <Route path="gst-report" element={<GstReport />} />
           {/* USER */}
           <Route path="employee" element={<EmployeeTable />} />
+          {/* <Route path="employee/:id" element={<EmployeeProfile />} /> New Route */}
           <Route path="administrator" element={<Administrators />} />
           <Route path="emp-sal" element={<EmployeeSalary />} />
           <Route path="emp-Att" element={<EmployeeAttendance />} />
