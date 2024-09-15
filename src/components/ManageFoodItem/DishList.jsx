@@ -23,7 +23,7 @@ const DishList = () => {
 
   const removeFood = async (foodId) => {
     try {
-      const response = await axios.post(`${URL}/api/food/remove/`, { id: foodId });
+      const response = await axios.post(`${URL}/api/food/remove`, { id: foodId });
       if (response.data.success) {
         toast.success(response.data.message);
         fetchList();
@@ -98,22 +98,22 @@ const DishList = () => {
               <tr key={item._id}>
                 <td className="px-6 py-4 text-sm font-medium text-gray-900">
                   <img
-                    src={`${URL}/images/${item.image}`}
+                    src={item.imageUrl} // Assuming imageUrl is the field for Cloudinary URL
                     alt={item.name}
-                    className="w-16 h-16 object-cover rounded-md"
+                    className="w-16 h-16 object-cover rounded-full" // Rounded icon styling
                   />
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">{item.name}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">{item.category}</td>
-                <td className="px-6 py-4 text-sm text-gray-900">${item.price}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">₹{item.price}</td> {/* Updated to INR */}
                 <td className="px-6 py-4 text-sm text-gray-900">{item.description}</td>
                 <td className="px-6 py-4 text-sm">
-                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${item.status === 'Available' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                  <span className={`px-2 py-1 text-xs font-medium rounded-full ${item.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     {item.status}
                   </span>
                 </td>
                 <td className="px-6 py-4 text-sm font-medium flex space-x-3">
-                  <NavLink to={`/edit-dish/${item._id}`} className="text-blue-600 hover:text-blue-800">
+                  <NavLink to={`edit-dish/${item._id}`} className="text-blue-600 hover:text-blue-800">
                     <svg
                       stroke="currentColor"
                       fill="none"
@@ -129,7 +129,7 @@ const DishList = () => {
                       <path d="m15 5 4 4"></path>
                     </svg>
                   </NavLink>
-                  <NavLink to={`/dish-details/${item._id}`} className="text-gray-600 hover:text-gray-800">
+                  <NavLink to={`dish-details/${item._id}`} className="text-gray-600 hover:text-gray-800">
                     <svg
                       stroke="currentColor"
                       fill="none"

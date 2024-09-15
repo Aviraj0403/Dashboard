@@ -45,6 +45,8 @@ import PaymentGateway from "./pages/Setting/PaymentGateway/PaymentGateway.jsx";
 import Administrators from "./pages/Adminstrators/Adminstrators.jsx";
 import EmployeeAttendance from "./pages/Employee/EmployeeAttendance.jsx";
 import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
+import EditDish from "./components/ManageFoodItem/EditDish.jsx";
+import DishDetails from "./components/ManageFoodItem/DishDetails.jsx";
 
 
 
@@ -83,6 +85,8 @@ const router = createBrowserRouter(
           <Route path="dining/table/:id" element={<BarCode />} />
           <Route path="add-item" element={<AddItem />} />
           <Route path="manage-item" element={<DishList />} />
+           <Route path="manage-item/edit-dish/:id" element={<EditDish />} />
+          <Route path=" manage-item/dish-details/:id" element={< DishDetails />} />
           <Route path="offersList" element={<OffersList />} />
           <Route path="add-offer" element={<AddOffer />} />
           <Route path="pos" element={<PosContainer />} />
