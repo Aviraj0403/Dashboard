@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { Button, MenuItem, Select, InputLabel, Box, Typography } from "@mui/material"; // Importing only necessary components from MUI
+import { Button, Box, Typography, InputLabel } from "@mui/material";
 import { toast } from "react-toastify";
 import axios from "axios";
 
 // Define URL for API endpoint
-const URL = "http://localhost:4000";
+const URL = process.env.SERVER_URL;
 
+// Define categories
 const categories = [
-  "Salad", "Rolls", "Deserts", "Sandwich", "Cake", "Pure Veg", "Pasta", "Noodles"
+  "Salad", "Rolls", "Desserts", "Sandwich", "Cake", "Pure Veg", "Pasta", "Noodles"
 ];
 
+// Validation schema using Yup
 const validationSchema = Yup.object({
   name: Yup.string().required("Dish name is required"),
   category: Yup.string().required("Category is required"),
@@ -27,6 +29,7 @@ const AddItem = () => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
 
+  // Handle image file change
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -39,40 +42,69 @@ const AddItem = () => {
     }
   };
 
+  // Remove image
   const removeImage = () => {
     setImage(null);
     setImagePreview(null);
   };
 
+  // Function to upload image to Cloudinary
+  const uploadImageToCloudinary = async () => {
+    const formData = new FormData();
+    formData.append("image", image);
+
+    try {
+      const response = await axios.post(`${URL}/api/upload/image`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      return response.data.imageUrl; // Return the Cloudinary image URL
+    } catch (error) {
+      console.error("Image upload error:", error.response?.data || error.message);
+      toast.error("Error uploading image. Please try again.");
+      return null;
+    }
+  };
+
+  // Handle form submission
   const onFormSubmit = async (values, { resetForm }) => {
     if (!image) {
       toast.error("Please upload an image.");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("name", values.name);
-    formData.append("description", values.description);
-    formData.append("price", Number(values.price));
-    formData.append("category", values.category);
-    formData.append("cookTime", values.cookTime);
-    formData.append("itemType", values.itemType);
-    formData.append("isFeatured", values.isFeatured);
-    formData.append("status", values.status);
-    formData.append("image", image);
+    // Upload image first
+    const imageUrl = await uploadImageToCloudinary();
+    if (!imageUrl) return; // Stop if image upload fails
+
+    // Prepare form data for food item
+    const formData = {
+      name: values.name,
+      description: values.description,
+      price: values.price,
+      category: values.category,
+      cookTime: values.cookTime,
+      itemType: values.itemType,
+      isFeatured: values.isFeatured ? true : false, // Ensure this is sent as a boolean
+      status: values.status,
+      imageUrl // Add Cloudinary image URL
+    };
 
     try {
       const response = await axios.post(`${URL}/api/food/add`, formData);
-      if (response.data.success) {
+
+      if (response.status === 201) {
         resetForm();
         setImage(null);
         setImagePreview(null);
-        toast.success(response.data.message);
+        toast.success("Food item added successfully!");
       } else {
         toast.warning(response.data.message);
       }
     } catch (error) {
-      toast.error("Error submitting form");
+      console.error("Form submission error:", error.response?.data || error.message);
+      toast.error(`Error submitting form: ${error.response?.data?.message || "Unknown error"}`);
     }
   };
 
@@ -88,14 +120,14 @@ const AddItem = () => {
           price: "",
           description: "",
           cookTime: "",
-          itemType: "",
+          itemType: "Veg",
           isFeatured: false,
           status: "Active"
         }}
         validationSchema={validationSchema}
         onSubmit={onFormSubmit}
       >
-        {({ setFieldValue }) => (
+        {() => (
           <Form className="flex flex-col gap-6">
             <Box className="flex justify-center mb-6">
               <div className="relative w-full max-w-md bg-yellow-50 border-2 border-orange-400 border-dashed rounded-lg p-4 flex flex-col items-center">
@@ -103,7 +135,7 @@ const AddItem = () => {
                   <>
                     <img
                       src={imagePreview}
-                      alt="Main preview"
+                      alt="Image Preview"
                       className="max-w-full max-h-48 rounded-lg mb-2"
                     />
                     <Button
@@ -122,10 +154,7 @@ const AddItem = () => {
                       type="file"
                       id="image"
                       name="image"
-                      onChange={(event) => {
-                        handleImageChange(event);
-                        setFieldValue("image", event.currentTarget.files[0]);
-                      }}
+                      onChange={handleImageChange}
                       className="hidden"
                     />
                     <label
@@ -140,6 +169,7 @@ const AddItem = () => {
             </Box>
 
             <Box className="space-y-6">
+              {/* Dish Name */}
               <div className="relative">
                 <InputLabel htmlFor="name" className="absolute top-0 left-3 -translate-y-1/2 bg-white px-1 text-gray-500 text-sm">
                   Dish Name
@@ -155,6 +185,7 @@ const AddItem = () => {
                 <ErrorMessage name="name" component="div" className="text-red-600 text-sm mt-1" />
               </div>
 
+              {/* Category */}
               <div className="relative">
                 <InputLabel htmlFor="category" className="absolute top-0 left-3 -translate-y-1/2 bg-white px-1 text-gray-500 text-sm">
                   Category
@@ -165,7 +196,7 @@ const AddItem = () => {
                   id="category"
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                 >
-                  <option value=""><em>Select Category</em></option>
+                  <option value="" disabled>Select Category</option>
                   {categories.map((category) => (
                     <option key={category} value={category}>
                       {category}
@@ -175,6 +206,7 @@ const AddItem = () => {
                 <ErrorMessage name="category" component="div" className="text-red-600 text-sm mt-1" />
               </div>
 
+              {/* Price */}
               <div className="relative">
                 <InputLabel htmlFor="price" className="absolute top-0 left-3 -translate-y-1/2 bg-white px-1 text-gray-500 text-sm">
                   Price
@@ -190,6 +222,7 @@ const AddItem = () => {
                 <ErrorMessage name="price" component="div" className="text-red-600 text-sm mt-1" />
               </div>
 
+              {/* Description */}
               <div className="relative">
                 <InputLabel htmlFor="description" className="absolute top-0 left-3 -translate-y-1/2 bg-white px-1 text-gray-500 text-sm">
                   Description
@@ -205,6 +238,7 @@ const AddItem = () => {
                 <ErrorMessage name="description" component="div" className="text-red-600 text-sm mt-1" />
               </div>
 
+              {/* Cook Time */}
               <div className="relative">
                 <InputLabel htmlFor="cookTime" className="absolute top-0 left-3 -translate-y-1/2 bg-white px-1 text-gray-500 text-sm">
                   Cook Time
@@ -220,6 +254,7 @@ const AddItem = () => {
                 <ErrorMessage name="cookTime" component="div" className="text-red-600 text-sm mt-1" />
               </div>
 
+              {/* Item Type */}
               <div className="relative">
                 <InputLabel htmlFor="itemType" className="absolute top-0 left-3 -translate-y-1/2 bg-white px-1 text-gray-500 text-sm">
                   Item Type
@@ -231,27 +266,20 @@ const AddItem = () => {
                   className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
                 >
                   <option value="Veg">Veg</option>
-                  <option value="Non Veg">Non Veg</option>
+                  <option value="Non-Veg">Non-Veg</option>
                 </Field>
                 <ErrorMessage name="itemType" component="div" className="text-red-600 text-sm mt-1" />
               </div>
 
-              <div className="relative">
-                <InputLabel htmlFor="isFeatured" className="absolute top-0 left-3 -translate-y-1/2 bg-white px-1 text-gray-500 text-sm">
-                  Is Featured
+              {/* Featured Checkbox */}
+              <div className="flex items-center">
+                <Field type="checkbox" name="isFeatured" id="isFeatured" className="mr-2" />
+                <InputLabel htmlFor="isFeatured" className="text-gray-500">
+                  Is Featured?
                 </InputLabel>
-                <Field
-                  as="select"
-                  name="isFeatured"
-                  id="isFeatured"
-                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
-                >
-                  <option value={true}>Yes</option>
-                  <option value={false}>No</option>
-                </Field>
-                <ErrorMessage name="isFeatured" component="div" className="text-red-600 text-sm mt-1" />
               </div>
 
+              {/* Status */}
               <div className="relative">
                 <InputLabel htmlFor="status" className="absolute top-0 left-3 -translate-y-1/2 bg-white px-1 text-gray-500 text-sm">
                   Status
@@ -267,12 +295,13 @@ const AddItem = () => {
                 </Field>
                 <ErrorMessage name="status" component="div" className="text-red-600 text-sm mt-1" />
               </div>
+            </Box>
 
-              <Box className="flex justify-end">
-                <Button type="submit" variant="contained" color="primary" className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600">
-                  Submit
-                </Button>
-              </Box>
+            {/* Submit Button */}
+            <Box className="flex justify-end mt-6">
+              <Button type="submit" variant="contained" color="primary">
+                Add Dish
+              </Button>
             </Box>
           </Form>
         )}

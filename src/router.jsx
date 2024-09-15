@@ -30,7 +30,6 @@ import SalesReport from "./pages/Reports/SaleReport.jsx"
 import ItemsReport from "./pages/Reports/ItemsReport.jsx"
 import GstReport from "./pages//Reports/GSTReport.jsx"
 import EmployeeTable from "./pages/Employee/EmployeeTable.jsx";
-import AddEmployee from "./pages/Employee/AddEmployee.jsx";
 import Site from "./pages/Setting/Site/Site.jsx";
 import MailSettings from "./pages/Setting/Mail/MailSetting.jsx";
 import FirebaseNotification from "./pages/Setting/Notification/Notification.jsx";
@@ -44,7 +43,6 @@ import RolePermissions from "./pages/Setting/RolePermission/RolePermissions.jsx"
 import TaxManagement from "./pages/Setting/Taxes/TaxManagement.jsx";
 import PaymentGateway from "./pages/Setting/PaymentGateway/PaymentGateway.jsx";
 import Administrators from "./pages/Adminstrators/Adminstrators.jsx";
-import EmployeeSalary from "./pages/Employee/EmployeeSalary.jsx";
 import EmployeeAttendance from "./pages/Employee/EmployeeAttendance.jsx";
 import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
 
@@ -100,7 +98,7 @@ const router = createBrowserRouter(
           <Route path="employee" element={<EmployeeTable />} />
           {/* <Route path="employee/:id" element={<EmployeeProfile />} /> New Route */}
           <Route path="administrator" element={<Administrators />} />
-          <Route path="emp-sal" element={<EmployeeSalary />} />
+          {/* <Route path="emp-sal" element={<EmployeeSalary />} /> */}
           <Route path="emp-Att" element={<EmployeeAttendance />} />
           <Route path="emp-Att/:name" element={<EmployeeAttendance />} />
           <Route path="emp-dash" element={<EmployeeDashboard />} />
