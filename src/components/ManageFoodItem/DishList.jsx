@@ -35,6 +35,37 @@ const DishList = () => {
     }
   };
 
+  const toggleFeatured = async (foodId, currentStatus) => {
+    try {
+      const newStatus = !currentStatus; // Toggle the current featured status
+      const response = await axios.put(`${URL}/api/food/${foodId}`, { isFeatured: newStatus });
+      if (response.data.success) {
+        toast.success(`Dish marked as ${newStatus ? 'featured' : 'not featured'}`);
+        fetchList(); // Refresh the list after toggling
+      } else {
+        toast.error(response.data.message || 'Error updating featured status');
+      }
+    } catch (error) {
+      toast.error(error.message || 'Error updating featured status');
+    }
+  };
+
+  const toggleRecommended = async (foodId, currentStatus) => {
+    try {
+      const newStatus = !currentStatus; // Toggle the current recommended status
+      const response = await axios.put(`${URL}/api/food/${foodId}`, { recommended: newStatus });
+      if (response.data.success) {
+        toast.success(`Dish marked as ${newStatus ? 'recommended' : 'not recommended'}`);
+        fetchList(); // Refresh the list after toggling
+      } else {
+        toast.error(response.data.message || 'Error updating recommended status');
+      }
+    } catch (error) {
+      toast.error(error.message || 'Error updating recommended status');
+    }
+  };
+  
+
   useEffect(() => {
     fetchList();
   }, []);
@@ -70,27 +101,17 @@ const DishList = () => {
         <table className="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Dish Image
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Dish Name
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Category
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Price
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Description
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Status
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Action
-              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dish Image</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dish Name</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Type</th> {/* New Column */}
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Featured</th> {/* New Column */}
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recommended</th>
+
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
@@ -105,12 +126,29 @@ const DishList = () => {
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">{item.name}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">{item.category}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">{item.itemType}</td> {/* Display item type */}
                 <td className="px-6 py-4 text-sm text-gray-900">₹{item.price}</td> {/* Updated to INR */}
                 <td className="px-6 py-4 text-sm text-gray-900">{item.description}</td>
                 <td className="px-6 py-4 text-sm">
                   <span className={`px-2 py-1 text-xs font-medium rounded-full ${item.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     {item.status}
                   </span>
+                </td>
+                <td className="px-6 py-4 text-sm">
+                  <button
+                    onClick={() => toggleFeatured(item._id, item.isFeatured)}
+                    className={`px-2 py-1 text-xs font-medium rounded-full ${item.isFeatured ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}`}
+                  >
+                    {item.isFeatured ? 'Featured' : 'Not Featured'}
+                  </button>
+                </td>
+                <td className="px-6 py-4 text-sm">
+                     <button
+                           onClick={() => toggleRecommended(item._id, item.recommended)}
+                           className={`px-2 py-1 text-xs font-medium rounded-full ${item.recommended ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
+                              >
+                           {item.recommended ? 'Recommended' : 'Not Recommended'}
+                    </button>
                 </td>
                 <td className="px-6 py-4 text-sm font-medium flex space-x-3">
                   <NavLink to={`edit-dish/${item._id}`} className="text-blue-600 hover:text-blue-800">

@@ -4,13 +4,16 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const EditDish = () => {
-  const { id } = useParams(); // Get the ID from URL params
+  const { id } = useParams();
   const [dish, setDish] = useState(null);
   const [name, setName] = useState('');
   const [category, setCategory] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
-  const [status, setStatus] = useState('');
+  const [status, setStatus] = useState('Available');
+  const [itemType, setItemType] = useState('');
+  const [isFeatured, setIsFeatured] = useState(false);
+  const [recommended, setRecommended] = useState(false);
 
   const fetchDish = async () => {
     try {
@@ -23,6 +26,9 @@ const EditDish = () => {
         setPrice(data.price);
         setDescription(data.description);
         setStatus(data.status);
+        setItemType(data.itemType);
+        setIsFeatured(data.isFeatured);
+        setRecommended(data.recommended);
       } else {
         toast.error(response.data.message || 'Error fetching dish details');
       }
@@ -43,6 +49,9 @@ const EditDish = () => {
         price,
         description,
         status,
+        itemType,
+        isFeatured,
+        recommended,
       });
       if (response.data.success) {
         toast.success('Dish updated successfully');
@@ -71,12 +80,18 @@ const EditDish = () => {
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Category:</label>
-          <input
-            type="text"
+          <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
-          />
+          >
+            <option value="">Select Category</option>
+            <option value="Salad">Salad</option>
+            <option value="Cake">Cake</option>
+            <option value="Main Course">Main Course</option>
+            <option value="Dessert">Dessert</option>
+            {/* Add more options as needed */}
+          </select>
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Price:</label>
@@ -105,6 +120,40 @@ const EditDish = () => {
             <option value="Available">Available</option>
             <option value="Unavailable">Unavailable</option>
           </select>
+        </div>
+        <div className="mb-4">
+          <label className="block text-gray-700">Item Type:</label>
+          <select
+            value={itemType}
+            onChange={(e) => setItemType(e.target.value)}
+            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+          >
+            <option value="">Select Item Type</option>
+            <option value="Veg">Veg</option>
+            <option value="Non-Veg">Non-Veg</option>
+          </select>
+        </div>
+        <div className="mb-4">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={isFeatured}
+              onChange={(e) => setIsFeatured(e.target.checked)}
+              className="mr-2"
+            />
+            Featured
+          </label>
+        </div>
+        <div className="mb-4">
+          <label className="flex items-center">
+            <input
+              type="checkbox"
+              checked={recommended}
+              onChange={(e) => setRecommended(e.target.checked)}
+              className="mr-2"
+            />
+            Recommended
+          </label>
         </div>
         <button
           type="button"

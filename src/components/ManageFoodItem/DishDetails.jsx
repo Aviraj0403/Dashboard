@@ -31,9 +31,11 @@ const DishDetails = () => {
       <h1 className="text-3xl font-bold text-gray-900">{dish.name}</h1>
       <img src={`http://localhost:4000/images/${dish.image}`} alt={dish.name} className="w-64 h-64 object-cover rounded-md mt-4" />
       <p className="mt-4 text-gray-700">{dish.description}</p>
-      <p className="mt-2 text-xl font-semibold text-gray-900">${dish.price}</p>
+      <p className="mt-2 text-xl font-semibold text-gray-900">₹{dish.price}</p>
       <p className="mt-2 text-gray-600">Category: {dish.category}</p>
+      <p className="mt-2 text-gray-600">Item Type: {dish.itemType}</p> {/* New field */}
       <p className="mt-2 text-gray-600">Status: {dish.status}</p>
+      <p className="mt-2 text-gray-600">Featured: {dish.isFeatured ? 'Yes' : 'No'}</p> {/* New field */}
     </div>
   );
 };

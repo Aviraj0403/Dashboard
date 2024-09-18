@@ -21,7 +21,8 @@ const validationSchema = Yup.object({
   description: Yup.string().required("Description is required"),
   cookTime: Yup.string().required("Cook time is required"),
   itemType: Yup.string().required("Item type is required"),
-  isFeatured: Yup.boolean(),
+  isFeatured: Yup.string().required("Please select if the dish is featured"),
+  recommended: Yup.string().required("Please select if the dish is recommended"),
   status: Yup.string().required("Status is required")
 });
 
@@ -86,7 +87,8 @@ const AddItem = () => {
       category: values.category,
       cookTime: values.cookTime,
       itemType: values.itemType,
-      isFeatured: values.isFeatured ? true : false, // Ensure this is sent as a boolean
+      isFeatured: values.isFeatured === "Active", // Convert to boolean
+      recommended: values.recommended === "Active", // Convert to boolean
       status: values.status,
       imageUrl // Add Cloudinary image URL
     };
@@ -121,7 +123,8 @@ const AddItem = () => {
           description: "",
           cookTime: "",
           itemType: "Veg",
-          isFeatured: false,
+          isFeatured: "Inactive", // Updated to string
+          recommended: "Inactive", // New field
           status: "Active"
         }}
         validationSchema={validationSchema}
@@ -271,12 +274,38 @@ const AddItem = () => {
                 <ErrorMessage name="itemType" component="div" className="text-red-600 text-sm mt-1" />
               </div>
 
-              {/* Featured Checkbox */}
-              <div className="flex items-center">
-                <Field type="checkbox" name="isFeatured" id="isFeatured" className="mr-2" />
-                <InputLabel htmlFor="isFeatured" className="text-gray-500">
+              {/* Is Featured Dropdown */}
+              <div className="relative">
+                <InputLabel htmlFor="isFeatured" className="absolute top-0 left-3 -translate-y-1/2 bg-white px-1 text-gray-500 text-sm">
                   Is Featured?
                 </InputLabel>
+                <Field
+                  as="select"
+                  name="isFeatured"
+                  id="isFeatured"
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                >
+                  <option value="Inactive">No</option>
+                  <option value="Active">Yes</option>
+                </Field>
+                <ErrorMessage name="isFeatured" component="div" className="text-red-600 text-sm mt-1" />
+              </div>
+
+              {/* Recommended Dropdown */}
+              <div className="relative">
+                <InputLabel htmlFor="recommended" className="absolute top-0 left-3 -translate-y-1/2 bg-white px-1 text-gray-500 text-sm">
+                  Recommended
+                </InputLabel>
+                <Field
+                  as="select"
+                  name="recommended"
+                  id="recommended"
+                  className="w-full p-3 border border-gray-300 rounded-lg shadow-sm"
+                >
+                  <option value="Inactive">No</option>
+                  <option value="Active">Yes</option>
+                </Field>
+                <ErrorMessage name="recommended" component="div" className="text-red-600 text-sm mt-1" />
               </div>
 
               {/* Status */}
