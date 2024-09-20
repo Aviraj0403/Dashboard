@@ -57,7 +57,7 @@ const router = createBrowserRouter(
       <Route path="login" element={<LoginPage />} />
 
 
-      <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin', 'superAdmin']} />}>
+      <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin', 'superAdmin','restaurantOwner']} />}>
         <Route path="" element={<Layout />}>
           <Route path="dashboard" element={
             <Suspense fallback={<FallbackPage />}>
