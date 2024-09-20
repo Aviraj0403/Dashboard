@@ -25,7 +25,7 @@ import WindowContextProvider from "./context/windowContext.jsx";
 import PosContainer from "./components/POS/PosContainer.jsx";
 import { OffersProvider } from "./context/OffersContext.jsx";
 import router from "./router.jsx";
-import { AuthContextProvider } from "./context/userContext.jsx";
+import { AuthProvider } from "./context/userContext.jsx";
 // const router = createBrowserRouter(
 //   createRoutesFromChildren(
 //     <Route path='/' element={<Layout/>} >
@@ -44,10 +44,10 @@ import { AuthContextProvider } from "./context/userContext.jsx";
 // )
 createRoot(document.getElementById("root")).render(
   <WindowContextProvider>
-    <AuthContextProvider>
+    <AuthProvider>
       <OffersProvider>
         <RouterProvider router={router} />
       </OffersProvider>
-    </AuthContextProvider>
+    </AuthProvider>
   </WindowContextProvider>
 );

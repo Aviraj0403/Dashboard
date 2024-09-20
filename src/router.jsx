@@ -26,9 +26,9 @@ import ProtectedRoute from "./components/secureRoute/ProtectedRoute.jsx";
 import CompanyForm from "./pages/Setting/Company/Company.jsx";
 import Branch from "./pages/Setting/Branch/Branch.jsx";
 import Landing from "./pages/Landin/LandingPage.jsx";
-import SalesReport from "./pages/Reports/SaleReport.jsx"
-import ItemsReport from "./pages/Reports/ItemsReport.jsx"
-import GstReport from "./pages//Reports/GSTReport.jsx"
+import SalesReport from "./pages/Reports/SaleReport.jsx";
+import ItemsReport from "./pages/Reports/ItemsReport.jsx";
+import GstReport from "./pages/Reports/GSTReport.jsx";
 import EmployeeTable from "./pages/Employee/EmployeeTable.jsx";
 import Site from "./pages/Setting/Site/Site.jsx";
 import MailSettings from "./pages/Setting/Mail/MailSetting.jsx";
@@ -37,7 +37,6 @@ import NotificationAlert from "./pages/Setting/Notification/NotificationAlert.js
 import Theme from "./pages/Setting/Theme/Theme.jsx";
 import Otp from "./pages/Setting/OTP/OTP.jsx";
 import Currencies from "./pages/Setting/Currency/Currency.jsx";
-import Currency from "./pages/Setting/Currency/Currency.jsx";
 import ItemCategory from "./pages/Setting/ItemCategory/ItemCategory.jsx";
 import RolePermissions from "./pages/Setting/RolePermission/RolePermissions.jsx";
 import TaxManagement from "./pages/Setting/Taxes/TaxManagement.jsx";
@@ -47,8 +46,7 @@ import EmployeeAttendance from "./pages/Employee/EmployeeAttendance.jsx";
 import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
 import EditDish from "./components/ManageFoodItem/EditDish.jsx";
 import DishDetails from "./components/ManageFoodItem/DishDetails.jsx";
-
-
+import SuperAdminDashboard from "./components/superAdminDashboard/SuperAdminDashboard.jsx"; // Import SuperAdminDashboard
 
 // Corrected router setup
 const router = createBrowserRouter(
@@ -58,11 +56,19 @@ const router = createBrowserRouter(
       <Route path="/" element={<Landing />} />
       <Route path="login" element={<LoginPage />} />
 
-      {/* Protected Routes (Admin) */}
-      <Route path="/admin" element={<ProtectedRoute />}>
+
+      <Route path="/admin" element={<ProtectedRoute allowedRoles={['admin', 'superAdmin']} />}>
         <Route path="" element={<Layout />}>
-          {" "}
-          {/* Layout wraps nested routes */}
+          <Route path="dashboard" element={
+            <Suspense fallback={<FallbackPage />}>
+              <Dashboard />
+            </Suspense>
+          } />
+
+      {/* Protected Routes (Admin) */}
+      {/* <Route path="/admin" element={<ProtectedRoute />}>
+        <Route path="" element={<Layout />}>
+
           <Route
             path=""
             element={
@@ -70,13 +76,28 @@ const router = createBrowserRouter(
                 <Dashboard />
               </Suspense>
             }
-          />
-          <Route
+          /> */}
+          {/* <Route
             path="dashboard"
             element={
               <Suspense fallback={<FallbackPage />}>
                 <Dashboard />
               </Suspense>
+            }
+          /> */}
+
+{/* <Route path="superAdminDashboard" element={
+  <ProtectedRoute allowedRoles={['superAdmin']}>
+    <SuperAdminDashboard />
+  </ProtectedRoute>
+} /> */}
+          {/* Super Admin Dashboard */}
+          <Route
+            path="super-admin-dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['superAdmin']}>
+                <SuperAdminDashboard />
+              </ProtectedRoute>
             }
           />
           {/* Admin nested routes */}
@@ -85,8 +106,8 @@ const router = createBrowserRouter(
           <Route path="dining/table/:id" element={<BarCode />} />
           <Route path="add-item" element={<AddItem />} />
           <Route path="manage-item" element={<DishList />} />
-           <Route path="manage-item/edit-dish/:id" element={<EditDish />} />
-          <Route path=" manage-item/dish-details/:id" element={< DishDetails />} />
+          <Route path="manage-item/edit-dish/:id" element={<EditDish />} />
+          <Route path="manage-item/dish-details/:id" element={<DishDetails />} />
           <Route path="offersList" element={<OffersList />} />
           <Route path="add-offer" element={<AddOffer />} />
           <Route path="pos" element={<PosContainer />} />
@@ -100,33 +121,28 @@ const router = createBrowserRouter(
           <Route path="gst-report" element={<GstReport />} />
           {/* USER */}
           <Route path="employee" element={<EmployeeTable />} />
-          {/* <Route path="employee/:id" element={<EmployeeProfile />} /> New Route */}
           <Route path="administrator" element={<Administrators />} />
-          {/* <Route path="emp-sal" element={<EmployeeSalary />} /> */}
           <Route path="emp-Att" element={<EmployeeAttendance />} />
-          <Route path="emp-Att/:name" element={<EmployeeAttendance />} />
           <Route path="emp-dash" element={<EmployeeDashboard />} />
-          {/* <Route path="add-employee" element={<AddEmployee />} /> */}
-         
-          {/* Setting  */}
-           <Route path="settings" element={<SecondarySidebar />}>
+
+          {/* Setting */}
+          <Route path="settings" element={<SecondarySidebar />}>
             <Route path="" element={<CompanyForm />} />
             <Route path="company" element={<CompanyForm />} />
             <Route path="branches" element={<Branch />} />
-            <Route path="site" element={< Site/>} />
-            <Route path="mail" element={< MailSettings/>} />
-            <Route path="otp" element={< Otp/>} />
-            <Route path="notification" element={< FirebaseNotification/>} />
-            < Route path="notification-alert" element={<NotificationAlert/>}/>
-            <Route path="theme" element={< Theme/>} />
-            <Route path="currency" element={< Currency/>} />
-            <Route path="item-categories" element={< ItemCategory/>} />
-            <Route path="role-permissions" element={<RolePermissions/>} />
-            <Route path="taxes" element={<TaxManagement/>} />
+            <Route path="site" element={<Site />} />
+            <Route path="mail" element={<MailSettings />} />
+            <Route path="otp" element={<Otp />} />
+            <Route path="notification" element={<FirebaseNotification />} />
+            <Route path="notification-alert" element={<NotificationAlert />} />
+            <Route path="theme" element={<Theme />} />
+            <Route path="currency" element={<Currencies />} />
+            <Route path="item-categories" element={<ItemCategory />} />
+            <Route path="role-permissions" element={<RolePermissions />} />
+            <Route path="taxes" element={<TaxManagement />} />
             <Route path="payment-gateway" element={<PaymentGateway />} />
+            {/* <Route path="sad" element={< SuperAdminDashboard />}/> */}
             <Route path="*" element={<PageNotFound />} />
-            {/* <Route path="test" element={<PageNotFound />} /> */}
-            <Route />
           </Route>
           {/* 404 Not Found */}
           <Route path="*" element={<PageNotFound />} />
