@@ -27,7 +27,9 @@ const LoginPage = () => {
 
   // Redirect if logged in
   if (isLoggedIn) {
-    const redirectPath = userRole === 'superAdmin' ? '/admin/super-admin-dashboard' : '/admin/dashboard';
+    const redirectPath = userRole === 'superAdmin' 
+      ? '/super-admin-dashboard' 
+      : '/admin/dashboard';
     return <Navigate to={redirectPath} replace />;
   }
 
@@ -48,8 +50,8 @@ const LoginPage = () => {
             <input
               type="text"
               id="username"
-              name="username"
-              value={formData.username || formData.email}
+              name="username" // Change to "username" to match handleChange
+              value={formData.username}
               onChange={handleChange}
               className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-blue-500"
               placeholder="Username or Email"
