@@ -46,6 +46,8 @@ import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
 import EditDish from "./components/ManageFoodItem/EditDish.jsx";
 import DishDetails from "./components/ManageFoodItem/DishDetails.jsx";
 import SuperAdminDashboard from "./components/superAdminDashboard/SuperAdminDashboard.jsx";
+import RegisterRestaurantOwner from "./components/superAdminDashboard/RestaurantManagement/RegisterRestaurantOwner.jsx"; // Assuming this component exists
+
 
 // Router setup
 const router = createBrowserRouter(
@@ -56,8 +58,14 @@ const router = createBrowserRouter(
       {/* Super Admin Dashboard */}
       <Route path="/super-admin-dashboard" element={
         <ProtectedRoute allowedRoles={['superAdmin']} /> } >
+          <Route path="" element={<Layout />}></Route>
           <Route path="" element={ <SuperAdminDashboard />}/>
         {/* children routes */}
+
+
+
+        {/* Create Restaurant Entity */}
+         <Route path="register-res-own" element={< RegisterRestaurantOwner/>} />
         {/* Setting */}  
         <Route path="settings" element={<SecondarySidebar />}>
             <Route path="" element={<CompanyForm />} />

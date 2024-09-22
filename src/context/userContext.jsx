@@ -1,59 +1,64 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { loginSuperAdmin, loginRestaurantOwner } from '../service/userApi.js';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userRole, setUserRole] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    // Check localStorage for initial logged-in state
+    return localStorage.getItem('isLoggedIn') === 'true';
+  });
+  const [userRole, setUserRole] = useState(() => {
+    // Check localStorage for initial user role
+    return localStorage.getItem('userRole');
+  });
   const [userData, setUserData] = useState(null);
 
   const handleLogin = async (credentials) => {
     const { username, password } = credentials;
-    console.log('Attempting to log in with:', credentials);
-
+  
     try {
       let data;
-
-      // Check if the input is an email or a username
+  
       if (username.includes('@')) {
-        console.log('Detected email login.');
         data = await loginRestaurantOwner({ email: username, password });
         setUserRole('restaurantOwner');
+        localStorage.setItem('userRole', 'restaurantOwner'); // Store role immediately
       } else {
-        console.log('Detected username login.');
         data = await loginSuperAdmin({ username, password });
         setUserRole('superAdmin');
+        localStorage.setItem('userRole', 'superAdmin'); // Store role immediately
       }
-
-      // Log the received data
-      console.log('Login successful, received data:', data);
-
-      // Only set logged in state if login was successful
+  
       if (data) {
         setIsLoggedIn(true);
         setUserData(data);
-        console.log('User logged in:', data);
+        // Store the login state in localStorage
+        localStorage.setItem('isLoggedIn', 'true');
       }
       return true; // Successful login
     } catch (error) {
-      console.error('Login error:', error);
       setIsLoggedIn(false);
       setUserRole(null);
       setUserData(null);
       return false; // Failed login
     }
   };
+  
 
   const handleLogout = () => {
-    console.log('Logging out user.');
+    localStorage.removeItem('isLoggedIn'); // Clear localStorage
+    localStorage.removeItem('userRole');
     setIsLoggedIn(false);
     setUserRole(null);
     setUserData(null);
   };
 
-  // Log state changes for debugging
-  console.log('AuthProvider state - isLoggedIn:', isLoggedIn, ', userRole:', userRole, ', userData:', userData);
+  // Update localStorage whenever isLoggedIn or userRole changes
+  useEffect(() => {
+    localStorage.setItem('isLoggedIn', isLoggedIn);
+    localStorage.setItem('userRole', userRole);
+  }, [isLoggedIn, userRole]);
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, userRole, userData, handleLogin, handleLogout }}>
