@@ -1,12 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { FaAlignLeft, FaUserAstronaut } from "react-icons/fa";
 import { MdMenu } from "react-icons/md";
 import Profile from "./profile/Profile";
 import { useWindowContext } from "../../context/windowContext";
-import logo from "../../../public/logo.png"
+import { useAuth } from "../../context/userContext"; // Use the AuthContext to access user data
+import logo from "../../../public/logo.png";
+
 function Header({ toggleSidebar, openSidebar }) {
   const [isOpenProfile, setIsOpenProfile] = useState(false);
   const { progressWidth } = useWindowContext();
+  const { userData } = useAuth(); // Get userData from AuthContext
+
   return (
     <header className="bg-orange-100/20 p-4 fixed top-0 left-0 right-0 z-50  backdrop-blur-md shadow-md transition-all ease-in-out duration-300">
       <div className="container mx-auto flex justify-between">
@@ -27,16 +31,12 @@ function Header({ toggleSidebar, openSidebar }) {
               onClick={() => setIsOpenProfile(!isOpenProfile)}
               className="bg-orange-700 flex items-center gap-1 text-white px-3 py-2 rounded"
             >
-              <FaUserAstronaut /> Br Tech
+              <FaUserAstronaut /> {userData?.user?.username || "User"} {/* Show logged-in user's name */}
             </button>
             {isOpenProfile && <Profile />}
           </div>
         </div>
       </div>
-      {/* <div
-        className=" border mt-1 h-2 bg-blue-700 transition-all ease-in-out duration-300"
-        style={{ width: `${progressWidth}%` }}
-      ></div> */}
     </header>
   );
 }

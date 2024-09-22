@@ -55,3 +55,13 @@ export const loginRestaurantOwner = async (data) => {
         throw handleApiError(error); // Use the error handler
     }
 };
+
+// Function to get the restaurant owner's profile
+export const getRestaurantOwnerProfile = async (ownerId) => {
+    try {
+        const response = await axiosInstance.get(`/profile/${ownerId}`);
+        return response.data; // Returns the response data
+    } catch (error) {
+        throw handleApiError(error); // Use the error handler
+    }
+};

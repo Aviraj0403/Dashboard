@@ -31,10 +31,12 @@ export const AuthProvider = ({ children }) => {
       }
   
       if (data) {
+        console.log("User Data:", data); 
         setIsLoggedIn(true);
         setUserData(data);
         // Store the login state in localStorage
         localStorage.setItem('isLoggedIn', 'true');
+        localStorage.setItem('userData', JSON.stringify(data));
       }
       return true; // Successful login
     } catch (error) {
