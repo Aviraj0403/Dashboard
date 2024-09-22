@@ -16,7 +16,6 @@ const SuperAdminDashboard = () => {
         const checkAuthentication = async () => {
             try {
                 const response = await axiosInstance.get('/check-superadmin');
-                console.log("Response status:", response.status);
                 if (response.status === 200 && isMounted) {
                     setIsAuthenticated(true);
                 } else {
@@ -44,11 +43,11 @@ const SuperAdminDashboard = () => {
     }, [navigate]);
 
     if (loading) {
-        return <div className="flex justify-center items-center min-h-screen"><p>Loading...</p></div>; // Optionally, replace with a loading spinner
+        return <div className="flex justify-center items-center min-h-screen"><p>Loading...</p></div>;
     }
 
     if (!isAuthenticated) {
-        return <p className="text-red-500">{errorMessage}</p>; // Display the error message
+        return <p className="text-red-500">{errorMessage}</p>;
     }
 
     return (
