@@ -3,6 +3,7 @@ import {
   FaUserCircle,
   FaUsersCog,
   FaChartBar,
+  FaUtensils,FaPlus
 } from "react-icons/fa";
 import { MdDashboard, MdSettings, MdClose } from "react-icons/md"; 
 import { NavLink } from "react-router-dom";
@@ -32,10 +33,10 @@ function SuperAdminSidebar({ className, toggleSidebar }) {
             `${isActive ? "bg-gray-200 text-orange-400" : "hover:bg-gray-200"} flex items-center gap-2 p-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105`
           }
         >
-          <FaUserCircle size={24} /> Register Restaurant Owner
+          <FaPlus size={24} /> Register Restaurant
         </NavLink>
         <NavLink
-          to={"manage-users"}
+          to={"rest-list"}
           className={({ isActive }) =>
             `${isActive ? "bg-gray-200 text-orange-400" : "hover:bg-gray-200"} flex items-center gap-2 p-3 rounded-lg transition duration-300 ease-in-out transform hover:scale-105`
           }

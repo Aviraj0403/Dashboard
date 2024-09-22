@@ -1,6 +1,7 @@
-// RestaurantList.js
 import React, { useEffect, useState } from 'react';
-import axiosInstance from '../../../Interceptors/axiosInstance.js';
+import { NavLink } from 'react-router-dom';
+import { getAllRestaurants } from '../../../service/userApi.js'; // Function to fetch all restaurants
+import axiosInstance from '../../../Interceptors/axiosInstance.js'; // Your axios instance
 
 const RestaurantList = () => {
     const [restaurants, setRestaurants] = useState([]);
@@ -12,8 +13,8 @@ const RestaurantList = () => {
         const fetchRestaurants = async () => {
             setLoading(true);
             try {
-                const response = await axiosInstance.get('/restaurants');
-                setRestaurants(response.data.restaurants || []);
+                const data = await getAllRestaurants(); // Fetch all restaurants
+                setRestaurants(data.restaurants || []);
             } catch (error) {
                 console.error("Error fetching restaurants:", error);
                 setError('Failed to fetch restaurants');
@@ -21,17 +22,18 @@ const RestaurantList = () => {
                 setLoading(false);
             }
         };
-    
+
         fetchRestaurants();
-    }, []);
-    
+    }, []); // Fetch once on mount
+
     const handleFilterChange = (e) => {
         const { name, value } = e.target;
         setFilter({ ...filter, [name]: value });
     };
 
     const filteredRestaurants = restaurants.filter((restaurant) => {
-        const matchesStatus = filter.status === 'all' || restaurant.subscriptionRecords.some(record => record.status === filter.status);
+        const matchesStatus = filter.status === 'all' || 
+            (restaurant.subscriptionRecords?.some(record => record.status === filter.status) ?? false);
         const matchesOwner = restaurant.ownerId?.username.toLowerCase().includes(filter.owner.toLowerCase());
         return matchesStatus && matchesOwner;
     });
@@ -46,7 +48,6 @@ const RestaurantList = () => {
             setError('Failed to send subscription reminder: ' + (error.response?.data.message || 'Unknown error'));
         }
     };
-    
 
     const extendSubscription = async (restaurantId, additionalMonths) => {
         setError('');
@@ -83,40 +84,44 @@ const RestaurantList = () => {
                 />
             </div>
 
-            <h2 className="text-xl font-semibold mb-4">All Restaurants</h2>
+            <h2 className="text-xl font-semibold mb-4">All Restaurants ({filteredRestaurants.length})</h2>
             {loading ? (
                 <p>Loading restaurants...</p>
             ) : error ? (
                 <p className="text-red-500">{error}</p>
             ) : (
                 <div className="overflow-x-auto">
-                    <table className="min-w-full bg-white">
+                    <table className="min-w-full bg-white border border-gray-300">
                         <thead className="bg-gray-200">
                             <tr>
-                                <th className="py-2 px-4 text-left">Name</th>
-                                <th className="py-2 px-4 text-left">Owner</th>
-                                <th className="py-2 px-4 text-left">Location</th>
-                                <th className="py-2 px-4 text-left">Subscription Status</th>
-                                <th className="py-2 px-4 text-left">Expiry Date</th>
-                                <th className="py-2 px-4 text-left">Actions</th>
+                                <th className="py-3 px-4 text-left border-b">Name</th>
+                                <th className="py-3 px-4 text-left border-b">Owner</th>
+                                <th className="py-3 px-4 text-left border-b">Location</th>
+                                <th className="py-3 px-4 text-left border-b">Subscription Status</th>
+                                <th className="py-3 px-4 text-left border-b">Expiry Date</th>
+                                <th className="py-3 px-4 text-left border-b">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             {filteredRestaurants.map((restaurant) => (
-                                <tr key={restaurant._id} className="border-b">
-                                    <td className="py-2 px-4">{restaurant.name}</td>
+                                <tr key={restaurant._id} className="border-b hover:bg-gray-100 transition duration-200">
+                                    <td className="py-2 px-4">
+                                        <NavLink to={`/restaurants/${restaurant._id}`} className="text-blue-500 hover:underline">
+                                            {restaurant.name}
+                                        </NavLink>
+                                    </td>
                                     <td className="py-2 px-4">{restaurant.ownerId?.username || 'N/A'}</td>
                                     <td className="py-2 px-4">{restaurant.location}</td>
-                                    <td className={`py-2 px-4 ${restaurant.subscriptionRecords.some(record => record.status === 'expired') ? 'text-red-500' : 'text-green-500'}`}>
-                                        {restaurant.subscriptionRecords.some(record => record.status === 'expired') ? 'Expired' : 'Active'}
+                                    <td className={`py-2 px-4 ${restaurant.subscriptionRecords?.some(record => record.status === 'expired') ? 'text-red-500' : 'text-green-500'}`}>
+                                        {restaurant.subscriptionRecords?.some(record => record.status === 'expired') ? 'Expired' : 'Active'}
                                     </td>
                                     <td className="py-2 px-4">
-                                        {restaurant.subscriptionRecords.length > 0 ? 
+                                        {restaurant.subscriptionRecords?.length > 0 ? 
                                             new Date(restaurant.subscriptionRecords[0].endDate).toLocaleDateString() : 'N/A'}
                                     </td>
                                     <td className="py-2 px-4">
-                                        {restaurant.subscriptionRecords.some(record => record.status === 'expired') ? (
-                                            <div className="flex space-x-4">
+                                        {restaurant.subscriptionRecords?.some(record => record.status === 'expired') ? (
+                                            <div className="flex space-x-2">
                                                 <button
                                                     onClick={() => sendAlert(restaurant._id)}
                                                     className="bg-red-500 text-white py-1 px-3 rounded-md hover:bg-red-600 transition duration-200"
