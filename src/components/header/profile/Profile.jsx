@@ -1,17 +1,20 @@
 import React from 'react';
 import { AiOutlineEdit } from 'react-icons/ai';
-import { Link, useNavigate } from 'react-router-dom'; // Import useNavigate
+import { Link, useNavigate } from 'react-router-dom';
 import { MdEdit, MdKey, MdOutlineLogout } from 'react-icons/md';
 import { useAuth } from '../../../context/userContext.jsx'; // Import the useAuth hook
 
 function Profile() {
   const navigate = useNavigate(); // Initialize navigate for redirection
-  const { handleLogout } = useAuth(); // Use handleLogout from the AuthContext
+  const { handleLogout, userData } = useAuth(); // Use handleLogout and userData from the AuthContext
 
   const handleLogoutClick = () => {
     handleLogout(); // Call the logout function from context
     navigate('/login'); // Redirect to the login page after logout
   };
+
+  // Extract user information from userData
+  const { username, email, phone } = userData || {};
 
   return (
     <div className="profile-container absolute top-[10vh] right-[-50px] border shadow-md rounded-b-2xl bg-white p-8">
@@ -30,14 +33,13 @@ function Profile() {
           </div>
         </div>
         <div className="text-center p-3">
-          <h2 className="font-bold">Aman</h2>
+          <h2 className="font-bold">{ userData?.user?.username|| 'Loading...'}</h2>
           <p className="text-sm font-semibold text-gray-500">
-            yadavaman7632@gmail.com
+            {email || 'Loading...'}
           </p>
           <p className="text-sm font-semibold text-gray-500">
-            +91 7632976843
+            {phone || 'Loading...'}
           </p>
-          <p>$789.80</p>
         </div>
       </div>
       <div className="lower-links px-3 py-3 flex flex-col gap-2">
