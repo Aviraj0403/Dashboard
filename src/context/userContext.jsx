@@ -1,20 +1,18 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { loginSuperAdmin, loginRestaurantOwner } from '../service/userApi.js';
+import Cookies from 'js-cookie'; // Make sure to install js-cookie
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    // Check localStorage for initial logged-in state
-    return localStorage.getItem('isLoggedIn') === 'true';
+    return Cookies.get('isLoggedIn') === 'true';
   });
   const [userRole, setUserRole] = useState(() => {
-    // Check localStorage for initial user role
-    return localStorage.getItem('userRole');
+    return Cookies.get('userRole');
   });
   const [userData, setUserData] = useState(() => {
-    // Check localStorage for initial user data
-    const data = localStorage.getItem('userData');
+    const data = Cookies.get('userData');
     return data ? JSON.parse(data) : null;
   });
 
@@ -23,7 +21,6 @@ export const AuthProvider = ({ children }) => {
 
     try {
       let data;
-
       // Determine the login method based on the username format
       if (username.includes('@')) {
         data = await loginRestaurantOwner({ email: username, password });
@@ -39,10 +36,10 @@ export const AuthProvider = ({ children }) => {
         setIsLoggedIn(true);
         setUserData(data);
 
-        // Store the login state and user data in localStorage
-        localStorage.setItem('isLoggedIn', 'true');
-        localStorage.setItem('userRole', userRole);
-        localStorage.setItem('userData', JSON.stringify(data));
+        // Store the login state and user data in cookies
+        Cookies.set('isLoggedIn', 'true', { expires: 7 }); // Expires in 7 days
+        Cookies.set('userRole', userRole, { expires: 7 }); // Use updated userRole
+        Cookies.set('userData', JSON.stringify(data), { expires: 7 });
       }
       return true; // Successful login
     } catch (error) {
@@ -55,25 +52,25 @@ export const AuthProvider = ({ children }) => {
   };
 
   const handleLogout = () => {
-    // Clear localStorage and update state
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userRole');
-    localStorage.removeItem('userData');
+    // Clear cookies and update state
+    Cookies.remove('isLoggedIn');
+    Cookies.remove('userRole');
+    Cookies.remove('userData');
     setIsLoggedIn(false);
     setUserRole(null);
     setUserData(null);
   };
 
-  // Update localStorage whenever isLoggedIn or userRole changes
+  // Update cookies whenever isLoggedIn or userRole changes
   useEffect(() => {
-    localStorage.setItem('isLoggedIn', isLoggedIn);
-    localStorage.setItem('userRole', userRole);
+    Cookies.set('isLoggedIn', isLoggedIn, { expires: 7 });
+    Cookies.set('userRole', userRole || '', { expires: 7 });
   }, [isLoggedIn, userRole]);
 
-  // Optional: Sync userData to localStorage whenever it changes
+  // Sync userData to cookies whenever it changes
   useEffect(() => {
     if (userData) {
-      localStorage.setItem('userData', JSON.stringify(userData));
+      Cookies.set('userData', JSON.stringify(userData), { expires: 7 });
     }
   }, [userData]);
 

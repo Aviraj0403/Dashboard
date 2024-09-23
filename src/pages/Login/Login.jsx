@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useAuth } from '../../context/userContext';
 import { Navigate } from 'react-router-dom';
 
 const LoginPage = () => {
     const { handleLogin, userRole, isLoggedIn } = useAuth();
-    const [formData, setFormData] = useState({ email: "", username: "", password: "" });
+    const [formData, setFormData] = useState({ username: "", password: "" });
     const [loginError, setLoginError] = useState("");
 
     const handleChange = (e) => {

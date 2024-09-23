@@ -6,15 +6,20 @@ const axiosInstance = axios.create({
     withCredentials: true, // Ensure cookies are included in requests
 });
 
-// Request interceptor to add the token to headers
+// Request interceptor to add the CSRF token to headers
 axiosInstance.interceptors.request.use(config => {
-    const token = localStorage.getItem('token');
-    console.log('Token being sent:', token); // Debugging: log the token
-    if (token) {
-        config.headers['Authorization'] = `Bearer ${token}`;
-    } else {
-        console.warn('No token found in localStorage.'); // Log if no token
+    const csrfToken = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('csrfToken='))
+        ?.split('=')[1]; // Retrieve CSRF token from cookies
+
+    console.log('CSRF Token being sent:', csrfToken); // Debugging: log the CSRF token
+
+    // Add CSRF token if available
+    if (csrfToken) {
+        config.headers['X-CSRF-Token'] = csrfToken; // Ensure header matches server expectation
     }
+
     return config;
 }, error => {
     return Promise.reject(error);
@@ -26,12 +31,15 @@ axiosInstance.interceptors.response.use(response => {
 }, error => {
     if (error.response) {
         if (error.response.status === 401) {
-            alert('Unauthorized access. Please log in again.');
-            localStorage.removeItem('token'); // Clear the token on unauthorized access
+            console.error('Unauthorized access. Please log in again.');
             window.location.href = '/login'; // Redirect to login
         } else if (error.response.status === 403) {
-            alert('Access denied. You do not have permission to perform this action.');
+            console.warn('Access denied. You do not have permission to perform this action.');
+        } else {
+            console.error('An unexpected error occurred:', error.response.data.message);
         }
+    } else {
+        console.error('Error with no response:', error);
     }
     return Promise.reject(error);
 });

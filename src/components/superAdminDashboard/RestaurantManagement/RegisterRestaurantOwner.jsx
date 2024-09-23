@@ -35,9 +35,9 @@ const RegisterRestaurantOwner = () => {
         e.preventDefault();
         setLoading(true);
         setError('');
-        
+
         try {
-            await axiosInstance.post('/restaurantowner/register', ownerData); // Adjust the endpoint as needed
+            await axiosInstance.post('auth/restaurantowner/register', ownerData);
             alert('Restaurant owner and restaurant created successfully');
             setOwnerData({ 
                 username: '', email: '', password: '', 
@@ -45,7 +45,7 @@ const RegisterRestaurantOwner = () => {
                 contactInfo: { phone: '', email: '' } 
             });
         } catch (error) {
-            console.error('Error creating owner and restaurant:', error);
+            console.error('Error creating owner and restaurant:', error.response || error);
             setError('Failed to create owner and restaurant: ' + (error.response?.data.message || 'Unknown error'));
         } finally {
             setLoading(false);
@@ -112,7 +112,7 @@ const RegisterRestaurantOwner = () => {
                 />
                 <input
                     type="email"
-                    name="contactEmail" // Ensure this matches your handler
+                    name="contactEmail"
                     value={ownerData.contactInfo.email}
                     onChange={handleInputChange}
                     placeholder="Restaurant Contact Email"
