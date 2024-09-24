@@ -48,7 +48,10 @@ import DishDetails from "./components/ManageFoodItem/DishDetails.jsx";
 import SuperAdminDashboard from "./components/superAdminDashboard/SuperAdminDashboard.jsx";
 import RegisterRestaurantOwner from "./components/superAdminDashboard/RestaurantManagement/RegisterRestaurantOwner.jsx"; // Assuming this component exists
 RestaurantList
-import RestaurantList from "./components/superAdminDashboard/RestaurantManagement/RestaurantList.jsx"; // Assuming this component exists
+import RestaurantList from "./components/superAdminDashboard/RestaurantManagement/RestaurantList.jsx";
+import OwnerProfile from "./components/superAdminDashboard/RestaurantManagement/OwnerProfile.jsx";  
+
+// Assuming this component exists
 // Router setup
 const router = createBrowserRouter(
   createRoutesFromChildren(
@@ -60,6 +63,7 @@ const router = createBrowserRouter(
         <ProtectedRoute allowedRoles={['superAdmin']} /> } >
           <Route path="" element={<Layout />}></Route>
           <Route path="" element={ <SuperAdminDashboard />}/>
+
         {/* children routes */}
 
 
@@ -67,6 +71,7 @@ const router = createBrowserRouter(
         {/* Create Restaurant Entity */}
          <Route path="register-res-own" element={< RegisterRestaurantOwner/>} />
          <Route path="rest-list" element={< RestaurantList/>} />
+         <Route path="users/profile/:ownerId" element={<OwnerProfile />} />
         {/* Setting */}  
         <Route path="settings" element={<SecondarySidebar />}>
             <Route path="" element={<CompanyForm />} />

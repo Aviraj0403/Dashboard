@@ -8,7 +8,8 @@ const RegisterRestaurantOwner = () => {
         password: '',
         restaurantName: '',
         restaurantLocation: '',
-        contactInfo: { phone: '', email: '' }
+        contactInfo: { phone: '', email: '' },
+        subscription: { plan: 'monthly', paymentMethod: 'creditCard' } // Default values for subscription
     });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
@@ -31,10 +32,32 @@ const RegisterRestaurantOwner = () => {
         }
     };
 
+    const validateForm = () => {
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const passwordStrengthPattern = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/; // Minimum 8 characters, at least one letter and one number
+
+        if (!emailPattern.test(ownerData.email)) {
+            setError('Invalid email format.');
+            return false;
+        }
+
+        if (!passwordStrengthPattern.test(ownerData.password)) {
+            setError('Password must be at least 8 characters long and contain at least one letter and one number.');
+            return false;
+        }
+
+        return true;
+    };
+
     const handleOwnerSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
         setError('');
+
+        if (!validateForm()) {
+            setLoading(false);
+            return;
+        }
 
         try {
             await axiosInstance.post('auth/restaurantowner/register', ownerData);
@@ -42,7 +65,8 @@ const RegisterRestaurantOwner = () => {
             setOwnerData({ 
                 username: '', email: '', password: '', 
                 restaurantName: '', restaurantLocation: '', 
-                contactInfo: { phone: '', email: '' } 
+                contactInfo: { phone: '', email: '' },
+                subscription: { plan: 'monthly', paymentMethod: 'creditCard' }
             });
         } catch (error) {
             console.error('Error creating owner and restaurant:', error.response || error);
@@ -53,7 +77,7 @@ const RegisterRestaurantOwner = () => {
     };
 
     return (
-        <div className="bg-white shadow-lg rounded-lg p-6 mb-10">
+        <div className="bg-white shadow-lg rounded-lg p-6 mb-10 transition-opacity duration-500 ease-in-out transform opacity-0 translate-y-2 animate-fadeInUp">
             <h2 className="text-xl font-semibold mb-4">Register New Restaurant Owner</h2>
             {error && <p className="text-red-500">{error}</p>}
             <form className="space-y-4" onSubmit={handleOwnerSubmit}>
@@ -63,7 +87,7 @@ const RegisterRestaurantOwner = () => {
                     value={ownerData.username}
                     onChange={handleInputChange}
                     placeholder="Username"
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                 />
                 <input
@@ -72,7 +96,7 @@ const RegisterRestaurantOwner = () => {
                     value={ownerData.email}
                     onChange={handleInputChange}
                     placeholder="Email"
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                 />
                 <input
@@ -81,7 +105,7 @@ const RegisterRestaurantOwner = () => {
                     value={ownerData.password}
                     onChange={handleInputChange}
                     placeholder="Password"
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                 />
                 <input
@@ -90,7 +114,7 @@ const RegisterRestaurantOwner = () => {
                     value={ownerData.restaurantName}
                     onChange={handleInputChange}
                     placeholder="Restaurant Name"
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                 />
                 <input
@@ -99,7 +123,7 @@ const RegisterRestaurantOwner = () => {
                     value={ownerData.restaurantLocation}
                     onChange={handleInputChange}
                     placeholder="Restaurant Location"
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                 />
                 <input
@@ -108,7 +132,7 @@ const RegisterRestaurantOwner = () => {
                     value={ownerData.contactInfo.phone}
                     onChange={handleInputChange}
                     placeholder="Phone"
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
                 <input
                     type="email"
@@ -116,8 +140,31 @@ const RegisterRestaurantOwner = () => {
                     value={ownerData.contactInfo.email}
                     onChange={handleInputChange}
                     placeholder="Restaurant Contact Email"
-                    className="w-full p-2 border rounded-md"
+                    className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                
+                <div className="flex space-x-4">
+                    <select
+                        name="plan"
+                        value={ownerData.subscription.plan}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="monthly">Monthly</option>
+                        <option value="yearly">Yearly</option>
+                    </select>
+                    <select
+                        name="paymentMethod"
+                        value={ownerData.subscription.paymentMethod}
+                        onChange={handleInputChange}
+                        className="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="creditCard">Credit Card</option>
+                        <option value="paypal">PayPal</option>
+                        <option value="bankTransfer">Bank Transfer</option>
+                    </select>
+                </div>
+
                 <button
                     type="submit"
                     className="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition duration-200"

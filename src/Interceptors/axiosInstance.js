@@ -6,18 +6,26 @@ const axiosInstance = axios.create({
     withCredentials: true, // Ensure cookies are included in requests
 });
 
-// Request interceptor to add the CSRF token to headers
-axiosInstance.interceptors.request.use(config => {
-    const csrfToken = document.cookie
+// Function to retrieve tokens from cookies
+const getTokenFromCookies = (tokenName) => {
+    const token = document.cookie
         .split('; ')
-        .find(row => row.startsWith('csrfToken='))
-        ?.split('=')[1]; // Retrieve CSRF token from cookies
+        .find(row => row.startsWith(`${tokenName}=`))
+        ?.split('=')[1];
+    return token || null;
+};
 
-    console.log('CSRF Token being sent:', csrfToken); // Debugging: log the CSRF token
+// Request interceptor to add the access and CSRF tokens to headers
+axiosInstance.interceptors.request.use(config => {
+    const accessToken = getTokenFromCookies('accessToken');
+    const csrfToken = getTokenFromCookies('csrfToken');
 
-    // Add CSRF token if available
+    if (accessToken) {
+        config.headers['Authorization'] = `Bearer ${accessToken}`; // Attach access token
+    }
+    
     if (csrfToken) {
-        config.headers['X-CSRF-Token'] = csrfToken; // Ensure header matches server expectation
+        config.headers['X-CSRF-Token'] = csrfToken; // Attach CSRF token
     }
 
     return config;
@@ -28,11 +36,26 @@ axiosInstance.interceptors.request.use(config => {
 // Response interceptor for handling errors globally
 axiosInstance.interceptors.response.use(response => {
     return response;
-}, error => {
+}, async (error) => {
     if (error.response) {
         if (error.response.status === 401) {
-            console.error('Unauthorized access. Please log in again.');
-            window.location.href = '/login'; // Redirect to login
+            console.error('Unauthorized access. Attempting to refresh token...');
+
+            // Try to refresh the token
+            try {
+                const refreshToken = getTokenFromCookies('refreshToken');
+                const response = await axios.post('http://localhost:4000/api/auth/refresh', {}, {
+                    headers: { 'Authorization': `Bearer ${refreshToken}` },
+                    withCredentials: true,
+                });
+
+                // Save new access token from the response
+                document.cookie = `accessToken=${response.data.accessToken}; Path=/; HttpOnly; Secure;`;
+                return axiosInstance(error.config); // Retry the original request
+            } catch (refreshError) {
+                console.error('Failed to refresh token. Redirecting to login.');
+                window.location.href = '/login'; // Redirect to login
+            }
         } else if (error.response.status === 403) {
             console.warn('Access denied. You do not have permission to perform this action.');
         } else {

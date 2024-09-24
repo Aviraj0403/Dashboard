@@ -3,18 +3,23 @@ import axiosInstance from '../Interceptors/axiosInstance.js';
 // Cache to store responses and their timestamps
 const cache = new Map();
 const CACHE_EXPIRATION_TIME = 300000; // 5 minutes in milliseconds
+const generateCacheKey = (method, url, data) => {
+    return method === 'get' ? `${url}?${new URLSearchParams(data).toString()}` : url;
+};
 
 // Function to handle API errors
 const handleApiError = (error) => {
     if (!error.response) {
         return { message: 'Network error. Please check your connection.' };
     }
-    
+
     switch (error.response.status) {
         case 400:
             return { message: 'Bad Request. Please check your input.' };
         case 401:
             return { message: 'Unauthorized. Please log in again.' };
+        case 403:
+            return { message: 'Forbidden. You do not have permission.' };
         case 404:
             return { message: 'Resource not found.' };
         case 500:
@@ -32,9 +37,24 @@ const handleCsrfToken = (data) => {
     }
 };
 
-// Function to generate a cache key
-const generateCacheKey = (method, url, data) => {
-    return method === 'get' ? `${url}?${new URLSearchParams(data).toString()}` : url;
+// Function to store tokens in cookies
+const storeTokens = (accessToken, refreshToken) => {
+    document.cookie = `accessToken=${accessToken}; path=/; secure; SameSite=Strict; httpOnly;`;
+    document.cookie = `refreshToken=${refreshToken}; path=/; secure; SameSite=Strict; httpOnly;`;
+};
+
+// Function to refresh access token
+const refreshAccessToken = async () => {
+    try {
+        const response = await axiosInstance.post('auth/refresh'); // Assuming your refresh endpoint is at 'auth/refresh'
+        const { accessToken, csrfToken } = response.data;
+        storeTokens(accessToken, response.data.refreshToken); // Store new tokens
+        handleCsrfToken(response.data); // Update CSRF token
+        return accessToken;
+    } catch (error) {
+        console.error('Failed to refresh access token:', error.message);
+        throw handleApiError(error);
+    }
 };
 
 // Function to make API requests
@@ -61,6 +81,14 @@ const makeApiRequest = async (method, url, data) => {
         
         return response.data;
     } catch (error) {
+        if (error.response && error.response.status === 401) {
+            // Attempt to refresh access token and retry the request
+            const newAccessToken = await refreshAccessToken();
+            if (newAccessToken) {
+                data.headers['Authorization'] = `Bearer ${newAccessToken}`;
+                return await axiosInstance[method](url, data); // Retry the request
+            }
+        }
         throw handleApiError(error);
     }
 };
@@ -84,13 +112,28 @@ export const registerRestaurantOwner = (data) => makeApiRequest('post', 'auth/re
 export const loginRestaurantOwner = (data) => makeApiRequest('post', 'auth/restaurantowner/login', data);
 
 // Function to get the restaurant owner's profile
-export const getRestaurantOwnerProfile = (ownerId) => makeApiRequest('get', `users/profile/${ownerId}`);
+export const getRestaurantOwnerProfile = (ownerId) => {
+    return makeApiRequest('get', `users/profile/${ownerId}`);
+};
+
+
 
 // Function to get all restaurants
 export const getAllRestaurants = (filters) => makeApiRequest('get', '/users/restaurants', { params: filters });
 
 // Function to get a specific restaurant by ID
 export const getRestaurantById = (restaurantId) => makeApiRequest('get', `users/restaurants/${restaurantId}`);
+
+// Function to log out the user
+export const logoutUser = async () => {
+    try {
+        await makeApiRequest('post', 'auth/logout'); // Assuming your logout endpoint is at 'auth/logout'
+        cache.clear(); // Clear cache on logout
+        console.log('User logged out successfully');
+    } catch (error) {
+        console.error('Logout failed:', error.message);
+    }
+};
 
 // Exporting batch request function
 export const batchApiRequests = (requests) => batchRequests(requests);

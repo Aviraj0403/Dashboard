@@ -1,16 +1,13 @@
+// AuthProvider.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { loginSuperAdmin, loginRestaurantOwner } from '../service/userApi.js';
-import Cookies from 'js-cookie'; // Make sure to install js-cookie
+import { loginSuperAdmin, loginRestaurantOwner, logoutUser as apiLogoutUser } from '../service/userApi.js';
+import Cookies from 'js-cookie';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(() => {
-    return Cookies.get('isLoggedIn') === 'true';
-  });
-  const [userRole, setUserRole] = useState(() => {
-    return Cookies.get('userRole');
-  });
+  const [isLoggedIn, setIsLoggedIn] = useState(() => Cookies.get('isLoggedIn') === 'true');
+  const [userRole, setUserRole] = useState(() => Cookies.get('userRole') || null);
   const [userData, setUserData] = useState(() => {
     const data = Cookies.get('userData');
     return data ? JSON.parse(data) : null;
@@ -21,7 +18,6 @@ export const AuthProvider = ({ children }) => {
 
     try {
       let data;
-      // Determine the login method based on the username format
       if (username.includes('@')) {
         data = await loginRestaurantOwner({ email: username, password });
         setUserRole('restaurantOwner');
@@ -30,47 +26,51 @@ export const AuthProvider = ({ children }) => {
         setUserRole('superAdmin');
       }
 
-      // If login is successful
       if (data) {
         console.log("User Data:", data);
         setIsLoggedIn(true);
         setUserData(data);
 
-        // Store the login state and user data in cookies
-        Cookies.set('isLoggedIn', 'true', { expires: 7 }); // Expires in 7 days
-        Cookies.set('userRole', userRole, { expires: 7 }); // Use updated userRole
+        // Store tokens and user info in cookies
+        Cookies.set('isLoggedIn', 'true', { expires: 7 });
+        Cookies.set('userRole', userRole, { expires: 7 });
         Cookies.set('userData', JSON.stringify(data), { expires: 7 });
       }
-      return true; // Successful login
+      return true;
     } catch (error) {
       console.error("Login failed:", error);
       setIsLoggedIn(false);
       setUserRole(null);
       setUserData(null);
-      return false; // Failed login
+      return false;
     }
   };
 
-  const handleLogout = () => {
-    // Clear cookies and update state
-    Cookies.remove('isLoggedIn');
-    Cookies.remove('userRole');
-    Cookies.remove('userData');
-    setIsLoggedIn(false);
-    setUserRole(null);
-    setUserData(null);
+  const handleLogout = async () => {
+    try {
+      await apiLogoutUser(); // Call API to handle logout on the server
+      Cookies.remove('isLoggedIn');
+      Cookies.remove('userRole');
+      Cookies.remove('userData');
+      setIsLoggedIn(false);
+      setUserRole(null);
+      setUserData(null);
+    } catch (error) {
+      console.error("Logout failed:", error);
+    }
   };
 
-  // Update cookies whenever isLoggedIn or userRole changes
+  // Sync cookie values with state
   useEffect(() => {
     Cookies.set('isLoggedIn', isLoggedIn, { expires: 7 });
     Cookies.set('userRole', userRole || '', { expires: 7 });
   }, [isLoggedIn, userRole]);
 
-  // Sync userData to cookies whenever it changes
   useEffect(() => {
     if (userData) {
       Cookies.set('userData', JSON.stringify(userData), { expires: 7 });
+    } else {
+      Cookies.remove('userData'); // Clear userData cookie if userData is null
     }
   }, [userData]);
 
