@@ -159,7 +159,7 @@ ChartJS.register(
 );
 
 const BookingChart = ({ title, url }) => {
-  const BASE_URl = "https://book-my-adventure.onrender.com/api/v1";
+  // const BASE_URl = "https://book-my-adventure.onrender.com/api/v1";
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(addDays(new Date(), 15));
   const [bookings, setBookings] = useState([]);
@@ -254,3 +254,4 @@ const BookingChart = ({ title, url }) => {
 };
 
 export default BookingChart;
+// 

@@ -21,7 +21,7 @@ const BarCode = () => {
         <QRCode
           className=" mt-3"
           size={200}
-          xlinkTitle="https://localhost"
+          xlinkTitle="https://localhost/"
           bgColor="#FFFFFF"
           fgColor="#000000"
           title="Scan This QR Code to order directly with your mobile."

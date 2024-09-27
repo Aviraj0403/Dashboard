@@ -71,7 +71,8 @@ const router = createBrowserRouter(
         {/* Create Restaurant Entity */}
          <Route path="register-res-own" element={< RegisterRestaurantOwner/>} />
          <Route path="rest-list" element={< RestaurantList/>} />
-         <Route path="users/profile/:ownerId" element={<OwnerProfile />} />
+         {/* <Route path="" element={<OwnerProfile />} /> */}
+         <Route path="owner-profile/:ownerId" element={<OwnerProfile />} />
         {/* Setting */}  
         <Route path="settings" element={<SecondarySidebar />}>
             <Route path="" element={<CompanyForm />} />

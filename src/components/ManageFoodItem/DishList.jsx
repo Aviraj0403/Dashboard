@@ -10,7 +10,10 @@ const DishList = () => {
 
   const fetchList = async () => {
     try {
-      const response = await axios.get(`${URL}/api/food/list-food`);
+      const response = await axios.get(`${URL}/api/food/list-food`,{
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true
+      });
       if (response.data.success) {
         setList(response.data.data);
       } else {

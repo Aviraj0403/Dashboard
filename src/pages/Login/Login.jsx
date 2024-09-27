@@ -6,6 +6,7 @@ const LoginPage = () => {
     const { handleLogin, userRole, isLoggedIn } = useAuth();
     const [formData, setFormData] = useState({ username: "", password: "" });
     const [loginError, setLoginError] = useState("");
+    const [loading, setLoading] = useState(false); // Loading state
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -17,24 +18,25 @@ const LoginPage = () => {
 
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
-        console.log("Login form submitted");
+        setLoading(true); // Start loading
 
         try {
             const success = await handleLogin(formData);
-            console.log("Login attempt success:", success);
             if (!success) {
                 setLoginError("Invalid username or password.");
+            } else {
+                setLoginError(""); // Clear error on success
             }
         } catch (error) {
             console.error("Login error:", error);
             setLoginError("An error occurred while trying to log in. Please try again.");
+        } finally {
+            setLoading(false); // End loading
         }
     };
 
     // Redirect if logged in
     if (isLoggedIn) {
-        console.log("isLoggedIn:", isLoggedIn);
-        console.log("userRole:", userRole);
         const redirectPath = userRole === 'superAdmin' 
             ? '/super-admin-dashboard' 
             : '/admin/dashboard';
@@ -73,8 +75,12 @@ const LoginPage = () => {
                         />
                     </div>
                     {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
-                    <button type="submit" className="w-full py-3 bg-blue-500 text-white font-semibold rounded-md hover:bg-blue-600">
-                        Login
+                    <button
+                        type="submit"
+                        className={`w-full py-3 ${loading ? "bg-gray-400" : "bg-blue-500"} text-white font-semibold rounded-md hover:bg-blue-600`}
+                        disabled={loading} // Disable button during loading
+                    >
+                        {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
             </div>

@@ -1,4 +1,3 @@
-// AuthProvider.js
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { loginSuperAdmin, loginRestaurantOwner, logoutUser as apiLogoutUser } from '../service/userApi.js';
 import Cookies from 'js-cookie';
@@ -19,9 +18,11 @@ export const AuthProvider = ({ children }) => {
     try {
       let data;
       if (username.includes('@')) {
+        // Restaurant owner login
         data = await loginRestaurantOwner({ email: username, password });
         setUserRole('restaurantOwner');
       } else {
+        // Super Admin login
         data = await loginSuperAdmin({ username, password });
         setUserRole('superAdmin');
       }
@@ -31,7 +32,7 @@ export const AuthProvider = ({ children }) => {
         setIsLoggedIn(true);
         setUserData(data);
 
-        // Store tokens and user info in cookies
+        // Store minimal user state in cookies (including restaurantId if available)
         Cookies.set('isLoggedIn', 'true', { expires: 7 });
         Cookies.set('userRole', userRole, { expires: 7 });
         Cookies.set('userData', JSON.stringify(data), { expires: 7 });
@@ -48,7 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   const handleLogout = async () => {
     try {
-      await apiLogoutUser(); // Call API to handle logout on the server
+      await apiLogoutUser();
       Cookies.remove('isLoggedIn');
       Cookies.remove('userRole');
       Cookies.remove('userData');
@@ -60,7 +61,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Sync cookie values with state
   useEffect(() => {
     Cookies.set('isLoggedIn', isLoggedIn, { expires: 7 });
     Cookies.set('userRole', userRole || '', { expires: 7 });
@@ -70,15 +70,23 @@ export const AuthProvider = ({ children }) => {
     if (userData) {
       Cookies.set('userData', JSON.stringify(userData), { expires: 7 });
     } else {
-      Cookies.remove('userData'); // Clear userData cookie if userData is null
+      Cookies.remove('userData');
     }
   }, [userData]);
 
+  // Get the restaurantId from userData if the role is 'restaurantOwner'
+  const restaurantId = userRole === 'restaurantOwner' && userData ? userData.restaurantId : null;
+
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userRole, userData, handleLogin, handleLogout }}>
+    <AuthContext.Provider value={{ isLoggedIn, userRole, userData, restaurantId, handleLogin, handleLogout }}>
       {children}
     </AuthContext.Provider>
   );
 };
 
 export const useAuth = () => useContext(AuthContext);
+// New custom hook to get restaurantId
+export const useRestaurantId = () => {
+  const { restaurantId } = useAuth();
+  return restaurantId;
+};
