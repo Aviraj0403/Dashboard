@@ -31,7 +31,7 @@ export const AuthProvider = ({ children }) => {
         console.log("User Data:", data);
         setIsLoggedIn(true);
         setUserData(data);
-
+        console.log("Restaurant ID:", data.user.restaurantId);
         // Store minimal user state in cookies (including restaurantId if available)
         Cookies.set('isLoggedIn', 'true', { expires: 7 });
         Cookies.set('userRole', userRole, { expires: 7 });
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
   }, [userData]);
 
   // Get the restaurantId from userData if the role is 'restaurantOwner'
-  const restaurantId = userRole === 'restaurantOwner' && userData ? userData.restaurantId : null;
+  const restaurantId = userRole === 'restaurantOwner' && userData ? userData.user.restaurantId : null;
 
   return (
     <AuthContext.Provider value={{ isLoggedIn, userRole, userData, restaurantId, handleLogin, handleLogout }}>

@@ -8,9 +8,13 @@ import axios from "axios";
 // Define URL for API endpoint
 const URL = "http://localhost:4000";
 
-// Define categories
+// Define categories and varieties
 const categories = [
   "Salad", "Rolls", "Desserts", "Sandwich", "Cake", "Pure Veg", "Pasta", "Noodles"
+];
+
+const varieties = [
+  "Breakfast", "Lunch", "Dinner"
 ];
 
 // Validation schema using Yup
@@ -21,6 +25,7 @@ const validationSchema = Yup.object({
   description: Yup.string().required("Description is required"),
   cookTime: Yup.string().required("Cook time is required"),
   itemType: Yup.string().required("Item type is required"),
+  variety: Yup.string().required("Variety is required"), // New field
   isFeatured: Yup.string().required("Please select if the dish is featured"),
   recommended: Yup.string().required("Please select if the dish is recommended"),
   status: Yup.string().required("Status is required")
@@ -77,6 +82,7 @@ const AddItem = ({ restaurantId }) => {
       category: values.category,
       cookTime: values.cookTime,
       itemType: values.itemType,
+      variety: values.variety, // Include variety in form data
       isFeatured: values.isFeatured === "Active",
       recommended: values.recommended === "Active",
       status: values.status,
@@ -116,6 +122,7 @@ const AddItem = ({ restaurantId }) => {
           description: "",
           cookTime: "",
           itemType: "Veg",
+          variety: "", // Initialize variety
           isFeatured: "Inactive",
           recommended: "Inactive",
           status: "Active"
@@ -151,6 +158,12 @@ const AddItem = ({ restaurantId }) => {
                 <MenuItem value="" disabled>Select Category</MenuItem>
                 {categories.map((category) => (
                   <MenuItem key={category} value={category}>{category}</MenuItem>
+                ))}
+              </Field>
+              <Field as={TextField} label="Variety" name="variety" select fullWidth variant="outlined" helperText={<ErrorMessage name="variety" component="div" className="text-red-600" />}>
+                <MenuItem value="" disabled>Select Variety</MenuItem>
+                {varieties.map((variety) => (
+                  <MenuItem key={variety} value={variety}>{variety}</MenuItem>
                 ))}
               </Field>
               <Field as={TextField} label="Price" name="price" type="number" fullWidth variant="outlined" helperText={<ErrorMessage name="price" component="div" className="text-red-600" />} />
