@@ -2,17 +2,26 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { useRestaurantId } from '../../context/userContext.jsx';
 
 const DishList = () => {
   const URL = 'http://localhost:4000';
-
+  const restaurantId = useRestaurantId();
   const [list, setList] = useState([]);
+
+  useEffect(() => {
+    if (!restaurantId) {
+      toast.error('Restaurant ID not found');
+      return;
+    }
+    fetchList();
+  }, [restaurantId]);
 
   const fetchList = async () => {
     try {
-      const response = await axios.get(`${URL}/api/food/list-food`,{
+      const response = await axios.get(`${URL}/api/food/${restaurantId}/list-food`, {
         headers: { "Content-Type": "application/json" },
-        withCredentials: true
+        withCredentials: true,
       });
       if (response.data.success) {
         setList(response.data.data);
@@ -26,7 +35,7 @@ const DishList = () => {
 
   const removeFood = async (foodId) => {
     try {
-      const response = await axios.post(`${URL}/api/food/remove`, { id: foodId });
+      const response = await axios.post(`${URL}/api/food/${restaurantId}/remove`, { id: foodId });
       if (response.data.success) {
         toast.success(response.data.message);
         fetchList();
@@ -40,11 +49,11 @@ const DishList = () => {
 
   const toggleFeatured = async (foodId, currentStatus) => {
     try {
-      const newStatus = !currentStatus; // Toggle the current featured status
-      const response = await axios.put(`${URL}/api/food/${foodId}`, { isFeatured: newStatus });
+      const newStatus = !currentStatus;
+      const response = await axios.put(`${URL}/api/food/${restaurantId}/${foodId}`, { isFeatured: newStatus });
       if (response.data.success) {
         toast.success(`Dish marked as ${newStatus ? 'featured' : 'not featured'}`);
-        fetchList(); // Refresh the list after toggling
+        fetchList();
       } else {
         toast.error(response.data.message || 'Error updating featured status');
       }
@@ -55,11 +64,11 @@ const DishList = () => {
 
   const toggleRecommended = async (foodId, currentStatus) => {
     try {
-      const newStatus = !currentStatus; // Toggle the current recommended status
-      const response = await axios.put(`${URL}/api/food/${foodId}`, { recommended: newStatus });
+      const newStatus = !currentStatus;
+      const response = await axios.put(`${URL}/api/food/${restaurantId}/${foodId}`, { recommended: newStatus });
       if (response.data.success) {
         toast.success(`Dish marked as ${newStatus ? 'recommended' : 'not recommended'}`);
-        fetchList(); // Refresh the list after toggling
+        fetchList();
       } else {
         toast.error(response.data.message || 'Error updating recommended status');
       }
@@ -67,11 +76,6 @@ const DishList = () => {
       toast.error(error.message || 'Error updating recommended status');
     }
   };
-  
-
-  useEffect(() => {
-    fetchList();
-  }, []);
 
   return (
     <div className="p-6 max-w-7xl mx-auto bg-white rounded-lg shadow-md border border-gray-200">
@@ -107,13 +111,13 @@ const DishList = () => {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dish Image</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dish Name</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Type</th> {/* New Column */}
+              <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Type</th>
+              <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Variety</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+              <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Featured</th> {/* New Column */}
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recommended</th>
-
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Featured</th>
+              <th className="hidden md:table-cell px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recommended</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
             </tr>
           </thead>
@@ -122,16 +126,17 @@ const DishList = () => {
               <tr key={item._id}>
                 <td className="px-6 py-4 text-sm font-medium text-gray-900">
                   <img
-                    src={item.imageUrl} // Assuming imageUrl is the field for Cloudinary URL
+                    src={item.imageUrl}
                     alt={item.name}
-                    className="w-16 h-16 object-cover rounded-full" // Rounded icon styling
+                    className="w-16 h-16 object-cover rounded-full"
                   />
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">{item.name}</td>
                 <td className="px-6 py-4 text-sm text-gray-900">{item.category}</td>
-                <td className="px-6 py-4 text-sm text-gray-900">{item.itemType}</td> {/* Display item type */}
-                <td className="px-6 py-4 text-sm text-gray-900">₹{item.price}</td> {/* Updated to INR */}
-                <td className="px-6 py-4 text-sm text-gray-900">{item.description}</td>
+                <td className="hidden md:table-cell px-6 py-4 text-sm text-gray-900">{item.itemType}</td>
+                <td className="hidden md:table-cell px-6 py-4 text-sm text-gray-900">{item.variety}</td>
+                <td className="px-6 py-4 text-sm text-gray-900">₹{item.price}</td>
+                <td className="hidden md:table-cell px-6 py-4 text-sm text-gray-900">{item.description}</td>
                 <td className="px-6 py-4 text-sm">
                   <span className={`px-2 py-1 text-xs font-medium rounded-full ${item.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
                     {item.status}
@@ -145,13 +150,13 @@ const DishList = () => {
                     {item.isFeatured ? 'Featured' : 'Not Featured'}
                   </button>
                 </td>
-                <td className="px-6 py-4 text-sm">
-                     <button
-                           onClick={() => toggleRecommended(item._id, item.recommended)}
-                           className={`px-2 py-1 text-xs font-medium rounded-full ${item.recommended ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
-                              >
-                           {item.recommended ? 'Recommended' : 'Not Recommended'}
-                    </button>
+                <td className="hidden md:table-cell px-6 py-4 text-sm">
+                  <button
+                    onClick={() => toggleRecommended(item._id, item.recommended)}
+                    className={`px-2 py-1 text-xs font-medium rounded-full ${item.recommended ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
+                  >
+                    {item.recommended ? 'Recommended' : 'Not Recommended'}
+                  </button>
                 </td>
                 <td className="px-6 py-4 text-sm font-medium flex space-x-3">
                   <NavLink to={`edit-dish/${item._id}`} className="text-blue-600 hover:text-blue-800">
