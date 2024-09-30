@@ -2,14 +2,16 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { useRestaurantId } from '../../context/userContext.jsx'; // Import restaurantId from context
 
 const DishDetails = () => {
   const { id } = useParams(); // Get the ID from URL params
+  const restaurantId = useRestaurantId(); // Get restaurantId from context
   const [dish, setDish] = useState(null);
 
   const fetchDish = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/food/${id}`);
+      const response = await axios.get(`http://localhost:4000/api/food/${restaurantId}/${id}`);
       if (response.data.success) {
         setDish(response.data.data);
       } else {
@@ -22,7 +24,7 @@ const DishDetails = () => {
 
   useEffect(() => {
     fetchDish();
-  }, [id]);
+  }, [id, restaurantId]);
 
   if (!dish) return <p>Loading...</p>;
 
@@ -33,10 +35,10 @@ const DishDetails = () => {
       <p className="mt-4 text-gray-700">{dish.description}</p>
       <p className="mt-2 text-xl font-semibold text-gray-900">₹{dish.price}</p>
       <p className="mt-2 text-gray-600">Category: {dish.category}</p>
-      <p className="mt-2 text-gray-600">Item Type: {dish.itemType}</p> {/* New field */}
-      <p className="mt-2 text-gray-600">Variety: {dish.variety}</p> {/* New field for variety */}
+      <p className="mt-2 text-gray-600">Item Type: {dish.itemType}</p>
+      <p className="mt-2 text-gray-600">Variety: {dish.variety}</p>
       <p className="mt-2 text-gray-600">Status: {dish.status}</p>
-      <p className="mt-2 text-gray-600">Featured: {dish.isFeatured ? 'Yes' : 'No'}</p> {/* New field */}
+      <p className="mt-2 text-gray-600">Featured: {dish.isFeatured ? 'Yes' : 'No'}</p>
     </div>
   );
 };

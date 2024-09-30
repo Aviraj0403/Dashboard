@@ -35,10 +35,13 @@ const DishList = () => {
 
   const removeFood = async (foodId) => {
     try {
-      const response = await axios.post(`${URL}/api/food/${restaurantId}/remove`, { id: foodId });
+      const response = await axios.delete(`${URL}/api/food/${restaurantId}/${foodId}`, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
       if (response.data.success) {
         toast.success(response.data.message);
-        fetchList();
+        fetchList(); // Refresh the list after removal
       } else {
         toast.error(response.data.message || 'Error removing item');
       }
