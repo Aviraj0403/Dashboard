@@ -118,7 +118,7 @@ function Sidebar({ className, toggleSidebar }) {
           {" "}
           <MdBookmark size={24} /> POS
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to={"pos/orders"}
           className={({ isActive }) =>
             ` ${
@@ -130,7 +130,7 @@ function Sidebar({ className, toggleSidebar }) {
         >
           {" "}
           <FaFirstOrder size={24} /> POS Orders
-        </NavLink>
+        </NavLink> */}
         <NavLink
           to={"table-orders"}
           className={({ isActive }) =>
@@ -202,7 +202,7 @@ function Sidebar({ className, toggleSidebar }) {
           {" "}
           <FaUserCircle size={24} /> Administrators
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to={"emp-sal"}
           className={({ isActive }) =>
             ` ${
@@ -214,7 +214,7 @@ function Sidebar({ className, toggleSidebar }) {
         >
           {" "}
           <MdGroup  size={24}/> Customers
-        </NavLink>
+        </NavLink> */}
         <NavLink
           to={"emp-Att"}
           className={({ isActive }) =>
@@ -239,7 +239,7 @@ function Sidebar({ className, toggleSidebar }) {
           }
         >
           {" "}
-          <MdGroup  size={24}/> Dashboard
+          <MdDashboard  size={24}/> Dashboard
         </NavLink>
         <NavLink
           to={"employee"}
