@@ -131,21 +131,6 @@ function Sidebar({ className, toggleSidebar }) {
           {" "}
           <FaFirstOrder size={24} /> POS Orders
         </NavLink>
-        
-        <NavLink
-          to={"sad"}
-          className={({ isActive }) =>
-            ` ${
-              isActive
-                ? " bg-gray-200  text-orange-400"
-                : " hover:shadow-none hover:bg-gray-200"
-            }  mb-1  border-gray-500  shadow-white px-4 py-2 rounded-md flex items-center gap-2`
-          }
-        >
-          {" "}
-          <FaFirstOrder size={24} /> sad
-        </NavLink>
-
         <NavLink
           to={"table-orders"}
           className={({ isActive }) =>

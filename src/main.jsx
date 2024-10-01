@@ -23,7 +23,6 @@ import BarCode from "./components/dashboard/table/BarCode.jsx";
 import FallbackPage from "./pages/FallBack.jsx";
 import WindowContextProvider from "./context/windowContext.jsx";
 import PosContainer from "./components/POS/PosContainer.jsx";
-import { OffersProvider } from "./context/OffersContext.jsx";
 import router from "./router.jsx";
 import { AuthProvider } from "./context/userContext.jsx";
 // const router = createBrowserRouter(
@@ -45,9 +44,9 @@ import { AuthProvider } from "./context/userContext.jsx";
 createRoot(document.getElementById("root")).render(
   <WindowContextProvider>
     <AuthProvider>
-      <OffersProvider>
+      
         <RouterProvider router={router} />
-      </OffersProvider>
+      
     </AuthProvider>
   </WindowContextProvider>
 );

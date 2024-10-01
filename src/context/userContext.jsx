@@ -33,6 +33,7 @@ export const AuthProvider = ({ children }) => {
         setUserData(data);
         console.log("Restaurant ID:", data.user.restaurantId);
         // Store minimal user state in cookies (including restaurantId if available)
+        Cookies.set('token', data.token, { expires: 7 });
         Cookies.set('isLoggedIn', 'true', { expires: 7 });
         Cookies.set('userRole', userRole, { expires: 7 });
         Cookies.set('userData', JSON.stringify(data), { expires: 7 });
@@ -53,6 +54,7 @@ export const AuthProvider = ({ children }) => {
       Cookies.remove('isLoggedIn');
       Cookies.remove('userRole');
       Cookies.remove('userData');
+      Cookies.remove('token'); 
       setIsLoggedIn(false);
       setUserRole(null);
       setUserData(null);

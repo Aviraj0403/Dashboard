@@ -1,139 +1,156 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { useOffers } from '../../context/OffersContext';
+import React, { useState } from "react";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { Button, Box, Typography, MenuItem, TextField } from "@mui/material";
+import { toast } from "react-toastify";
+import axios from "axios";
+import { useNavigate } from "react-router-dom"; 
+import { useRestaurantId } from '../../context/userContext.jsx'; // Assuming you have a context to get the restaurant ID
+
+const URL = "http://localhost:4000";
+
+const validationSchema = Yup.object({
+  name: Yup.string().required("Name is required"),
+  discountPercentage: Yup.number()
+    .required("Discount percentage is required")
+    .min(0, "Must be at least 0"),
+  startDate: Yup.date().required("Start date is required"),
+  endDate: Yup.date().required("End date is required"),
+  status: Yup.string().required("Status is required"),
+  image: Yup.mixed().nullable(),
+});
 
 const AddOffer = () => {
   const navigate = useNavigate();
-  const { addOffer } = useOffers();
-  const [offer, setOffer] = useState({
-    name: '',
-    discountPercentage: '',
-    startDate: '',
-    endDate: '',
-    image: null,
-    status: 'Active'
-  });
+  const restaurantId = useRestaurantId(); // Get restaurant ID from context
+  const [image, setImage] = useState(null);
+  const [imagePreview, setImagePreview] = useState(null);
 
-  const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (type === 'file') {
-      setOffer(prevState => ({ ...prevState, [name]: files[0] }));
-    } else {
-      setOffer(prevState => ({ ...prevState, [name]: value }));
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setImagePreview(reader.result);
+      reader.readAsDataURL(file);
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData();
-    for (const key in offer) {
-      formData.append(key, offer[key]);
-    }
+  const removeImage = () => {
+    setImage(null);
+    setImagePreview(null);
+  };
 
-    const message = await addOffer(formData);
-    if (message === 'Offer added successfully') {
-      toast.success(message);
-      navigate('/offersList'); // Redirect after successful addition
-    } else {
-      toast.error(message);
+  const uploadImageToCloudinary = async () => {
+    if (!image) return null;
+
+    const formData = new FormData();
+    formData.append("image", image);
+
+    try {
+      const response = await axios.post(`${URL}/api/upload/image`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      return response.data.imageUrl; 
+    } catch (error) {
+      console.error("Image upload error:", error.response?.data || error.message);
+      toast.error("Error uploading image. Please try again.");
+      return null;
+    }
+  };
+
+  const onFormSubmit = async (values, { resetForm }) => {
+    const imageUrl = await uploadImageToCloudinary();
+
+    const formData = {
+      restaurantId, // Include restaurant ID in the form data
+      name: values.name,
+      discountPercentage: values.discountPercentage,
+      startDate: values.startDate,
+      endDate: values.endDate,
+      status: values.status,
+      imageUrl, // Use the imageUrl (which could be null)
+    };
+
+    try {
+      const response = await axios.post(`${URL}/api/offer/${restaurantId}`, formData, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+
+      if (response.status === 201) {
+        resetForm();
+        removeImage();
+        toast.success("Offer added successfully!");
+        navigate('/admin/offersList'); // Redirect to offers list
+      } else {
+        toast.warning(response.data.message);
+      }
+    } catch (error) {
+      console.error("Form submission error:", error.response?.data || error.message);
+      toast.error(`Error submitting form: ${error.response?.data?.message || "Unknown error"}`);
     }
   };
 
   return (
-    <div className="p-6 max-w-2xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200 relative">
-      <button
-        onClick={() => navigate('/offersList')}
-        className="absolute top-4 right-4 text-gray-500 hover:text-gray-700"
+    <Box className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200">
+      <Typography variant="h4" className="text-center text-2xl font-bold mb-6">
+        Add a New Offer
+      </Typography>
+      <Formik
+        initialValues={{
+          name: "",
+          discountPercentage: "",
+          startDate: "",
+          endDate: "",
+          status: "Active",
+          image: null,
+        }}
+        validationSchema={validationSchema}
+        onSubmit={onFormSubmit}
       >
-        X
-      </button>
-      <h1 className="text-2xl font-bold mb-6">Add Offer</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={offer.name}
-            onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Discount Percentage</label>
-          <input
-            type="number"
-            name="discountPercentage"
-            value={offer.discountPercentage}
-            onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Start Date</label>
-          <input
-            type="datetime-local"
-            name="startDate"
-            value={offer.startDate}
-            onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">End Date</label>
-          <input
-            type="datetime-local"
-            name="endDate"
-            value={offer.endDate}
-            onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-            required
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Image (548px x 140px)</label>
-          <input
-            type="file"
-            name="image"
-            onChange={handleChange}
-            className="mt-1 block w-full text-sm text-gray-500 file:py-2 file:px-4 file:border file:border-gray-300 file:rounded-md file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100"
-          />
-          <p className="mt-1 text-sm text-gray-500">No file chosen</p>
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Status</label>
-          <select
-            name="status"
-            value={offer.status}
-            onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-indigo-500 sm:text-sm"
-          >
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
-        </div>
-        <div className="flex gap-4">
-          <button
-            type="submit"
-            className="inline-flex items-center px-4 py-2 bg-blue-500 text-white font-semibold rounded-md shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          >
-            Save
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/offersList')}
-            className="inline-flex items-center px-4 py-2 bg-gray-200 text-gray-700 font-semibold rounded-md shadow-sm hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
-          >
-            Close
-          </button>
-        </div>
-      </form>
-    </div>
+        {() => (
+          <Form className="flex flex-col gap-6">
+            <Box className="flex justify-center mb-6">
+              <Box className="relative w-full max-w-md bg-yellow-50 border-2 border-orange-400 border-dashed rounded-lg p-4 flex flex-col items-center">
+                {imagePreview ? (
+                  <>
+                    <img src={imagePreview} alt="Image Preview" className="max-w-full max-h-48 rounded-lg mb-2" />
+                    <Button type="button" onClick={removeImage} variant="contained" color="error" className="absolute top-2 right-2">
+                      Remove
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <input type="file" id="image" name="image" onChange={handleImageChange} className="hidden" />
+                    <label htmlFor="image" className="bg-orange-500 text-white px-4 py-2 rounded-lg cursor-pointer">
+                      Upload Offer Image (optional)
+                    </label>
+                  </>
+                )}
+              </Box>
+            </Box>
+
+            <Box className="space-y-6">
+              <Field as={TextField} label="Name" name="name" fullWidth variant="outlined" helperText={<ErrorMessage name="name" component="div" className="text-red-600" />} />
+              <Field as={TextField} label="Discount Percentage" name="discountPercentage" type="number" fullWidth variant="outlined" helperText={<ErrorMessage name="discountPercentage" component="div" className="text-red-600" />} />
+              <Field as={TextField} label="Start Date" name="startDate" type="datetime-local" fullWidth variant="outlined" helperText={<ErrorMessage name="startDate" component="div" className="text-red-600" />} />
+              <Field as={TextField} label="End Date" name="endDate" type="datetime-local" fullWidth variant="outlined" helperText={<ErrorMessage name="endDate" component="div" className="text-red-600" />} />
+              <Field as={TextField} label="Status" name="status" select fullWidth variant="outlined" helperText={<ErrorMessage name="status" component="div" className="text-red-600" />}>
+                <MenuItem value="Active">Active</MenuItem>
+                <MenuItem value="Inactive">Inactive</MenuItem>
+              </Field>
+            </Box>
+
+            <Box className="mt-6">
+              <Button type="submit" variant="contained" color="primary" fullWidth>
+                Add Offer
+              </Button>
+            </Box>
+          </Form>
+        )}
+      </Formik>
+    </Box>
   );
 };
 
