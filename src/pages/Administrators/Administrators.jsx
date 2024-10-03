@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ReactToPrint from 'react-to-print';
 import { CSVLink } from 'react-csv';
-import { useNavigate } from 'react-router-dom';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 
@@ -77,14 +75,29 @@ const Administrators = () => {
     reset();
   };
 
+  const handlePrint = () => {
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Print</title>');
+    printWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid black; padding: 8px; text-align: left; } thead { background-color: #f4f4f4; }</style>');
+    printWindow.document.write('</head><body >');
+    printWindow.document.write('<h1>Administrators List</h1>');
+    printWindow.document.write(document.getElementById('admin-table').outerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  };
+
   return (
     <div className="p-4">
       <div className="mb-4 flex justify-between items-center">
         <div className="flex space-x-2">
-          <ReactToPrint
-            trigger={() => <button className="bg-blue-500 text-white px-4 py-2 rounded">Print</button>}
-            content={() => document.getElementById('admin-table')}
-          />
+          <button
+            onClick={handlePrint}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Print
+          </button>
           <CSVLink
             data={filteredAdmins}
             filename={"administrators.csv"}
@@ -130,13 +143,7 @@ const Administrators = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{admin.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{admin.phone}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span
-                      className={`${
-                        admin.status.toLowerCase() === "active"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      } text-sm px-2 py-1 rounded-full`}
-                    >
+                    <span className={`${admin.status.toLowerCase() === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"} text-sm px-2 py-1 rounded-full`}>
                       {admin.status}
                     </span>
                   </td>
@@ -206,39 +213,41 @@ const Administrators = () => {
                     <option value="Inactive">Inactive</option>
                   </select>
                 </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="flex flex-col gap-2">
                   <label className="block text-sm font-medium text-gray-700">Password</label>
                   <input
                     type="password"
-                    {...register('password', { required: 'Password is required' })}
+                    {...register('password', { required: isAdding ? 'Password is required' : false })}
                     className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="block text-sm font-medium text-gray-700">Password Confirmation</label>
+                  <label className="block text-sm font-medium text-gray-700">Confirm Password</label>
                   <input
                     type="password"
                     {...register('passwordConfirmation', {
-                      validate: (value) => value === watch('password') || 'Passwords must match',
+                      validate: (value) =>
+                        value === watch('password') || "Passwords don't match"
                     })}
                     className="p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                   {errors.passwordConfirmation && <p className="text-red-500 text-sm">{errors.passwordConfirmation.message}</p>}
                 </div>
               </div>
-              <div className="flex space-x-2 justify-end mt-4">
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                  {isAdding ? 'Save' : 'Update'}
-                </button>
+              <div className="flex justify-end mt-4">
                 <button
                   type="button"
                   onClick={handleClose}
-                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                  className="mr-2 bg-gray-300 text-gray-800 px-4 py-2 rounded"
                 >
-                  Close
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-500 text-white px-4 py-2 rounded"
+                >
+                  {isAdding ? 'Add Admin' : 'Update Admin'}
                 </button>
               </div>
             </form>

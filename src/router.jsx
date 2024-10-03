@@ -40,7 +40,8 @@ import ItemCategory from "./pages/Setting/ItemCategory/ItemCategory.jsx";
 import RolePermissions from "./pages/Setting/RolePermission/RolePermissions.jsx";
 import TaxManagement from "./pages/Setting/Taxes/TaxManagement.jsx";
 import PaymentGateway from "./pages/Setting/PaymentGateway/PaymentGateway.jsx";
-import Administrators from "./pages/Adminstrators/Adminstrators.jsx";
+import Administrators from "./pages/Administrators/Administrators.jsx";
+
 import EmployeeAttendance from "./pages/Employee/EmployeeAttendance.jsx";
 import EmployeeDashboard from "./pages/Employee/EmployeeDashboard.jsx";
 import EditDish from "./components/ManageFoodItem/EditDish.jsx";

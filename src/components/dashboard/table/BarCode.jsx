@@ -2,7 +2,7 @@ import React from "react";
 import Container from "../../commonUI/Container";
 import QRCode from "react-qr-code";
 import { useParams } from "react-router-dom";
-import { useRestaurantId } from "../../../context/userContext"; // Import the new function to get restaurantId
+import { useRestaurantId } from "../../../context/userContext";
 
 const BarCode = () => {
   const { id } = useParams(); // id refers to the tableId
@@ -13,8 +13,8 @@ const BarCode = () => {
     return <p>Loading...</p>;
   }
 
-  // Dynamic URL based on the restaurantId and tableId
-  const dynamicUrl = `http://localhost:4000/api/food/restaurants/${restaurantId}/table/${id}`;
+  // Dynamic URL to scan which fetches both food and table info
+  const dynamicUrl = `http://localhost:4000/api/scan?restaurantId=${restaurantId}&tableId=${id}`;
 
   return (
     <Container

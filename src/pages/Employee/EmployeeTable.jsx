@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import ReactToPrint from 'react-to-print';
 import { CSVLink } from 'react-csv';
-import { useNavigate } from 'react-router-dom';
-import { FaEye, FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
 import { useForm } from 'react-hook-form';
 
 // Dummy data; replace with data from backend in the future
 const initialEmployees = [
-  { name: 'Avi Raj', email: 'stuff@example.com', phone: '+8801222224443', role: 'Stuff', status: 'Active' },
+  { name: 'Avi Raj', email: 'stuff@example.com', phone: '+8801222224443', role: 'Staff', status: 'Active' },
   { name: 'Farha Israt', email: 'posoperator@example.com', phone: '+880156873641', role: 'POS Operator', status: 'Active' },
   { name: 'Sunny Bhaiya', email: 'branchmanager@example.com', phone: '+8801275333453', role: 'Branch Manager', status: 'Active' },
 ];
@@ -18,8 +16,6 @@ const EmployeeTable = () => {
   const [editingEmployee, setEditingEmployee] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
-
-  const navigate = useNavigate();
 
   const { register, handleSubmit, reset, formState: { errors }, watch } = useForm({
     defaultValues: {
@@ -34,7 +30,6 @@ const EmployeeTable = () => {
     },
   });
 
-  // Filter employees based on the filter state
   const filteredEmployees = employeesList.filter(employee =>
     employee.name.toLowerCase().includes(filter.toLowerCase()) ||
     employee.email.toLowerCase().includes(filter.toLowerCase()) ||
@@ -42,21 +37,6 @@ const EmployeeTable = () => {
     employee.role.toLowerCase().includes(filter.toLowerCase()) ||
     employee.status.toLowerCase().includes(filter.toLowerCase())
   );
-
-  useEffect(() => {
-    // TODO: Fetch data from backend and update employeesList
-    // Example function to fetch employees:
-    // const fetchEmployees = async () => {
-    //   try {
-    //     const response = await fetch('/api/employees');
-    //     const data = await response.json();
-    //     setEmployeesList(data);
-    //   } catch (error) {
-    //     console.error('Error fetching employees:', error);
-    //   }
-    // };
-    // fetchEmployees();
-  }, []);
 
   const handleAddEmployee = () => {
     setIsAdding(true);
@@ -72,56 +52,13 @@ const EmployeeTable = () => {
   };
 
   const handleDeleteEmployee = (employee) => {
-    // TODO: Implement API call to delete employee from backend
-    // Example function to delete an employee:
-    // const deleteEmployee = async (email) => {
-    //   try {
-    //     await fetch(`/api/employees/${email}`, {
-    //       method: 'DELETE',
-    //     });
-    //     setEmployeesList(employeesList.filter(e => e.email !== email));
-    //   } catch (error) {
-    //     console.error('Error deleting employee:', error);
-    //   }
-    // };
-    // deleteEmployee(employee.email);
     setEmployeesList(employeesList.filter(e => e !== employee));
   };
 
   const onSubmit = async (data) => {
     if (isAdding) {
-      // TODO: Implement API call to add employee to backend
-      // Example function to add an employee:
-      // const addEmployee = async (employee) => {
-      //   try {
-      //     await fetch('/api/employees', {
-      //       method: 'POST',
-      //       headers: { 'Content-Type': 'application/json' },
-      //       body: JSON.stringify(employee),
-      //     });
-      //     setEmployeesList([...employeesList, employee]);
-      //   } catch (error) {
-      //     console.error('Error adding employee:', error);
-      //   }
-      // };
-      // addEmployee(data);
       setEmployeesList([...employeesList, data]);
     } else if (isEditing) {
-      // TODO: Implement API call to update employee in backend
-      // Example function to update an employee:
-      // const updateEmployee = async (employee) => {
-      //   try {
-      //     await fetch(`/api/employees/${employee.email}`, {
-      //       method: 'PUT',
-      //       headers: { 'Content-Type': 'application/json' },
-      //       body: JSON.stringify(employee),
-      //     });
-      //     setEmployeesList(employeesList.map(emp => emp.email === editingEmployee.email ? employee : emp));
-      //   } catch (error) {
-      //     console.error('Error updating employee:', error);
-      //   }
-      // };
-      // updateEmployee(data);
       setEmployeesList(employeesList.map(emp => emp.email === editingEmployee.email ? data : emp));
     }
     setIsAdding(false);
@@ -135,15 +72,30 @@ const EmployeeTable = () => {
     reset();
   };
 
+  const handlePrint = () => {
+    const printWindow = window.open('', '', 'height=600,width=800');
+    printWindow.document.write('<html><head><title>Print</title>');
+    printWindow.document.write('<style>table { width: 100%; border-collapse: collapse; } th, td { border: 1px solid black; padding: 8px; text-align: left; } thead { background-color: #f4f4f4; }</style>');
+    printWindow.document.write('</head><body >');
+    printWindow.document.write('<h1>Employee List</h1>');
+    printWindow.document.write(document.getElementById('employee-table').outerHTML);
+    printWindow.document.write('</body></html>');
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  };
+
   return (
     <div className="p-4">
       {/* Print and Export Buttons */}
       <div className="mb-4 flex justify-between items-center">
         <div className="flex space-x-2">
-          <ReactToPrint
-            trigger={() => <button className="bg-blue-500 text-white px-4 py-2 rounded">Print</button>}
-            content={() => document.getElementById('employee-table')}
-          />
+          <button
+            onClick={handlePrint}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Print
+          </button>
           <CSVLink
             data={filteredEmployees}
             filename={"employees.csv"}
@@ -194,11 +146,7 @@ const EmployeeTable = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{employee.role}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">
                     <span
-                      className={`${
-                        employee.status.toLowerCase() === "active"
-                          ? "bg-green-100 text-green-700"
-                          : "bg-red-100 text-red-700"
-                      } text-sm px-2 py-1 rounded-full`}
+                      className={`${employee.status.toLowerCase() === "active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"} text-sm px-2 py-1 rounded-full`}
                     >
                       {employee.status}
                     </span>
@@ -339,6 +287,7 @@ const EmployeeTable = () => {
 };
 
 export default EmployeeTable;
+
 // 
 // Backend Guidlines :
 // useEffect(() => {
