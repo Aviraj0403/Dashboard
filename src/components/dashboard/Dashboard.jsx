@@ -1,11 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect , useRef }from "react";
 import { FaChartLine, FaClipboardList, FaUser } from "react-icons/fa";
 import { MdMenuBook } from "react-icons/md";
 import BookingChart from "../chart/BookingChart";
 import FeaturedItem from "./featured/FeaturedItem";
 import { Outlet } from "react-router-dom";
 import io from "socket.io-client";
-import { Button, Card, CardContent, Typography, MenuItem, Select, TextField } from "@mui/material";
+import {
+  Button,
+  Card,
+  CardContent,
+  Typography,
+  MenuItem,
+  Select,
+  TextField,
+  Snackbar,
+} from "@mui/material";
 import { motion } from "framer-motion";
 
 // Sample data for items and orders
@@ -48,10 +57,16 @@ function Dashboard() {
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [persons, setPersons] = useState(1);
-  
 
   // Notification state
   const [notification, setNotification] = useState(null);
+  const [paymentMethod, setPaymentMethod] = useState('Cash'); // State for payment method
+  const [paymentNotification, setPaymentNotification] = useState(null); // Notification for payment confirmation
+  // const [hasUserInteracted, setHasUserInteracted] = useState(false);
+  const notificationSound = useRef(new Audio('/notification.mp3'));
+  
+   // Play notification sound when notification is set
+   
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -68,10 +83,12 @@ function Dashboard() {
   }, [selectedTable]);
 
   useEffect(() => {
-    const socketConnection = io("YOUR_WEBSOCKET_SERVER_URL");
+    const socketConnection = io("http://localhost:4000");
     setSocket(socketConnection);
 
-    socketConnection.on("orderUpdate", (data) => {
+    socketConnection.on("orderUpdate", (data) => 
+      {
+        console.log("Received order update:", data); 
       setOrderData(prevData => {
         const updatedData = [...prevData];
         data.forEach(update => {
@@ -84,8 +101,7 @@ function Dashboard() {
         });
         return updatedData;
       });
-       // Show notification
-       setNotification(`Order updated for Table ${data.tableId}`);
+      setNotification(`Order updated for Table ${data.tableId}`);
     });
 
     socketConnection.on("tableUpdate", (data) => {
@@ -105,16 +121,46 @@ function Dashboard() {
       });
     });
 
+    // New listener for payment confirmation
+    socketConnection.on("paymentProcessed", (data) => {
+      setOrderData(prevData =>
+        prevData.map(order =>
+          order.tableId === data.tableId
+            ? { ...order, paymentStatus: 'paid', transactionId: data.transactionId }
+            : order
+        )
+      );
+      setPaymentNotification(`Payment confirmed for Table ${data.tableId}`);
+      playNotificationSound(); // Play sound immediately for payment notification
+    });
+
     return () => {
       socketConnection.off("orderUpdate");
       socketConnection.off("tableUpdate");
       socketConnection.off("tableStatusUpdate");
+       socketConnection.off("paymentProcessed");
     };
   }, [selectedTable]);
-  
+
   const handleNotificationClose = () => {
     setNotification(null);
   };
+
+  const handlePaymentNotificationClose = () => {
+    setPaymentNotification(null);
+  };
+  const playNotificationSound = () => {
+    notificationSound.current.play().catch((error) => {
+      console.error('Error playing sound:', error);
+      // Handle the error, maybe store the error to notify user later
+    });
+  };
+
+useEffect(() => {
+  if (notification) {
+      playNotificationSound();
+  }
+}, [notification]);
 
   const hours = new Date().getHours();
   let greetingMessage;
@@ -160,6 +206,7 @@ function Dashboard() {
   const handleGenerateBill = () => {
     if (selectedTable !== null) {
       console.log("Generating bill for table", selectedTable);
+      updateTableStatus('paid', 'completed'); // Automatically update statuses for simplicity
     }
   };
 
@@ -183,7 +230,20 @@ function Dashboard() {
   };
 
   return (
-    <main className="flex-grow p-4 overflow-scroll">
+    <main className="flex-grow p-4 overflow-scroll" >
+      
+
+{/* Payment Notification Snackbar */}
+{paymentNotification && (
+  <Snackbar
+  open={Boolean(paymentNotification)}
+  autoHideDuration={12000}
+  onClose={handlePaymentNotificationClose}
+  message={paymentNotification}
+  />
+)}
+
+
       {/* Heading or notification bar */}
       <div className="rounded-sm shadow-md bg-red-100 px-3 py-2 mb-1">
         <h2 className="text-xl font-semibold">Notification or Alert</h2>
@@ -236,11 +296,10 @@ function Dashboard() {
           {orderData.map(order => (
             <motion.div
               key={order.tableId}
-              className={`bg-gray-100 p-4 rounded-lg shadow-lg cursor-pointer ${
-                order.paymentStatus === 'paid' ? 'border-green-500 border-2' : 
-                order.paymentStatus === 'unpaid' ? 'border-red-500 border-2' : 
-                'border-yellow-500 border-2'
-              } transition-transform transform hover:scale-105`}
+              className={`bg-gray-100 p-4 rounded-lg shadow-lg cursor-pointer ${order.paymentStatus === 'paid' ? 'border-green-500 border-2' :
+                order.paymentStatus === 'unpaid' ? 'border-red-500 border-2' :
+                  'border-yellow-500 border-2'
+                } transition-transform transform hover:scale-105`}
               onClick={() => setSelectedTable(order.tableId)}
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.2 }}
@@ -248,13 +307,16 @@ function Dashboard() {
               <Typography variant="h6" component="h3" className="font-bold">Table {order.tableId}</Typography>
               <Typography variant="body1">Order Total: ₹{order.totalAmount.toFixed(2)}</Typography>
               <Typography variant="body1">Payment Status: {order.paymentStatus}</Typography>
+              {order.transactionId && (
+                <Typography variant="body1">Transaction ID: {order.transactionId}</Typography>
+              )}
               <Typography variant="body1">Food Status: {order.foodStatus}</Typography>
               <Typography variant="body1">Persons: {order.persons}</Typography>
             </motion.div>
           ))}
         </div>
       </div>
-          {/* Notification Snackbar */}
+      {/* Notification Snackbar */}
       {notification && (
         <Snackbar
           open={Boolean(notification)}
@@ -268,7 +330,21 @@ function Dashboard() {
           }
         />
       )}
-      
+      {/* Payment Notification Snackbar */}
+      {paymentNotification && (
+        <Snackbar
+          open={Boolean(paymentNotification)}
+          autoHideDuration={6000}
+          onClose={handlePaymentNotificationClose}
+          message={paymentNotification}
+          action={
+            <Button color="inherit" onClick={handlePaymentNotificationClose}>
+              Close
+            </Button>
+          }
+        />
+      )}
+
       {/* Table Specific Orders */}
       {selectedTable && (
         <div className="mb-4">
@@ -342,6 +418,11 @@ function Dashboard() {
                 inputProps={{ min: 1 }}
               />
             </div>
+
+            <div className={`border ${order.paymentStatus === 'paid' ? 'border-green-500' : order.paymentStatus === 'unpaid' ? 'border-red-500' : 'border-yellow-500'}`}>
+              <Typography variant="body1">Payment Status: {order.paymentStatus}</Typography>
+            </div>
+
             <div className="mb-4">
               <Typography variant="body1" className="block mb-2">Persons</Typography>
               <TextField
