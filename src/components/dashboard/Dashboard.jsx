@@ -41,7 +41,7 @@ function Dashboard() {
   const [showMenu, setShowMenu] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantity, setQuantity] = useState(1);
-
+  
   // Socket connection
   useEffect(() => {
     const socketConnection = io("http://localhost:4000");

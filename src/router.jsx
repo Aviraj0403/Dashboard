@@ -51,6 +51,7 @@ import RegisterRestaurantOwner from "./components/superAdminDashboard/Restaurant
 RestaurantList
 import RestaurantList from "./components/superAdminDashboard/RestaurantManagement/RestaurantList.jsx";
 import OwnerProfile from "./components/superAdminDashboard/RestaurantManagement/OwnerProfile.jsx";  
+import FoodMenu from "./pages/FoodMenu/FoodeMenu.jsx";
 
 // Assuming this component exists
 // Router setup
@@ -118,7 +119,7 @@ const router = createBrowserRouter(
           <Route path="transactions" element={<TransactionDashboard />} />
           <Route path="table-orders" element={<TableOrders />} />
           <Route path="table-orders/:id" element={<OrderDetails />} />
-          <Route path="items" element={<Navbar />} />
+          <Route path="items" element={<FoodMenu/>} />
 
           {/* REPORT */}
           <Route path="sales-report" element={<SalesReport />} />
