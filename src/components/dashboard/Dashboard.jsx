@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { FaChartLine, FaClipboardList, FaUser } from "react-icons/fa";
 import { MdMenuBook } from "react-icons/md";
 import BookingChart from "../chart/BookingChart";
 import { Outlet } from "react-router-dom";
+import { useRestaurantId } from '../../context/userContext';
 import io from "socket.io-client";
 import {
   Button,
@@ -15,70 +16,40 @@ import {
   Snackbar,
 } from "@mui/material";
 import { motion } from "framer-motion";
+import useNotification from '../../hooks/useNotification';
 
-// Your items array remains unchanged.
+// Item data
 const items = [
-  { id: 1, name: 'Sesame Chicken', image: 'https://demo.foodscan.xyz/storage/61/conversions/sweet_&_sour_chicken-thumb.png', price: 2500.00 },
-  { id: 2, name: 'Sweet & Sour Chicken', image: 'https://demo.foodscan.xyz/storage/61/conversions/sweet_&_sour_chicken-thumb.png', price: 2000.00 },
-  { id: 3, name: 'Wonton Soup', image: 'https://demo.foodscan.xyz/storage/79/conversions/wonton_soup-thumb.png', price: 1500.00 },
-  { id: 4, name: 'American BBQ Double', image: 'https://demo.foodscan.xyz/storage/43/conversions/american_bbq_double-thumb.png', price: 3000.00 },
-  { id: 5, name: 'Vegetable Roll', image: 'https://demo.foodscan.xyz/storage/42/conversions/vegetable_roll-thumb.png', price: 1000.00 },
-  { id: 6, name: 'Plain Grilled Chicken', image: 'https://demo.foodscan.xyz/storage/56/conversions/plain_grilled_chicken-thumb.png', price: 2500.00 },
-  { id: 7, name: 'Roasted Salmon Salad', image: 'https://demo.foodscan.xyz/storage/75/conversions/roasted_salmon_salad-thumb.png', price: 3500.00 },
-  { id: 8, name: 'Yemete Kudasai Chicken', image: 'https://demo.foodscan.xyz/storage/62/conversions/yemete_kudasai_chicken-thumb.png', price: 2000.00 },
+  { id: 1, name: 'Sesame Chicken', price: 2500.00 },
+  { id: 2, name: 'Sweet & Sour Chicken', price: 2000.00 },
+  { id: 3, name: 'Wonton Soup', price: 1500.00 },
+  { id: 4, name: 'American BBQ Double', price: 3000.00 },
+  { id: 5, name: 'Vegetable Roll', price: 1000.00 },
+  { id: 6, name: 'Plain Grilled Chicken', price: 2500.00 },
+  { id: 7, name: 'Roasted Salmon Salad', price: 3500.00 },
+  { id: 8, name: 'Yemete Kudasai Chicken', price: 2000.00 },
 ];
 
 function Dashboard() {
+  const restaurantId = useRestaurantId();
+  console.log("Restaurant ID:", restaurantId);
+
+  const { notification, notify, clearNotification } = useNotification();
   const [orderData, setOrderData] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
   const [tableOrders, setTableOrders] = useState([]);
   const [activeTables, setActiveTables] = useState(new Set());
-  const [socket, setSocket] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [notification, setNotification] = useState(null);
-  const notificationSound = useRef(new Audio('/notification.mp3'));
 
+  // Socket connection
   useEffect(() => {
+
     const socketConnection = io("http://localhost:4000");
-    setSocket(socketConnection);
-
-    const handleOrderUpdate = (data) => {
-      setOrderData(prevData => {
-        const updatedData = [...prevData];
-        const index = updatedData.findIndex(order => order.tableId === data.tableId);
-        if (index !== -1) {
-          updatedData[index] = data; // Update existing order
-        } else {
-          updatedData.push(data); // Add new order
-        }
-        return updatedData;
-      });
-      setNotification(`Order updated for Table ${data.tableId}`);
-      playNotificationSound();
-    };
-
-    const handleNewOrder = (data) => {
-      setOrderData(prevData => [...prevData, data]);
-      setActiveTables(prev => new Set(prev).add(data.tableName));
-    };
-
-    const handleTableUpdate = (data) => {
-      if (selectedTable === data.tableId) {
-        setTableOrders(data.orders);
-      }
-    };
-
-    const handlePaymentProcessed = (data) => {
-      setOrderData(prevData =>
-        prevData.map(order =>
-          order.tableId === data.tableId ? { ...order, paymentStatus: 'paid', transactionId: data.transactionId } : order
-        )
-      );
-      setNotification(`Payment confirmed from ${data.tableName}`);
-      playNotificationSound();
-    };
+    console.log("Joining restaurant with ID:", restaurantId);
+    
+    socketConnection.emit("joinRestaurant", restaurantId);
 
     socketConnection.on("orderUpdate", handleOrderUpdate);
     socketConnection.on("newOrder", handleNewOrder);
@@ -92,15 +63,45 @@ function Dashboard() {
       socketConnection.off("paymentProcessed", handlePaymentProcessed);
       socketConnection.disconnect();
     };
-  }, [selectedTable]);
+  }, [restaurantId]);
 
-  const hours = new Date().getHours();
-  const greetingMessage = hours < 12 ? "Good Morning!" : hours < 18 ? "Good Afternoon!" : "Good Evening!";
-  const textColor = hours < 12 ? "text-blue-600" : hours < 18 ? "text-orange-500" : "text-purple-600";
-
-  const playNotificationSound = () => {
-    notificationSound.current.play().catch(console.error);
+  const handleOrderUpdate = (data) => {
+    setOrderData((prevData) => {
+      const updatedData = [...prevData];
+      const index = updatedData.findIndex(order => order.tableId === data.tableId);
+      if (index !== -1) {
+        updatedData[index] = data;
+      } else {
+        updatedData.push(data);
+      }
+      return updatedData;
+    });
+    notify(`Order updated for Table ${data.tableId}`);
   };
+
+  const handleNewOrder = (data) => {
+    setOrderData(prevData => [...prevData, data]);
+    setActiveTables(prev => new Set(prev).add(data.tableName));
+  };
+
+  const handleTableUpdate = (data) => {
+    if (selectedTable === data.tableId) {
+      setTableOrders(data.orders);
+    }
+  };
+
+  const handlePaymentProcessed = (data) => {
+    setOrderData(prevData =>
+      prevData.map(order =>
+        order.tableId === data.tableId ? { ...order, paymentStatus: 'paid', transactionId: data.transactionId } : order
+      )
+    );
+    notify(`Payment confirmed from ${data.tableName}`);
+  };
+
+  const calculateTotalPrice = useMemo(() =>
+    tableOrders.reduce((total, order) => total + order.price, 0), [tableOrders]
+  );
 
   const handleAddItem = () => {
     if (selectedTable !== null && selectedItem) {
@@ -128,34 +129,29 @@ function Dashboard() {
     setQuantity(1);
   };
 
-  const calculateTotalPrice = () => tableOrders.reduce((total, order) => total + order.price, 0);
+  const hours = new Date().getHours();
+  const greetingMessage = hours < 12 ? "Good Morning!" : hours < 18 ? "Good Afternoon!" : "Good Evening!";
+  const textColor = hours < 12 ? "text-blue-600" : hours < 18 ? "text-orange-500" : "text-purple-600";
 
   return (
     <main className="flex-grow p-4 overflow-scroll">
-      {/* Notification Snackbar */}
       <Snackbar
         open={Boolean(notification)}
         autoHideDuration={12000}
-        onClose={() => setNotification(null)}
+        onClose={clearNotification}
         message={notification}
       />
-      <div className="rounded-sm shadow-md bg-red-100 px-3 py-2 mb-1">
-        <h2 className="text-xl font-semibold">Notification or Alert</h2>
-        <p>For notification purposes</p>
-      </div>
 
       {/* Greeting bar */}
       <div className="px-3 py-2 mb-1">
         <h2 className={`text-2xl font-bold ${textColor}`}>{greetingMessage}</h2>
-        <p>For greeting purposes</p>
       </div>
-
 
       <h2 className="text-2xl font-bold mb-4">Overview</h2>
       <div className="grid md:grid-cols-2 grid-cols-1 gap-4 text-white">
-        <OverviewCard title="Total Sales" value={`₹${calculateTotalPrice().toFixed(2)}`} icon={<FaChartLine />} color="#FF4F99" />
+        <OverviewCard title="Total Sales" value={`₹${calculateTotalPrice.toFixed(2)}`} icon={<FaChartLine />} color="#FF4F99" />
         <OverviewCard title="Total Orders" value={orderData.length} icon={<FaClipboardList />} color="#8262FE" />
-        <OverviewCard title="Total Customers" value={[...activeTables].length} icon={<MdMenuBook />} color="#567DFF" />
+        <OverviewCard title="Total Customers" value={activeTables.size} icon={<MdMenuBook />} color="#567DFF" />
         <OverviewCard title="Total Menu Items" value={items.length} icon={<FaUser />} color="#A953FF" />
       </div>
 
@@ -185,7 +181,7 @@ function Dashboard() {
           quantity={quantity}
           setQuantity={setQuantity}
           handleAddItem={handleAddItem}
-          closeMenu={() => setShowMenu(false)}
+          closeMenu={resetMenuState}
         />
       )}
 
@@ -207,26 +203,21 @@ const OverviewCard = ({ title, value, icon, color }) => (
 );
 
 // OrderCard Component
-// OrderCard Component
-const OrderCard = ({ order, onClick }) => {
-  const totalAmount = order.totalAmount || 0; // Default to 0 if totalAmount is undefined
-
-  return (
-    <motion.div
-      onClick={onClick}
-      className={`bg-gray-100 p-4 rounded-lg shadow-lg cursor-pointer border-2 transition-transform transform hover:scale-105`}
-      whileHover={{ scale: 1.05 }}
-      transition={{ duration: 0.2 }}
-    >
-      <Typography variant="h6" component="h3" className="font-bold"> {order.tableName}</Typography>
-      <Typography variant="body1">Order Total: ₹{totalAmount.toFixed(2)}</Typography>
-      <Typography variant="body1">Payment Status: {order.paymentStatus || "Pending"}</Typography>
-      {order.transactionId && <Typography variant="body1">Transaction ID: {order.transactionId}</Typography>}
-      <Typography variant="body1">Food Status: {order.foodStatus || "Pending"}</Typography>
-      <Typography variant="body1">Persons: {order.persons || 0}</Typography>
-    </motion.div>
-  );
-};
+const OrderCard = ({ order, onClick }) => (
+  <motion.div
+    onClick={onClick}
+    className={`bg-gray-100 p-4 rounded-lg shadow-lg cursor-pointer border-2 transition-transform transform hover:scale-105`}
+    whileHover={{ scale: 1.05 }}
+    transition={{ duration: 0.2 }}
+  >
+    <Typography variant="h6" component="h3" className="font-bold">{order.tableName}</Typography>
+    <Typography variant="body1">Order Total: ₹{(order.totalAmount || 0).toFixed(2)}</Typography>
+    <Typography variant="body1">Payment Status: {order.paymentStatus || "Pending"}</Typography>
+    {order.transactionId && <Typography variant="body1">Transaction ID: {order.transactionId}</Typography>}
+    <Typography variant="body1">Food Status: {order.foodStatus || "Pending"}</Typography>
+    <Typography variant="body1">Persons: {order.persons || 0}</Typography>
+  </motion.div>
+);
 
 // TableOrders Component
 const TableOrders = ({ selectedTable, tableOrders, calculateTotalPrice, setShowMenu }) => (
@@ -234,7 +225,7 @@ const TableOrders = ({ selectedTable, tableOrders, calculateTotalPrice, setShowM
     <h2 className="text-2xl font-bold mb-4">Orders for Table {selectedTable}</h2>
     <div className="mb-4">
       <Button variant="contained" color="primary" onClick={() => setShowMenu(true)}>Add Item to Order</Button>
-      <Typography variant="h6" className="mb-2">Total Price (INR): ₹{calculateTotalPrice().toFixed(2)}</Typography>
+      <Typography variant="h6" className="mb-2">Total Price (INR): ₹{calculateTotalPrice.toFixed(2)}</Typography>
     </div>
     <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4 py-3">
       {tableOrders.map(order => (
@@ -267,7 +258,7 @@ const ItemSelectionMenu = ({ items, selectedItem, setSelectedItem, quantity, set
         label="Quantity"
         type="number"
         value={quantity}
-        onChange={(e) => setQuantity(Number(e.target.value))}
+        onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
         inputProps={{ min: 1 }}
         fullWidth
       />
@@ -280,4 +271,3 @@ const ItemSelectionMenu = ({ items, selectedItem, setSelectedItem, quantity, set
 );
 
 export default Dashboard;
-// latest
