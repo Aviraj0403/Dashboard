@@ -14,6 +14,7 @@ import {
   Select,
   TextField,
   Snackbar,
+  Chip,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import useNotification from '../../hooks/useNotification';
@@ -32,8 +33,6 @@ const items = [
 
 function Dashboard() {
   const restaurantId = useRestaurantId();
-  console.log("Restaurant ID:", restaurantId);
-
   const { notification, notify, clearNotification } = useNotification();
   const [orderData, setOrderData] = useState([]);
   const [selectedTable, setSelectedTable] = useState(null);
@@ -45,10 +44,8 @@ function Dashboard() {
 
   // Socket connection
   useEffect(() => {
-
     const socketConnection = io("http://localhost:4000");
-    console.log("Joining restaurant with ID:", restaurantId);
-    
+
     socketConnection.emit("joinRestaurant", restaurantId);
 
     socketConnection.on("orderUpdate", handleOrderUpdate);
@@ -80,8 +77,24 @@ function Dashboard() {
   };
 
   const handleNewOrder = (data) => {
-    setOrderData(prevData => [...prevData, data]);
-    setActiveTables(prev => new Set(prev).add(data.tableName));
+    if (!data.orderDetails || !data.orderDetails.cart) {
+      console.error("Invalid order data received:", data);
+      return;
+    }
+
+    const { selectedTable, totalPrice, cart } = data.orderDetails;
+
+    const newOrder = {
+      tableId: selectedTable,
+      totalAmount: totalPrice,
+      orderDetails: cart,
+      paymentStatus: 'Pending',
+      tableName: data.tableName,
+    };
+
+    setOrderData(prevData => [...prevData, newOrder]);
+    setActiveTables(prev => new Set(prev).add(newOrder.tableName));
+    notify(`New order received for Table ${selectedTable}`);
   };
 
   const handleTableUpdate = (data) => {
@@ -93,7 +106,7 @@ function Dashboard() {
   const handlePaymentProcessed = (data) => {
     setOrderData(prevData =>
       prevData.map(order =>
-        order.tableId === data.tableId ? { ...order, paymentStatus: 'paid', transactionId: data.transactionId } : order
+        order.tableId === data.tableId ? { ...order, paymentStatus: 'Paid', transactionId: data.transactionId ,tableName: order.tableName } : order
       )
     );
     notify(`Payment confirmed from ${data.tableName}`);
@@ -142,7 +155,6 @@ function Dashboard() {
         message={notification}
       />
 
-      {/* Greeting bar */}
       <div className="px-3 py-2 mb-1">
         <h2 className={`text-2xl font-bold ${textColor}`}>{greetingMessage}</h2>
       </div>
@@ -159,7 +171,8 @@ function Dashboard() {
         <h2 className="text-2xl font-bold mb-4">Customer Orders</h2>
         <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4 py-3">
           {orderData.map(order => (
-            <OrderCard key={order.tableId} order={order} onClick={() => setSelectedTable(order.tableId)} />
+           <OrderCard key={order.tableId} order={order} onClick={() => setSelectedTable(order.tableId)} />
+
           ))}
         </div>
       </div>
@@ -206,16 +219,26 @@ const OverviewCard = ({ title, value, icon, color }) => (
 const OrderCard = ({ order, onClick }) => (
   <motion.div
     onClick={onClick}
-    className={`bg-gray-100 p-4 rounded-lg shadow-lg cursor-pointer border-2 transition-transform transform hover:scale-105`}
+    className={`bg-gray-100 p-4 rounded-lg shadow-lg cursor-pointer border-2 border-gray-300 transition-transform transform hover:scale-105`}
     whileHover={{ scale: 1.05 }}
     transition={{ duration: 0.2 }}
   >
-    <Typography variant="h6" component="h3" className="font-bold">{order.tableName}</Typography>
+    <Typography variant="h6" component="h3" className="font-bold flex justify-between items-center">
+      {order.tableName}
+      {order.paymentStatus === 'Paid' && <Chip label="Paid" color="success" size="small" />}
+    </Typography>
     <Typography variant="body1">Order Total: ₹{(order.totalAmount || 0).toFixed(2)}</Typography>
     <Typography variant="body1">Payment Status: {order.paymentStatus || "Pending"}</Typography>
+
+    {/* Display cart items */}
+    <Typography variant="body2" className="mt-2">Order Details:</Typography>
+    {order.orderDetails.map(item => (
+      <Typography key={item.fooditemId} variant="body2">
+        {item.name} (Quantity: {item.quantity})
+      </Typography>
+    ))}
+
     {order.transactionId && <Typography variant="body1">Transaction ID: {order.transactionId}</Typography>}
-    <Typography variant="body1">Food Status: {order.foodStatus || "Pending"}</Typography>
-    <Typography variant="body1">Persons: {order.persons || 0}</Typography>
   </motion.div>
 );
 
@@ -229,7 +252,7 @@ const TableOrders = ({ selectedTable, tableOrders, calculateTotalPrice, setShowM
     </div>
     <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4 py-3">
       {tableOrders.map(order => (
-        <Card key={order.id} className="shadow-lg">
+        <Card key={order.id} className="shadow-lg p-4 border border-gray-300">
           <CardContent>
             <Typography variant="h6" component="div">{order.itemName}</Typography>
             <Typography variant="body2">Quantity: {order.quantity}</Typography>
