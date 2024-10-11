@@ -1,0 +1,23 @@
+@media (max-width: 768px) {
+    .table {
+      display: block;
+      overflow-x: auto;
+    }
+    .table thead {
+      display: none;
+    }
+    .table tbody tr {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 1rem;
+      border: 1px solid #eaeaea;
+      padding: 1rem;
+      border-radius: 0.5rem;
+    }
+    .table tbody tr td {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+    }
+  }
+  
