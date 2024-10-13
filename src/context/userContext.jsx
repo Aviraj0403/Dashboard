@@ -1,3 +1,5 @@
+// src/context/userContext.js
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { loginSuperAdmin, loginRestaurantOwner, logoutUser as apiLogoutUser } from '../service/userApi.js';
 import Cookies from 'js-cookie';
@@ -28,11 +30,8 @@ export const AuthProvider = ({ children }) => {
       }
 
       if (data) {
-        console.log("User Data:", data);
         setIsLoggedIn(true);
         setUserData(data);
-        console.log("Restaurant ID:", data.user.restaurantId);
-        // Store minimal user state in cookies (including restaurantId if available)
         Cookies.set('token', data.token, { expires: 7 });
         Cookies.set('isLoggedIn', 'true', { expires: 7 });
         Cookies.set('userRole', userRole, { expires: 7 });
@@ -87,7 +86,6 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
-// New custom hook to get restaurantId
 export const useRestaurantId = () => {
   const { restaurantId } = useAuth();
   return restaurantId;

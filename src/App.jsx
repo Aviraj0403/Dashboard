@@ -7,7 +7,7 @@ import SuperAdminDashboard from "./components/superAdminDashboard/SuperAdminDash
 import LoginPage from "./pages/Login/Login.jsx"; // Assuming you have a LoginPage
 import ProtectedRoute from './components/secureRoute/ProtectedRoute.jsx'; // Import ProtectedRoute
 import { AuthProvider } from './context/userContext'; // Import AuthProvider
-
+import { SocketProvider } from './context/SocketContext';
 function App() {
   const [openSidebar, setOpenSidebar] = useState(true);
 
@@ -32,7 +32,9 @@ function App() {
 
   return (
     <AuthProvider>
+       
       <Router>
+      <SocketProvider>
         <div className="flex h-screen overflow-hidden">
           <Sidebar
             className={`lg:fixed absolute top-0 left-0 z-30 w-64 h-full bg-gray-800 transition-transform duration-300 ease-in-out ${
@@ -63,6 +65,7 @@ function App() {
             <Footer />
           </div>
         </div>
+        </SocketProvider>
       </Router>
     </AuthProvider>
   );
