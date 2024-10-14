@@ -4,6 +4,7 @@ import { MdMenuBook } from "react-icons/md";
 import BookingChart from "../chart/BookingChart";
 import { Outlet } from "react-router-dom";
 import { useRestaurantId } from '../../context/userContext';
+import io from "socket.io-client";
 import {
   Button,
   Card,
@@ -17,7 +18,6 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import useNotification from '../../hooks/useNotification';
-import useSocket from '../../hooks/useSocket'; // Import your custom hook
 
 // Item data
 const items = [
@@ -41,8 +41,27 @@ function Dashboard() {
   const [showMenu, setShowMenu] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantity, setQuantity] = useState(1);
+  
+  // Socket connection
+  useEffect(() => {
+    const socketConnection = io("http://localhost:4000");
 
-  // Socket handler functions
+    socketConnection.emit("joinRestaurant", restaurantId);
+
+    socketConnection.on("orderUpdate", handleOrderUpdate);
+    socketConnection.on("newOrder", handleNewOrder);
+    socketConnection.on("tableUpdate", handleTableUpdate);
+    socketConnection.on("paymentProcessed", handlePaymentProcessed);
+
+    return () => {
+      socketConnection.off("orderUpdate", handleOrderUpdate);
+      socketConnection.off("newOrder", handleNewOrder);
+      socketConnection.off("tableUpdate", handleTableUpdate);
+      socketConnection.off("paymentProcessed", handlePaymentProcessed);
+      socketConnection.disconnect();
+    };
+  }, [restaurantId]);
+
   const handleOrderUpdate = (data) => {
     setOrderData((prevData) => {
       const updatedData = [...prevData];
@@ -92,17 +111,6 @@ function Dashboard() {
     );
     notify(`Payment confirmed from ${data.tableName}`);
   };
-
-  // Socket handlers object
-  const handlers = {
-    orderUpdate: handleOrderUpdate,
-    newOrder: handleNewOrder,
-    tableUpdate: handleTableUpdate,
-    paymentProcessed: handlePaymentProcessed,
-  };
-
-  // Use custom hook for socket connection
-  useSocket(restaurantId, handlers);
 
   const calculateTotalPrice = useMemo(() =>
     tableOrders.reduce((total, order) => total + order.price, 0), [tableOrders]
