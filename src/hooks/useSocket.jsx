@@ -1,26 +1,25 @@
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import io from 'socket.io-client';
 
-const useSocket = (url, onMessage) => {
-  const socketRef = useRef(null);
-
+const useSocket = (restaurantId, handlers) => {
   useEffect(() => {
-    // Create the socket connection
-    socketRef.current = io(url);
+    const socket = io("http://localhost:4000");
 
-    // Register event listeners
-    socketRef.current.on('message', onMessage);
+    socket.emit("joinRestaurant", restaurantId);
+
+    // Attach event handlers
+    Object.entries(handlers).forEach(([event, handler]) => {
+      socket.on(event, handler);
+    });
 
     return () => {
-      // Cleanup: Remove the event listener and disconnect the socket when the component unmounts
-      if (socketRef.current) {
-        socketRef.current.off('message', onMessage);
-        socketRef.current.disconnect();
-      }
+      // Clean up: remove event handlers and disconnect socket
+      Object.entries(handlers).forEach(([event]) => {
+        socket.off(event);
+      });
+      socket.disconnect();
     };
-  }, [url, onMessage]);
-
-  return socketRef.current;
+  }, [restaurantId, handlers]);
 };
 
 export default useSocket;
