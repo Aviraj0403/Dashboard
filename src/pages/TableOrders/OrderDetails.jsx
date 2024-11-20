@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'; // For fetching order ID from URL params
 
 const sampleOrderDetails = {
-  id: '1507244',
+  id: '1507244', 
   paymentStatus: 'Unpaid',
   foodStatus: 'Accept',
   date: '03:21 PM, 15-07-2024',

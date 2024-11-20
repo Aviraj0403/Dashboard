@@ -47,7 +47,7 @@ const OffersList = () => {
   };
 
   const handleEditOffer = (offerId) => {
-    navigate(`/admin/edit-offer//${restaurantId}/${offerId}`);
+    navigate(`/admin/edit-offer/${restaurantId}/${offerId}`);
   };
 
   const handleRemoveOffer = async (offerId) => {

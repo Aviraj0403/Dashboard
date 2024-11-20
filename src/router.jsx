@@ -13,6 +13,7 @@ import AddItem from "./components/addItem/addItem.jsx";
 import FallbackPage from "./pages/FallBack.jsx";
 import DishList from "./components/ManageFoodItem/DishList.jsx";
 import OffersList from "./pages/Promo/OffersList.jsx";
+import EditOffer from "./pages/Promo/EditOffer.jsx";
 import AddOffer from "./pages/Promo/AddOffer.jsx";
 import PosContainer from "./components/POS/PosContainer.jsx";
 import SecondarySidebar from "./pages/Setting/secondarySidebar.jsx";
@@ -114,6 +115,7 @@ const router = createBrowserRouter(
           <Route path="manage-item/edit-dish/:id" element={<EditDish />} />
           <Route path="manage-item/dish-details/:id" element={<DishDetails />} />
           <Route path="offersList" element={<OffersList />} />
+          <Route path="edit-offer/:restaurantId/:offerId" element={<EditOffer />} />
           <Route path="add-offer" element={<AddOffer />} />
           <Route path="pos" element={<PosContainer />} />
           <Route path="transactions" element={<TransactionDashboard />} />
