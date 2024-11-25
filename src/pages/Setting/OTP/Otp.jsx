@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const Otp = () => {
+const OTP = () => {
   // State for managing OTP settings
   const [otpType, setOtpType] = useState('');
   const [otpDigitLimit, setOtpDigitLimit] = useState('');
@@ -111,4 +111,4 @@ const Otp = () => {
   );
 };
 
-export default Otp;
+export default OTP;

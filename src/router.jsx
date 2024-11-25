@@ -35,7 +35,7 @@ import MailSettings from "./pages/Setting/Mail/MailSetting.jsx";
 import FirebaseNotification from "./pages/Setting/Notification/Notification.jsx";
 import NotificationAlert from "./pages/Setting/Notification/NotificationAlert.jsx";
 import Theme from "./pages/Setting/Theme/Theme.jsx";
-import Otp from "./pages/Setting/OTP/OTP.jsx";
+import OTP from "./pages/Setting/OTP/OTP.jsx";
 import Currencies from "./pages/Setting/Currency/Currency.jsx";
 import ItemCategory from "./pages/Setting/ItemCategory/ItemCategory.jsx";
 import RolePermissions from "./pages/Setting/RolePermission/RolePermissions.jsx";
@@ -83,7 +83,7 @@ const router = createBrowserRouter(
             <Route path="branches" element={<Branch />} />
             <Route path="site" element={<Site />} />
             <Route path="mail" element={<MailSettings />} />
-            <Route path="otp" element={<Otp />} />
+            <Route path="otp" element={<OTP />} />
             <Route path="notification" element={<FirebaseNotification />} />
             <Route path="notification-alert" element={<NotificationAlert />} />
             <Route path="theme" element={<Theme />} />
@@ -141,7 +141,7 @@ const router = createBrowserRouter(
             <Route path="branches" element={<Branch />} />
             <Route path="site" element={<Site />} />
             <Route path="mail" element={<MailSettings />} />
-            <Route path="otp" element={<Otp />} />
+            <Route path="otp" element={<OTP />} />
             <Route path="notification" element={<FirebaseNotification />} />
             <Route path="notification-alert" element={<NotificationAlert />} />
             <Route path="theme" element={<Theme />} />
