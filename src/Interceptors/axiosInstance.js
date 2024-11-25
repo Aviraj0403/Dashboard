@@ -1,7 +1,9 @@
 import axios from 'axios';
 // Create an instance of axios
 const axiosInstance = axios.create({
-    baseURL: 'http://localhost:4000/api', // Use environment variable for base URL
+    // baseURL: 'http://localhost:4000/api', 
+    // Use environment variable for base URL
+    baseURL: 'https://backend-obet.onrender.com/api',
     withCredentials: true, // Ensure cookies are included in requests
 });
 
