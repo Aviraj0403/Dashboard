@@ -44,7 +44,9 @@ function Dashboard() {
   
   // Socket connection
   useEffect(() => {
-    const socketConnection = io("http://localhost:4000");
+    const socketURL = process.env.REACT_APP_SOCKET_URL || "http://localhost:4000";
+    const socketConnection = io(socketURL);
+    // const URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
     socketConnection.emit("joinRestaurant", restaurantId);
 

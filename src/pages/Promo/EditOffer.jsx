@@ -9,7 +9,7 @@ const EditOffer = () => {
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const { offerId } = useParams(); // Get the offer ID from the URL
-  const URL = 'http://localhost:4000';
+  const URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
   const restaurantId = useRestaurantId(); // Get the restaurant ID from context
 
   useEffect(() => {

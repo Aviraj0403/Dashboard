@@ -20,7 +20,8 @@ const EditDish = () => {
 
   const fetchDish = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/food/${restaurantId}/${id}`); // Use restaurantId here
+      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:4000"; 
+      const response = await axios.get(`${apiUrl}/api/food/${restaurantId}/${id}`); // Use restaurantId here
       if (response.data.success) {
         const data = response.data.data;
         setDish(data);
@@ -47,7 +48,7 @@ const EditDish = () => {
 
   const handleSave = async () => {
     try {
-      const response = await axios.put(`http://localhost:4000/api/food/${restaurantId}/${id}`, { // Use restaurantId here
+      const response = await axios.put(`${apiUrl}/api/food/${restaurantId}/${id}`, { // Use restaurantId here
         name,
         category,
         price,

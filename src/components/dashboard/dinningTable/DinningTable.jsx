@@ -22,8 +22,8 @@ const DiningTable = () => {
   const { register, reset, handleSubmit, setValue } = useForm();
   const [isOpenForm, setIsOpenForm] = useState({ formName: "", tableId: null });
   const restaurantId = useRestaurantId();
-  const URL = "http://localhost:4000";
-
+  // const URL = "http://localhost:4000";
+  const URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
   const handleCloseForm = () => {
     setIsOpenForm({ formName: "", tableId: null });
     reset();

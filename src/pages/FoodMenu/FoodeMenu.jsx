@@ -8,7 +8,7 @@ const FoodMenu = () => {
     const [foods, setFoods] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:4000";
     useEffect(() => {
         const fetchFoods = async () => {
             if (!restaurantId) {
@@ -18,7 +18,7 @@ const FoodMenu = () => {
             }
 
             try {
-                const response = await axios.get(`http://localhost:4000/api/food/${restaurantId}/list-food`);
+                const response = await axios.get(`${apiUrl}/api/food/${restaurantId}/list-food`);
                 setFoods(response.data.data);
             } catch (err) {
                 setError('Failed to fetch food items');

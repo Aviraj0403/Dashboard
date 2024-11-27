@@ -11,7 +11,8 @@ const DishDetails = () => {
 
   const fetchDish = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/food/${restaurantId}/${id}`);
+      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:4000";
+      const response = await axios.get(`${apiUrl}/api/food/${restaurantId}/${id}`);
       if (response.data.success) {
         setDish(response.data.data);
       } else {

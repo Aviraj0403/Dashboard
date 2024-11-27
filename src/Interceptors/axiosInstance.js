@@ -3,7 +3,7 @@ import axios from 'axios';
 const axiosInstance = axios.create({
     // baseURL: 'http://localhost:4000/api', 
     // Use environment variable for base URL
-    baseURL: 'https://backend-obet.onrender.com/api',
+    baseURL: 'https://backend-obet.onrender.com/api' || 'http://localhost:4000' ,
     withCredentials: true, // Ensure cookies are included in requests
 });
 

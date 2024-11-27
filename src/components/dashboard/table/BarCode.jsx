@@ -14,7 +14,8 @@ const BarCode = () => {
   }
 
   // Dynamic URL to scan which fetches both food and table info
-  const dynamicUrl = `http://localhost:4000/api/scan?restaurantId=${restaurantId}&tableId=${id}`;
+  const dynamicUrl=`https://scan-version.vercel.app/`
+  // const dynamicUrl = `http://localhost:4000/api/scan?restaurantId=${restaurantId}&tableId=${id}`;
 
   return (
     <Container

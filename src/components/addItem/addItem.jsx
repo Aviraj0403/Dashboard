@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import axios from "axios";
 
 // Define URL for API endpoint
-const URL = "http://localhost:4000";
+const URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
 
 // Define categories and varieties
 const categories = [
