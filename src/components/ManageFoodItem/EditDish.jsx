@@ -20,7 +20,7 @@ const EditDish = () => {
 
   const fetchDish = async () => {
     try {
-      const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:4000"; 
+      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000"; 
       const response = await axios.get(`${apiUrl}/api/food/${restaurantId}/${id}`); // Use restaurantId here
       if (response.data.success) {
         const data = response.data.data;

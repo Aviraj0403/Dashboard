@@ -9,7 +9,7 @@ const OffersList = () => {
   const [offers, setOffers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const URL = process.env.REACT_APP_API_URL || 'http://localhost:4000';
+  const URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
   const restaurantId = useRestaurantId(); // Get the restaurant ID from context
 
   useEffect(() => {

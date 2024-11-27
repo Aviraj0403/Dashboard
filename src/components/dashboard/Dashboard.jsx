@@ -44,7 +44,7 @@ function Dashboard() {
   
   // Socket connection
   useEffect(() => {
-    const socketURL = process.env.REACT_APP_SOCKET_URL || "http://localhost:4000";
+    const socketURL = import.meta.env.VITE_API_URL || "http://localhost:4000";
     const socketConnection = io(socketURL);
     // const URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
 

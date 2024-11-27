@@ -8,7 +8,7 @@ export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState();
 
   useEffect(() => {
-    const socketURL = process.env.REACT_APP_SOCKET_URL || "http://localhost:4000";
+    const socketURL = import.meta.env.REACT_APP_SOCKET_URL || "http://localhost:4000";
     const newSocket = io(socketURL);
     setSocket(newSocket);
 

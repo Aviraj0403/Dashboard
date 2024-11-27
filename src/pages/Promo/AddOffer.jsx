@@ -7,7 +7,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom"; 
 import { useRestaurantId } from '../../context/userContext.jsx'; // Assuming you have a context to get the restaurant ID
 
-const URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
+const URL = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Name is required"),

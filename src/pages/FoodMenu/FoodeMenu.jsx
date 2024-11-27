@@ -8,7 +8,7 @@ const FoodMenu = () => {
     const [foods, setFoods] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const apiUrl = process.env.REACT_APP_API_URL || "http://localhost:4000";
+    const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000";
     useEffect(() => {
         const fetchFoods = async () => {
             if (!restaurantId) {

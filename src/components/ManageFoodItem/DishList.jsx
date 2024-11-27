@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { useRestaurantId } from '../../context/userContext.jsx';
 
 const DishList = () => {
-  const URL =  process.env.REACT_APP_API_URL || 'http://localhost:4000';
+  const URL =  import.meta.env.VITE_API_URL || 'http://localhost:4000';
   const restaurantId = useRestaurantId();
   const [list, setList] = useState([]);
 
