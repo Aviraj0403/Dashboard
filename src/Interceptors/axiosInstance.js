@@ -1,9 +1,13 @@
 import axios from 'axios';
 // Create an instance of axios
+console.log(" :",process.env.NODE_ENV )
 const axiosInstance = axios.create({
+    baseURL: process.env.NODE_ENV === 'development' 
+    ? 'https://backend-obet.onrender.com/api' 
+    : 'http://localhost:4000/api',
     // baseURL: 'http://localhost:4000/api', 
     // Use environment variable for base URL
-    baseURL: 'https://backend-obet.onrender.com/api' || 'http://localhost:4000' ,
+    // baseURL: 'https://backend-obet.onrender.com/api' || 'http://localhost:4000/api' ,
     withCredentials: true, // Ensure cookies are included in requests
 });
 

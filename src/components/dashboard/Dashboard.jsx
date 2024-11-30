@@ -200,7 +200,7 @@ function Dashboard() {
         />
       )}
 
-      <BookingChart title={"Sales Report"} url={"/ticket/tickets/all"} />
+      <BookingChart title={"Sales Report"} url={"#"} />
       <Outlet />
     </main>
   );
