@@ -1,98 +1,100 @@
 import axios from 'axios';
-// Create an instance of axios
-console.log(" :",process.env.NODE_ENV )
+
+// Create Axios instance
 const axiosInstance = axios.create({
-    baseURL: process.env.NODE_ENV === 'development' 
+  baseURL: process.env.NODE_ENV === 'development' 
     ? 'https://backend-obet.onrender.com/api' 
     : 'http://localhost:4000/api',
-    // baseURL: 'http://localhost:4000/api', 
-    // Use environment variable for base URL
-    // baseURL: 'https://backend-obet.onrender.com/api' || 'http://localhost:4000/api' ,
-    withCredentials: true, // Ensure cookies are included in requests
+  withCredentials: true, // Ensure cookies are included in requests
+  headers: { 'Content-Type': 'application/json' },
 });
 
-// Function to retrieve CSRF token from cookies
-const getCsrfTokenFromCookies = () => {
-    const cookieString = document.cookie.split('; ').find(row => row.startsWith('csrfToken='));
-    return cookieString ? cookieString.split('=')[1] : null;
-};
-
-// Function to retrieve access token from cookies
-const getAccessTokenFromCookies = () => {
-    const cookieString = document.cookie.split('; ').find(row => row.startsWith('accessToken='));
-    return cookieString ? cookieString.split('=')[1] : null;
-};
-
-// Function to check if the user is logged in (e.g., check if access token exists)
-const isUserLoggedIn = () => {
-    return !!getAccessTokenFromCookies(); // Returns true if access token exists
+// Helper function to retrieve token from cookies with improved handling
+const getTokenFromCookies = (tokenName) => {
+  const cookieString = document.cookie.split('; ').find(row => row.startsWith(`${tokenName}=`));
+  if (cookieString) {
+    const token = cookieString.split('=')[1];
+    console.log(`Retrieved ${tokenName}:`, token); // Log the token value for debugging
+    return token;
+  } else {
+    console.log(`No ${tokenName} found in cookies.`); // Log if token is missing
+    return null;
+  }
 };
 
 // Request interceptor to add the CSRF token and Authorization header
 axiosInstance.interceptors.request.use(config => {
-    const csrfToken = getCsrfTokenFromCookies();
-    const accessToken = getAccessTokenFromCookies();
-    
-    if (csrfToken) {
-        config.headers['X-CSRF-Token'] = csrfToken; // Attach CSRF token
-        console.log('CSRF token added to request headers:', csrfToken); // Debugging
-    } else if (isUserLoggedIn()) { // Only warn if the user is logged in
-        console.warn('No CSRF token found in cookies. Make sure you are logged in and the CSRF token is set.');
-    }
+  const csrfToken = getTokenFromCookies('csrfToken'); // Retrieve CSRF token from cookies
+  const accessToken = getTokenFromCookies('accessToken'); // Retrieve Access token from cookies
+  
+  // Add CSRF token if it exists
+  if (csrfToken) {
+    config.headers['X-CSRF-Token'] = csrfToken;
+    console.log('CSRF Token added to headers:', csrfToken); // Log CSRF token
+  } else {
+    console.log('No CSRF Token found'); // Log if CSRF token is missing
+  }
+  
+  // Add Access Token if it exists
+  if (accessToken) {
+    config.headers['Authorization'] = `Bearer ${accessToken}`;
+    console.log('Authorization Header added:', `Bearer ${accessToken}`); // Log Access Token
+  } else {
+    console.log('No Access Token found'); // Log if Access Token is missing
+  }
 
-    if (accessToken) {
-        config.headers['Authorization'] = `Bearer ${accessToken}`; // Attach access token
-        console.log('Access token added to request headers:', accessToken); // Debugging
-    } else if (isUserLoggedIn()) { // Only warn if the user is logged in
-        console.warn('No access token found in cookies. Please log in to obtain an access token.');
-    }
-
-    return config;
+  return config;
 }, error => {
-    console.error('Error in request interceptor:', error); // Debugging
-    return Promise.reject(error);
+  console.error('Request Interceptor Error:', error);
+  return Promise.reject(error);
 });
 
-// Response interceptor for handling errors globally
+// Response interceptor to handle token refresh on 401 Unauthorized
 axiosInstance.interceptors.response.use(response => {
-    console.log('Response received:', response); // Debugging
-    return response;
+  return response;
 }, async (error) => {
-    if (error.response) {
-        const { status, data } = error.response;
-        console.error('Response error:', status, data); // Debugging
-
-        if (status === 401 && !error.config._retry) {
-            console.error('Unauthorized access. Attempting to refresh token...');
-            error.config._retry = true;
-
-            try {
-                const refreshToken = getAccessTokenFromCookies(); // Adjust this if you're storing refresh token differently
-                const response = await axios.post(`${axiosInstance.defaults.baseURL}/auth/refresh-token`, {
-                    refreshToken,
-                }, {
-                    withCredentials: true,
-                });
-
-                const newAccessToken = response.data.accessToken;
-                document.cookie = `accessToken=${newAccessToken}; path=/`; // Set the access token in a cookie
-                console.log('Access token refreshed successfully:', newAccessToken); // Debugging
-
-                axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${newAccessToken}`;
-                return axiosInstance(error.config);
-            } catch (refreshError) {
-                console.error('Failed to refresh token. Redirecting to login.', refreshError); // Debugging
-                window.location.href = '/login';
-            }
-        } else if (status === 403) {
-            console.warn('Access denied. You do not have permission to perform this action.'); // Debugging
-        } else {
-            console.error('An unexpected error occurred:', data.message || 'No error message available.'); // Debugging
-        }
-    } else {
-        console.error('Error with no response:', error); // Debugging
+  // If the status is 401 (Unauthorized) and the request hasn't been retried yet
+  if (error.response && error.response.status === 401 && !error.config._retry) {
+    error.config._retry = true;
+    try {
+      // Attempt to refresh the access token
+      const refreshedData = await refreshAccessToken();
+      if (refreshedData) {
+        // Retry the original request with the new access token
+        return axiosInstance(error.config);
+      }
+    } catch (refreshError) {
+      // If token refresh fails, redirect to login
+      console.error('Token refresh failed, redirecting to login:', refreshError);
+      window.location.href = '/login'; // Redirect to login on token refresh failure
     }
-    return Promise.reject(error);
+  }
+  return Promise.reject(error);
 });
+
+// Function to refresh the Access Token
+const refreshAccessToken = async () => {
+  try {
+    const refreshToken = getTokenFromCookies('refreshToken'); // Get the refresh token from cookies
+    if (!refreshToken) {
+      console.error('No refresh token available in cookies');
+      return null;
+    }
+
+    console.log('Attempting to refresh access token with refresh token:', refreshToken);
+
+    // Make a request to the backend to refresh the access token
+    const response = await axiosInstance.post('/auth/refresh-token', { refreshToken });
+
+    // If successful, update the access token in the cookies
+    document.cookie = `accessToken=${response.data.accessToken}; path=/; secure; SameSite=Strict;`;
+    console.log('Access token refreshed successfully:', response.data.accessToken);
+
+    return response.data;
+  } catch (error) {
+    console.error('Failed to refresh access token:', error.message);
+    return null;
+  }
+};
 
 export default axiosInstance;

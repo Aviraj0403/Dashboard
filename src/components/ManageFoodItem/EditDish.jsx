@@ -18,12 +18,14 @@ const EditDish = () => {
   const [isFeatured, setIsFeatured] = useState(false);
   const [recommended, setRecommended] = useState(false);
 
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000"; 
+
   const fetchDish = async () => {
     try {
-      const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4000"; 
-      const response = await axios.get(`${apiUrl}/api/food/${restaurantId}/${id}`); // Use restaurantId here
-      if (response.data.success) {
-        const data = response.data.data;
+      const response = await axios.get(`${apiUrl}/api/food/${restaurantId}/${id}`);
+      const { success, data, message } = response.data;
+
+      if (success) {
         setDish(data);
         setName(data.name);
         setCategory(data.category);
@@ -35,7 +37,7 @@ const EditDish = () => {
         setIsFeatured(data.isFeatured);
         setRecommended(data.recommended);
       } else {
-        toast.error(response.data.message || 'Error fetching dish details');
+        toast.error(message || 'Error fetching dish details');
       }
     } catch (error) {
       toast.error(error.message || 'Error fetching dish details');
@@ -44,26 +46,37 @@ const EditDish = () => {
 
   useEffect(() => {
     fetchDish();
-  }, [id, restaurantId]); // Include restaurantId in the dependencies
+  }, [id, restaurantId]);
 
   const handleSave = async () => {
-    try {
-      const response = await axios.put(`${apiUrl}/api/food/${restaurantId}/${id}`, { // Use restaurantId here
-        name,
-        category,
-        price,
-        description,
-        status,
-        itemType,
-        variety,
-        isFeatured,
-        recommended,
-      }, { withCredentials: true });
+    if (!name || !category || !price || !itemType) {
+      toast.error('Please fill in all required fields.');
+      return;
+    }
 
-      if (response.data.success) {
+    try {
+      const response = await axios.put(
+        `${apiUrl}/api/food/${restaurantId}/${id}`,
+        {
+          name,
+          category,
+          price,
+          description,
+          status,
+          itemType,
+          variety,
+          isFeatured,
+          recommended,
+        },
+        { withCredentials: true }
+      );
+
+      const { success, message } = response.data;
+
+      if (success) {
         toast.success('Dish updated successfully');
       } else {
-        toast.error(response.data.message || 'Error updating dish');
+        toast.error(message || 'Error updating dish');
       }
     } catch (error) {
       toast.error(error.message || 'Error updating dish');
@@ -84,6 +97,7 @@ const EditDish = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            required
           />
         </div>
         <div className="mb-4">
@@ -92,6 +106,7 @@ const EditDish = () => {
             value={category}
             onChange={(e) => setCategory(e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            required
           >
             <option value="">Select Category</option>
             <option value="Salad">Salad</option>
@@ -107,6 +122,7 @@ const EditDish = () => {
             value={price}
             onChange={(e) => setPrice(e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            required
           />
         </div>
         <div className="mb-4">
@@ -143,6 +159,7 @@ const EditDish = () => {
             value={itemType}
             onChange={(e) => setItemType(e.target.value)}
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            required
           >
             <option value="">Select Item Type</option>
             <option value="Veg">Veg</option>

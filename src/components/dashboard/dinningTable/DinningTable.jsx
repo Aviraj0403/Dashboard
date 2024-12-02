@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import Modal from "../../modal/Modal";
 import { toast } from "react-toastify";
 import axios from "axios";
+import Cookies from 'js-cookie';
 import { useRestaurantId } from "../../../context/userContext.jsx";
 
 const DiningTable = () => {
@@ -30,14 +31,16 @@ const DiningTable = () => {
   };
 
   const fetchTables = async () => {
+    const accessToken = Cookies.get('accessToken');
     try {
       const response = await axios.get(`${URL}/api/table/${restaurantId}`, {
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`,
         },
         withCredentials: true,
       });
-
+  
       if (response.data.success) {
         setTables(response.data.data);
         setFilteredTables(response.data.data);
@@ -45,9 +48,40 @@ const DiningTable = () => {
         toast.error(response.data.message || "Error fetching tables");
       }
     } catch (error) {
-      toast.error(error.message || "Error fetching tables");
+      if (error.response?.status === 401) {
+        // Handle token refresh here
+        const refreshToken = Cookies.get('refreshToken');
+        if (refreshToken) {
+          // Call the API to refresh the token
+          try {
+            const refreshResponse = await axios.post(`${URL}/api/refresh-token`, { refreshToken }, {
+              headers: { 'Content-Type': 'application/json' },
+              withCredentials: true,
+            });
+  
+            const newAccessToken = refreshResponse.data.accessToken;
+            Cookies.set('accessToken', newAccessToken); // Store the new access token in cookies
+  
+            // Retry the request with the new token
+            const retryResponse = await axios.get(`${URL}/api/table/${restaurantId}`, {
+              headers: { 'Authorization': `Bearer ${newAccessToken}` },
+              withCredentials: true,
+            });
+  
+            setTables(retryResponse.data.data);
+            setFilteredTables(retryResponse.data.data);
+          } catch (refreshError) {
+            toast.error("Failed to refresh the token");
+          }
+        } else {
+          toast.error("No refresh token available");
+        }
+      } else {
+        toast.error(error.message || "Error fetching tables");
+      }
     }
   };
+  
 
   useEffect(() => {
     if (restaurantId) {
@@ -135,8 +169,6 @@ const DiningTable = () => {
 };
 
   
-  
-
   const handleDeleteTable = async (tableId) => {
     if (window.confirm("Are you sure you want to delete this table?")) {
       try {
