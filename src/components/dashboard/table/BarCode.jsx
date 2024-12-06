@@ -30,7 +30,7 @@ const BarCode = () => {
         <h2 className="pb-2 text-2xl font-semibold">Br Tech</h2>
         <p>Branch</p>
         <p>Phone Number</p>
-        <p>House: 25, Road No: 1, Block A, Hajipur-1, Vaishali, Bihar</p>
+        <p>House: 25, Road No: 1, Block A, Dwarka, Delhi</p>
 
         {/* QR Code with dynamic URL */}
         <QRCode

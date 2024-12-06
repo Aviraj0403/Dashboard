@@ -7,7 +7,6 @@ const Navbar = () => {
 
   return (
     <nav className="bg-[#004353] p-4 fixed top-0 w-full z-50 shadow-lg transition-all ease-in-out duration-300">
-
       <div className="container mx-auto flex justify-between items-center">
         <div className="text-white text-2xl font-bold animate__animated animate__fadeIn">
           <span className="text-orange-500">Br Tech</span>
@@ -18,18 +17,6 @@ const Navbar = () => {
           <a href="#" className="text-white hover:text-orange-400 transition-colors duration-300">Services</a>
           <a href="#" className="text-white hover:text-orange-400 transition-colors duration-300">Contact</a>
         </div>
-
-        {/* Demo Button at the top */}
-        <div className="md:hidden">
-          <Link
-            to="https://test-hard.vercel.app/"
-            className="bg-orange-500 text-white px-6 py-3 rounded-md hover:bg-orange-600 transition-all transform hover:scale-105"
-            target="_blank" // Open link in a new tab
-          >
-            Demo
-          </Link>
-        </div>
-
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="text-white">
             <svg
@@ -84,7 +71,19 @@ const Landing = () => {
       <Navbar />
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-16 text-center h-screen bg-gradient-to-r from-orange-600 to-blue-400 flex items-center justify-center">
+      <main className="container mx-auto px-4 py-16 text-center h-screen bg-gradient-to-r from-orange-600 to-blue-400 flex items-center justify-center relative">
+        
+        {/* Demo Button at the top of Main Content */}
+        <div className="absolute top-20 left-1/2 transform -translate-x-1/2 mt-4">
+          <Link
+            to="https://test-hard.vercel.app/"
+            className="bg-orange-500 text-white px-6 py-3 rounded-md hover:bg-orange-600 transition-all transform hover:scale-105"
+            target="_blank" // Open link in a new tab
+          >
+            Demo
+          </Link>
+        </div>
+
         <div className="text-white">
           <h1 className="text-4xl font-extrabold mb-4">
             Welcome to <span className="text-orange-500">Br Tech</span>

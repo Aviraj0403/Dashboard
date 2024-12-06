@@ -46,8 +46,6 @@ function Dashboard() {
   useEffect(() => {
     const socketURL = import.meta.env.VITE_API_URL || "http://localhost:4000";
     const socketConnection = io(socketURL);
-    // const URL = process.env.REACT_APP_API_URL || "http://localhost:4000";
-
     socketConnection.emit("joinRestaurant", restaurantId);
 
     socketConnection.on("orderUpdate", handleOrderUpdate);
@@ -173,8 +171,7 @@ function Dashboard() {
         <h2 className="text-2xl font-bold mb-4">Customer Orders</h2>
         <div className="grid lg:grid-cols-2 sm:grid-cols-1 gap-4 py-3">
           {orderData.map(order => (
-           <OrderCard key={order.tableId} order={order} onClick={() => setSelectedTable(order.tableId)} />
-
+            <OrderCard key={order.tableId} order={order} onClick={() => setSelectedTable(order.tableId)} />
           ))}
         </div>
       </div>
@@ -187,7 +184,7 @@ function Dashboard() {
           setShowMenu={setShowMenu}
         />
       )}
- 
+
       {showMenu && (
         <ItemSelectionMenu
           items={items}
@@ -269,7 +266,7 @@ const TableOrders = ({ selectedTable, tableOrders, calculateTotalPrice, setShowM
 // ItemSelectionMenu Component
 const ItemSelectionMenu = ({ items, selectedItem, setSelectedItem, quantity, setQuantity, handleAddItem, closeMenu }) => (
   <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex items-center justify-center">
-    <div className="bg-white p-4 rounded shadow-lg">
+    <div className="bg-white p-4 rounded shadow-lg w-full sm:w-96">
       <h2 className="text-xl font-bold mb-4">Select Item</h2>
       <Select value={selectedItem || ''} onChange={(e) => setSelectedItem(e.target.value)} displayEmpty fullWidth>
         <MenuItem value="" disabled>Select Menu Item</MenuItem>
@@ -296,4 +293,3 @@ const ItemSelectionMenu = ({ items, selectedItem, setSelectedItem, quantity, set
 );
 
 export default Dashboard;
-//For streak purpose

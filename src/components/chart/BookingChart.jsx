@@ -336,14 +336,50 @@ const BookingChart = ({ title, url }) => {
     ],
   };
 
+  const options = {
+    responsive: true,  // Ensures the chart is responsive
+    maintainAspectRatio: false,  // Ensures the chart resizes and maintains its aspect ratio on different screen sizes
+    scales: {
+      x: {
+        ticks: {
+          font: {
+            size: 10,  // Smaller font size for mobile screens
+          },
+        },
+      },
+      y: {
+        ticks: {
+          font: {
+            size: 10,  // Smaller font size for mobile screens
+          },
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        position: "top", // Adjust the legend to a position that works well on mobile
+        labels: {
+          font: {
+            size: 8, // Smaller legend font size for mobile screens
+          },
+        },
+      },
+      tooltip: {
+        bodyFont: {
+          size: 10,  // Smaller tooltip font size for mobile screens
+        },
+      },
+    },
+  };
+
   return (
     <div className="rounded-md shadow-md w-full bg-white">
       <div className="p-4 flex flex-col sm:flex-row justify-between border-b-2 items-center mb-4">
         <h2 className="text-lg sm:text-xl font-bold text-center sm:text-left">
           {title}
         </h2>
-        <div className="flex flex-wrap items-center justify-center sm:justify-end mt-2 sm:mt-0">
-          <div className="w-fit">
+        <div className="flex flex-wrap items-center justify-center sm:justify-end mt-2 sm:mt-0 space-x-2">
+          <div className="w-full sm:w-auto">
             <DatePicker
               selected={startDate}
               onChange={(date) => setStartDate(date)}
@@ -354,7 +390,7 @@ const BookingChart = ({ title, url }) => {
             />
           </div>
           <div className="w-[9px] h-[2px] bg-black mx-1"></div>
-          <div className="w-fit">
+          <div className="w-full sm:w-auto">
             <DatePicker
               selected={endDate}
               onChange={(date) => setEndDate(date)}
@@ -368,9 +404,13 @@ const BookingChart = ({ title, url }) => {
           <MdDateRange className="text-[#FF4F99] ml-2" size={24} />
         </div>
       </div>
-      <Line data={data} className="p-4 mt-2 min-h-[40vh] sm:min-h-[50vh]" />
+      <div className="p-4 mt-2 min-h-[40vh] sm:min-h-[50vh]">
+        <Line data={data} options={options} />
+      </div>
     </div>
   );
 };
 
 export default BookingChart;
+
+
