@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import 'animate.css/animate.min.css';
- // Import animate.css for animation effects
- import 'animate.css/animate.min.css';
+import 'animate.css/animate.min.css'; // Import animate.css for animation effects
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +18,18 @@ const Navbar = () => {
           <a href="#" className="text-white hover:text-orange-400 transition-colors duration-300">Services</a>
           <a href="#" className="text-white hover:text-orange-400 transition-colors duration-300">Contact</a>
         </div>
+
+        {/* Demo Button at the top */}
+        <div className="md:hidden">
+          <Link
+            to="https://test-hard.vercel.app/"
+            className="bg-orange-500 text-white px-6 py-3 rounded-md hover:bg-orange-600 transition-all transform hover:scale-105"
+            target="_blank" // Open link in a new tab
+          >
+            Demo
+          </Link>
+        </div>
+
         <div className="md:hidden">
           <button onClick={() => setIsOpen(!isOpen)} className="text-white">
             <svg
@@ -39,6 +49,7 @@ const Navbar = () => {
           </button>
         </div>
       </div>
+
       {/* Mobile Menu */}
       {isOpen && (
         <div className="md:hidden bg-blue-500 p-4 rounded-lg animate__animated animate__fadeIn">
@@ -54,8 +65,7 @@ const Navbar = () => {
 
 const Footer = () => {
   return (
-    <footer className="bg-[#004353] text-white py-4 mt-8"
->
+    <footer className="bg-[#004353] text-white py-4 mt-8">
       <div className="container mx-auto text-center">
         <p className="text-lg">&copy; 2024 <span className="text-orange-500">Br Tech</span>. All rights reserved.</p>
         <div className="flex justify-center space-x-4 mt-2">
@@ -75,23 +85,22 @@ const Landing = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-16 text-center h-screen bg-gradient-to-r from-orange-600 to-blue-400 flex items-center justify-center">
-  <div className="text-white">
-    <h1 className="text-4xl font-extrabold mb-4 animate__animated animate__fadeIn">
-      Welcome to <span className="text-orange-500">Br Tech</span>
-    </h1>
-    <p className="text-lg text-gray-100 mb-8 animate__animated animate__fadeIn animate__delay-1s">
-      Empower your restaurant management with our intuitive software, designed to streamline operations, enhance customer experience, and drive efficiency. From real-time updates to seamless order management, we provide the tools you need for a smooth and successful business.
-    </p>
-    <Link
-      to={"/login"}
-      className="bg-orange-500 text-white px-6 py-3 rounded-md hover:bg-orange-600 transition-all transform hover:scale-105"
-    >
-      Login
-    </Link>
-  </div>
-</main>
-
-
+        <div className="text-white">
+          <h1 className="text-4xl font-extrabold mb-4">
+            Welcome to <span className="text-orange-500">Br Tech</span>
+          </h1>
+          <p className="text-lg text-gray-100 mb-8">
+            Empower your restaurant management with our intuitive software, designed to streamline operations, enhance customer experience, and drive efficiency. From real-time updates to seamless order management, we provide the tools you need for a smooth and successful business.
+          </p>
+          <Link
+            to="/login"
+            className="bg-orange-500 text-white px-6 py-3 rounded-md hover:bg-orange-600 transition-all transform hover:scale-105"
+          >
+            Login
+          </Link>
+        </div>
+      </main>
+        
       {/* Footer */}
       <Footer />
     </div>
