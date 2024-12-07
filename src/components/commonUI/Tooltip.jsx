@@ -6,7 +6,7 @@ const Tooltip = ({ text, isVisible }) => (
       isVisible
         ? "opacity-100 translate-y-0"
         : "opacity-0 translate-y-2 pointer-events-none"
-    }`}
+    } sm:top-[-30px] md:top-[-40px] lg:top-[-50px]`}
   >
     <div className="bg-gray-700 text-white text-xs px-2 py-1 rounded-md relative">
       {text}

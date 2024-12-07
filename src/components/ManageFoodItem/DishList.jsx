@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useRestaurantId } from '../../context/userContext.jsx';
-import './DishList.css';
 
 const DishList = () => {
   const URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
@@ -108,69 +107,38 @@ const DishList = () => {
         <div className="text-center text-gray-500">Loading...</div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dish Image</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dish Name</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Type</th>
-                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Variety</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Featured</th>
-                <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recommended</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {list.length === 0 ? (
-                <tr>
-                  <td colSpan="10" className="text-center py-4 text-gray-600">
-                    No dishes available.
-                  </td>
-                </tr>
-              ) : (
-                list.map((item) => (
-                  <tr key={item._id}>
-                    <td className="px-4 py-4 text-sm font-medium text-gray-900">
+          {/* Mobile View */}
+          <div className="block md:hidden">
+            {list.length === 0 ? (
+              <p className="text-center py-4 text-gray-600">No dishes available.</p>
+            ) : (
+              list.map((item) => (
+                <div key={item._id} className="p-4 mb-4 border border-gray-200 rounded-lg">
+                  <div className="flex items-center justify-between">
+                    {/* Left side: Image, Name, Price */}
+                    <div className="flex items-center flex-1">
                       <img
                         src={item.imageUrl}
                         alt={item.name}
-                        className="w-16 h-16 object-cover rounded-full mx-auto"
+                        className="w-16 h-16 object-cover rounded-full"
                       />
-                    </td>
-                    <td className="px-4 py-4 text-sm text-gray-900">{item.name}</td>
-                    <td className="px-4 py-4 text-sm text-gray-900">{item.category}</td>
-                    <td className="hidden md:table-cell px-4 py-4 text-sm text-gray-900">{item.itemType}</td>
-                    <td className="hidden md:table-cell px-4 py-4 text-sm text-gray-900">{item.variety}</td>
-                    <td className="px-4 py-4 text-sm text-gray-900">₹{item.price}</td>
-                    <td className="hidden md:table-cell px-4 py-4 text-sm text-gray-900">{item.description}</td>
-                    <td className="px-4 py-4 text-sm">
+                      <div className="ml-4">
+                        <p className="text-lg font-semibold text-gray-900">{item.name}</p>
+                        <p className="text-sm text-gray-500">₹{item.price}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-center items-center ml-460">
                       <span
                         className={`px-2 py-1 text-xs font-medium rounded-full ${item.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
                       >
                         {item.status}
                       </span>
-                    </td>
-                    <td className="px-4 py-4 text-sm">
-                      <button
-                        onClick={() => toggleDishProperty(item._id, 'isFeatured', item.isFeatured)}
-                        className={`px-2 py-1 text-xs font-medium rounded-full ${item.isFeatured ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}`}
-                      >
-                        {item.isFeatured ? 'Featured' : 'Not Featured'}
-                      </button>
-                    </td>
-                    <td className="hidden md:table-cell px-4 py-4 text-sm">
-                      <button
-                        onClick={() => toggleDishProperty(item._id, 'recommended', item.recommended)}
-                        className={`px-2 py-1 text-xs font-medium rounded-full ${item.recommended ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
-                      >
-                        {item.recommended ? 'Recommended' : 'Not Recommended'}
-                      </button>
-                    </td>
-                    <td className="px-4 py-4 text-sm font-medium flex space-x-3 justify-center">
+                    </div>
+
+                    {/* Action buttons */}
+                    <div className="flex flex-col items-end space-y-2">
+                      <div className="flex space-x-3 mt-2">
                       <NavLink to={`edit-dish/${item._id}`} className="text-blue-600 hover:text-blue-800">
                         <svg
                           stroke="currentColor"
@@ -225,12 +193,152 @@ const DishList = () => {
                           <line x1="14" x2="14" y1="11" y2="17"></line>
                         </svg>
                       </button>
+                      </div>
+                    
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Desktop View */}
+          <div className="hidden md:block">
+            <table className="min-w-full bg-white border border-gray-200 divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dish Image</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dish Name</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Item Type</th>
+                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Variety</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Featured</th>
+                  <th className="hidden md:table-cell px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Recommended</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {list.length === 0 ? (
+                  <tr>
+                    <td colSpan="10" className="text-center py-4 text-gray-600">
+                      No dishes available.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  list.map((item) => (
+                    <tr key={item._id}>
+                      {/* Dish Image */}
+                      <td className="px-4 py-4 text-sm font-medium text-gray-900">
+                        <img
+                          src={item.imageUrl}
+                          alt={item.name}
+                          className="w-16 h-16 object-cover rounded-full mx-auto"
+                        />
+                      </td>
+                      {/* Dish Name */}
+                      <td className="px-4 py-4 text-sm text-gray-900">{item.name}</td>
+                      {/* Category */}
+                      <td className="hidden md:table-cell px-4 py-4 text-sm text-gray-900">{item.category}</td>
+                      {/* Item Type */}
+                      <td className="hidden md:table-cell px-4 py-4 text-sm text-gray-900">{item.itemType}</td>
+                      {/* Variety */}
+                      <td className="hidden md:table-cell px-4 py-4 text-sm text-gray-900">{item.variety}</td>
+                      {/* Price */}
+                      <td className="px-4 py-4 text-sm text-gray-900">₹{item.price}</td>
+                      {/* Description */}
+                      <td className="hidden md:table-cell px-4 py-4 text-sm text-gray-900">{item.description}</td>
+                      {/* Status */}
+                      <td className="px-4 py-4 text-sm">
+                        <span
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${item.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}
+                        >
+                          {item.status}
+                        </span>
+                      </td>
+                      {/* Featured */}
+                      <td className="px-4 py-4 text-sm">
+                        <button
+                          onClick={() => toggleDishProperty(item._id, 'isFeatured', item.isFeatured)}
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${item.isFeatured ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800'}`}
+                        >
+                          {item.isFeatured ? 'Featured' : 'Not Featured'}
+                        </button>
+                      </td>
+                      {/* Recommended */}
+                      <td className="hidden md:table-cell px-4 py-4 text-sm">
+                        <button
+                          onClick={() => toggleDishProperty(item._id, 'recommended', item.recommended)}
+                          className={`px-2 py-1 text-xs font-medium rounded-full ${item.recommended ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'}`}
+                        >
+                          {item.recommended ? 'Recommended' : 'Not Recommended'}
+                        </button>
+                      </td>
+                      {/* Action */}
+                      <td className="px-4 py-4 text-sm font-medium flex space-x-3 justify-center">
+                      <NavLink to={`edit-dish/${item._id}`} className="text-blue-600 hover:text-blue-800">
+                        <svg
+                          stroke="currentColor"
+                          fill="none"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          height="20"
+                          width="20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"></path>
+                          <path d="m15 5 4 4"></path>
+                        </svg>
+                      </NavLink>
+                      <NavLink to={`dish-details/${item._id}`} className="text-gray-600 hover:text-gray-800">
+                        <svg
+                          stroke="currentColor"
+                          fill="none"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          height="20"
+                          width="20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                      </NavLink>
+                      <button
+                        onClick={() => removeFood(item._id)}
+                        className="text-red-600 hover:text-red-800"
+                      >
+                        <svg
+                          stroke="currentColor"
+                          fill="none"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          height="20"
+                          width="20"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path d="M3 6h18"></path>
+                          <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+                          <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+                          <line x1="10" x2="10" y1="11" y2="17"></line>
+                          <line x1="14" x2="14" y1="11" y2="17"></line>
+                        </svg>
+                      </button>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

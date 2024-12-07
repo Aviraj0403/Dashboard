@@ -80,7 +80,6 @@ const TableOrders = () => {
     navigate(`${orderId}`); // Navigate to the OrderDetails page
   };
 
-
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
 
@@ -112,54 +111,53 @@ const TableOrders = () => {
         </div>
       </div>
 
-      <table className="w-full border-collapse border border-gray-200">
-        <thead>
-          <tr>
-            <th className="border border-gray-300 p-2">Order ID</th>
-            <th className="border border-gray-300 p-2">Order Type</th>
-            <th className="border border-gray-300 p-2">Customer</th>
-            <th className="border border-gray-300 p-2">Amount</th>
-            <th className="border border-gray-300 p-2">Date</th>
-            <th className="border border-gray-300 p-2">Status</th>
-            <th className="border border-gray-300 p-2">Action</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map(order => (
-              <tr key={order.id}>
-                <td className="border border-gray-300 p-2">{order.id}</td>
-                <td className={`border border-gray-300 p-2 ${orderTypeColors[order.type] || 'bg-gray-100 text-gray-800'}`}>
-                  {order.type}
-                </td>
-                <td className="border border-gray-300 p-2">{order.customer}</td>
-                <td className="border border-gray-300 p-2">{order.amount}</td>
-                <td className="border border-gray-300 p-2">{order.date}</td>
-                <td className={`border border-gray-300 p-2 ${statusColors[order.status] || 'bg-gray-200 text-gray-800'}`}>
-                  {order.status}
-                </td>
-                {/* VIEW */}
-                <td className="border border-gray-300 p-2 text-center">
-                  {/* Eye icon with click handler for future use */}
-                  <button
-                    onClick={() => handleViewDetails(order.id)}
-                    className="text-blue-500 relative hover:text-blue-700 rounded-md p-2 bg-blue-100 transition-transform duration-300 ease-in-out transform hover:scale-110"
-                  >
-                  
-                    <HiEye className="w-5 h-5" />
-                  </button>
+      <div className="overflow-x-auto">
+        <table className="min-w-full border-collapse border border-gray-200">
+          <thead>
+            <tr>
+              <th className="border border-gray-300 p-2">Order ID</th>
+              <th className="border border-gray-300 p-2">Order Type</th>
+              <th className="border border-gray-300 p-2">Customer</th>
+              <th className="border border-gray-300 p-2">Amount</th>
+              <th className="border border-gray-300 p-2">Date</th>
+              <th className="border border-gray-300 p-2">Status</th>
+              <th className="border border-gray-300 p-2">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredOrders.length > 0 ? (
+              filteredOrders.map(order => (
+                <tr key={order.id}>
+                  <td className="border border-gray-300 p-2">{order.id}</td>
+                  <td className={`border border-gray-300 p-2 ${orderTypeColors[order.type] || 'bg-gray-100 text-gray-800'}`}>
+                    {order.type}
+                  </td>
+                  <td className="border border-gray-300 p-2">{order.customer}</td>
+                  <td className="border border-gray-300 p-2">{order.amount}</td>
+                  <td className="border border-gray-300 p-2">{order.date}</td>
+                  <td className={`border border-gray-300 p-2 ${statusColors[order.status] || 'bg-gray-200 text-gray-800'}`}>
+                    {order.status}
+                  </td>
+                  <td className="border border-gray-300 p-2 text-center">
+                    <button
+                      onClick={() => handleViewDetails(order.id)}
+                      className="text-blue-500 relative hover:text-blue-700 rounded-md p-2 bg-blue-100 transition-transform duration-300 ease-in-out transform hover:scale-110"
+                    >
+                      <HiEye className="w-5 h-5" />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="7" className="border border-gray-300 p-2 text-center">
+                  No orders found
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="7" className="border border-gray-300 p-2 text-center">
-                No orders found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       <div className="mt-4">
         Showing 1 to {filteredOrders.length} of {orders.length} entries

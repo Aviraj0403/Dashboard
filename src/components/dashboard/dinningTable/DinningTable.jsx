@@ -23,12 +23,7 @@ const DiningTable = () => {
   const { register, reset, handleSubmit, setValue } = useForm();
   const [isOpenForm, setIsOpenForm] = useState({ formName: "", tableId: null });
   const restaurantId = useRestaurantId();
-  // const URL = "http://localhost:4000";
   const URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
-  const handleCloseForm = () => {
-    setIsOpenForm({ formName: "", tableId: null });
-    reset();
-  };
 
   const fetchTables = async () => {
     const accessToken = Cookies.get('accessToken');
@@ -40,7 +35,7 @@ const DiningTable = () => {
         },
         withCredentials: true,
       });
-  
+
       if (response.data.success) {
         setTables(response.data.data);
         setFilteredTables(response.data.data);
@@ -49,25 +44,22 @@ const DiningTable = () => {
       }
     } catch (error) {
       if (error.response?.status === 401) {
-        // Handle token refresh here
         const refreshToken = Cookies.get('refreshToken');
         if (refreshToken) {
-          // Call the API to refresh the token
           try {
             const refreshResponse = await axios.post(`${URL}/api/refresh-token`, { refreshToken }, {
               headers: { 'Content-Type': 'application/json' },
               withCredentials: true,
             });
-  
+
             const newAccessToken = refreshResponse.data.accessToken;
-            Cookies.set('accessToken', newAccessToken); // Store the new access token in cookies
-  
-            // Retry the request with the new token
+            Cookies.set('accessToken', newAccessToken);
+
             const retryResponse = await axios.get(`${URL}/api/table/${restaurantId}`, {
               headers: { 'Authorization': `Bearer ${newAccessToken}` },
               withCredentials: true,
             });
-  
+
             setTables(retryResponse.data.data);
             setFilteredTables(retryResponse.data.data);
           } catch (refreshError) {
@@ -81,7 +73,6 @@ const DiningTable = () => {
       }
     }
   };
-  
 
   useEffect(() => {
     if (restaurantId) {
@@ -129,46 +120,34 @@ const DiningTable = () => {
       setIsOpenForm({ formName: "edit", tableId }); // Use tableId directly
     }
   };
-  
+
   const handleEditTable = async (data) => {
     const updatedTable = {
-        name: data.name,
-        size: data.size,
-        status: data.status ? "Active" : "Inactive",
+      name: data.name,
+      size: data.size,
+      status: data.status ? "Active" : "Inactive",
     };
 
-    // Confirm before proceeding with the update
     if (window.confirm("Are you sure you want to update this table?")) {
-        try {
-            const response = await axios.put(`${URL}/api/table/${restaurantId}/${editTableData.tableId}`, updatedTable, {
-                headers: { "Content-Type": "application/json" },
-                withCredentials: true,
-            });
+      try {
+        const response = await axios.put(`${URL}/api/table/${restaurantId}/${editTableData.tableId}`, updatedTable, {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        });
 
-            if (response.data.success) {
-                fetchTables(); // Refresh the list of tables
-                toast.success("Table updated successfully");
-                handleCloseForm(); // Close the form/modal
-            } else {
-                toast.error(response.data.message || "Error updating table");
-            }
-        } catch (error) {
-            // Improved error handling
-            if (error.response) {
-                // Server responded with a status other than 200
-                toast.error(error.response.data.message || "Error updating table");
-            } else if (error.request) {
-                // Request was made but no response was received
-                toast.error("No response from server. Please try again later.");
-            } else {
-                // Something happened in setting up the request
-                toast.error("Error: " + error.message);
-            }
+        if (response.data.success) {
+          fetchTables();
+          toast.success("Table updated successfully");
+          handleCloseForm();
+        } else {
+          toast.error(response.data.message || "Error updating table");
         }
+      } catch (error) {
+        toast.error(error.message || "Error updating table");
+      }
     }
-};
+  };
 
-  
   const handleDeleteTable = async (tableId) => {
     if (window.confirm("Are you sure you want to delete this table?")) {
       try {
@@ -218,9 +197,9 @@ const DiningTable = () => {
   return (
     <div className="container mx-auto p-6">
       <div className="bg-white rounded-lg shadow-md p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h3 className="text-lg font-semibold text-gray-600">Dining Tables</h3>
-          <div className="flex space-x-2">
+        <div className="flex flex-wrap justify-between items-center mb-4 gap-4">
+          <h3 className="text-lg font-semibold text-gray-600 w-full sm:w-auto">Dining Tables</h3>
+          <div className="flex space-x-2 gap-2 sm:gap-4">
             <button
               onClick={() => setActiveFilter(!activeFilter)}
               className="bg-blue-50 text-blue-500 hover:bg-blue-100 px-4 py-2 rounded-md flex items-center gap-1"
@@ -241,13 +220,13 @@ const DiningTable = () => {
 
         <div className={`overflow-hidden transition-all duration-500 ease-in-out ${activeFilter ? "max-h-60" : "max-h-0"}`}>
           <div className="p-4 bg-gray-100 rounded-md">
-            <form onSubmit={handleSubmit(filterTable)} className="flex flex-wrap flex-col justify-between">
-              <div className="flex gap-1">
-                <Input label="Name" placeholder="Name" className="rounded-md py-2" {...register("name")} />
-                <Input label="Size" placeholder="Size" className="rounded-md py-2" type="number" {...register("size")} />
-                <Input label="Status" placeholder="Status" className="rounded-md py-2" {...register("status")} />
+            <form onSubmit={handleSubmit(filterTable)} className="flex flex-wrap flex-col gap-4 sm:flex-row sm:justify-between sm:gap-5">
+              <div className="flex gap-1 sm:w-1/3">
+                <Input label="Name" placeholder="Name" className="rounded-md py-2 w-full" {...register("name")} />
+                <Input label="Size" placeholder="Size" className="rounded-md py-2 w-full sm:w-1/2" type="number" {...register("size")} />
+                <Input label="Status" placeholder="Status" className="rounded-md py-2 w-full sm:w-1/2" {...register("status")} />
               </div>
-              <div className="flex flex-wrap items-center gap-5 py-5">
+              <div className="flex flex-wrap items-center gap-5 py-5 w-full sm:w-auto sm:justify-end">
                 <Button type="submit" className="bg-blue-700 flex items-center gap-1">
                   <FaSearch /> Search
                 </Button>
@@ -263,141 +242,130 @@ const DiningTable = () => {
           </div>
         </div>
 
-        <table className="min-w-full bg-white border border-gray-200 rounded-lg mt-4">
-          <thead>
-            <tr className="text-left border-b">
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Size</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTables.map((table) => (
-              <tr key={table.tableId} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-2">{table.name}</td>
-                <td className="px-4 py-2">{table.size}</td>
-                <td className="px-4 py-2">
-                  <span className={`${table.status.toLowerCase() === "active" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"} rounded-full px-2 py-1`}>
-                    {table.status}
-                  </span>
-                </td>
-                <td className="px-4 py-2 flex gap-5 space-x-2 relative">
-                  <div className="relative">
-                    <button
-                      onMouseEnter={() => handleMouseEnter("QR", table.tableId)}
-                      onMouseLeave={() => handleMouseLeave(table.tableId)}
-                      className="text-yellow-500 relative hover:text-yellow-700 rounded-md border p-2 bg-yellow-100 transition-transform duration-300 ease-in-out transform hover:scale-110"
-                    >
-                      <AiOutlineBarcode />
-                    </button>
-                    <Tooltip text="QR" isVisible={hoveredItems[table.tableId] === "QR"} />
-                  </div>
-
-                  <div className="relative">
-                    <button
-                      onClick={() => navigate("table/" + table.tableId)}
-                      onMouseEnter={() => handleMouseEnter("VIEW", table.tableId)}
-                      onMouseLeave={() => handleMouseLeave(table.tableId)}
-                      className="text-blue-500 relative hover:text-blue-700 rounded-md p-2 bg-blue-100 transition-transform duration-300 ease-in-out transform hover:scale-110"
-                    >
-                      <FaEye />
-                    </button>
-                    <Tooltip text="VIEW" isVisible={hoveredItems[table.tableId] === "VIEW"} />
-                  </div>
-
-                  <div className="relative">
-                    <button
-                      onClick={() => handleEditClick(table.tableId)}
-                      onMouseEnter={() => handleMouseEnter("EDIT", table.tableId)}
-                      onMouseLeave={() => handleMouseLeave(table.tableId)}
-                      className="text-green-500 relative hover:text-green-700 rounded-md p-2 bg-green-100 transition-transform duration-300 ease-in-out transform hover:scale-110"
-                    >
-                      <FaEdit />
-                    </button>
-                    <Tooltip text="EDIT" isVisible={hoveredItems[table.tableId] === "EDIT"} />
-                  </div>
-
-                  <div className="relative">
-                    <button
-                      onClick={() => handleDeleteTable(table.tableId)}
-                      onMouseEnter={() => handleMouseEnter("DELETE", table.tableId)}
-                      onMouseLeave={() => handleMouseLeave(table.tableId)}
-                      className="text-red-500 relative hover:text-red-700 rounded-md p-2 bg-red-100 transition-transform duration-300 ease-in-out transform hover:scale-110"
-                    >
-                      <FaTrash />
-                    </button>
-                    <Tooltip text="DELETE" isVisible={hoveredItems[table.tableId] === "DELETE"} />
-                  </div>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white border border-gray-200 rounded-lg mt-4">
+            <thead>
+              <tr className="text-left border-b">
+                <th className="px-4 py-2">Name</th>
+                <th className="px-4 py-2">Size</th>
+                <th className="px-4 py-2">Status</th>
+                <th className="px-4 py-2">Action</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredTables.map((table) => (
+                <tr key={table.tableId} className="border-b hover:bg-gray-50">
+                  <td className="px-4 py-2">{table.name}</td>
+                  <td className="px-4 py-2">{table.size}</td>
+                  <td className="px-4 py-2">
+                    <span className={`${table.status.toLowerCase() === "active" ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-700"} rounded-full px-2 py-1`}>
+                      {table.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-2 flex gap-5 space-x-2 relative">
+                    <div className="relative">
+                      <button
+                        onMouseEnter={() => handleMouseEnter("QR", table.tableId)}
+                        onMouseLeave={() => handleMouseLeave(table.tableId)}
+                        className="text-yellow-500 relative hover:text-yellow-700 rounded-md border p-2 bg-yellow-100 transition-transform duration-300 ease-in-out transform hover:scale-110"
+                      >
+                        <AiOutlineBarcode />
+                      </button>
+                      <Tooltip text="QR" isVisible={hoveredItems[table.tableId] === "QR"} />
+                    </div>
 
-        <div className="mt-4 text-sm text-gray-500">
-          Showing 1 to {filteredTables.length} of {tables.length} entries
+                    <div className="relative">
+                      <button
+                        onClick={() => navigate("table/" + table.tableId)}
+                        onMouseEnter={() => handleMouseEnter("VIEW", table.tableId)}
+                        onMouseLeave={() => handleMouseLeave(table.tableId)}
+                        className="text-blue-500 relative hover:text-blue-700 rounded-md p-2 bg-blue-100 transition-transform duration-300 ease-in-out transform hover:scale-110"
+                      >
+                        <FaEye />
+                      </button>
+                      <Tooltip text="VIEW" isVisible={hoveredItems[table.tableId] === "VIEW"} />
+                    </div>
+
+                    <div className="relative">
+                      <button
+                        onClick={() => handleEditClick(table.tableId)}
+                        onMouseEnter={() => handleMouseEnter("EDIT", table.tableId)}
+                        onMouseLeave={() => handleMouseLeave(table.tableId)}
+                        className="text-green-500 relative hover:text-green-700 rounded-md p-2 bg-green-100 transition-transform duration-300 ease-in-out transform hover:scale-110"
+                      >
+                        <FaEdit />
+                      </button>
+                      <Tooltip text="EDIT" isVisible={hoveredItems[table.tableId] === "EDIT"} />
+                    </div>
+
+                    <div className="relative">
+                      <button
+                        onClick={() => handleDeleteTable(table.tableId)}
+                        onMouseEnter={() => handleMouseEnter("DELETE", table.tableId)}
+                        onMouseLeave={() => handleMouseLeave(table.tableId)}
+                        className="text-red-500 relative hover:text-red-700 rounded-md p-2 bg-red-100 transition-transform duration-300 ease-in-out transform hover:scale-110"
+                      >
+                        <FaTrash />
+                      </button>
+                      <Tooltip text="DELETE" isVisible={hoveredItems[table.tableId] === "DELETE"} />
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
+
+        <div className="mt-4">{tables.length === 0 && <div className="text-center text-gray-500">No tables found</div>}</div>
       </div>
 
-      {/* Add modal */}
-      <Modal isOpen={isOpenForm.formName === "add"} onClose={handleCloseForm} title="Dining Table">
-        <form onSubmit={handleSubmit(handleAddTable)} className="flex flex-wrap flex-col justify-between p-4">
-          <div className="flex flex-col gap-1">
-            <Input label="Name" placeholder="Name" className="rounded-md py-2" {...register("tname")} />
-            <Input label="Size" placeholder="Size" className="rounded-md py-2" type="number" {...register("tsize")} />
-            <label htmlFor="status">Status</label>
-            <div className="flex items-center gap-4">
-              <input type="radio" name="status" id="Active" defaultChecked {...register("tstatus")} />
-              <label htmlFor="Active">Active</label>
-              <input type="radio" name="status" id="InActive" {...register("tstatus")} />
-              <label htmlFor="InActive">Inactive</label>
-            </div>
+      {/* Add/Edit Modal */}
+      <Modal
+        isOpen={isOpenForm.formName !== ""}
+        onClose={() => setIsOpenForm({ formName: "", tableId: null })}
+        title={isOpenForm.formName === "add" ? "Add Table" : "Edit Table"}
+      >
+        <form
+          onSubmit={handleSubmit(isOpenForm.formName === "add" ? handleAddTable : handleEditTable)}
+          className="space-y-4"
+        >
+          <Input
+            label="Name"
+            placeholder="Enter Table Name"
+            defaultValue={editTableData?.name || ""}
+            {...register("tname")}
+            required
+          />
+          <Input
+            label="Size"
+            placeholder="Enter Table Size"
+            type="number"
+            defaultValue={editTableData?.size || ""}
+            {...register("tsize")}
+            required
+          />
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              id="status"
+              {...register("tstatus")}
+              defaultChecked={editTableData?.status === "Active"}
+            />
+            <label htmlFor="status" className="ml-2 text-sm">
+              Active
+            </label>
           </div>
-          <div className="flex flex-wrap items-center gap-5 py-5">
-            <Button type="submit" className="bg-blue-700 flex items-center gap-1">
+          <div className="flex justify-end gap-4">
+            <Button type="submit" className="bg-blue-600 text-white">
               <FaSave /> Save
             </Button>
-            <div
-              onClick={() => {
-                reset();
-                handleCloseForm();
-              }}
-              className="flex items-center gap-1 text-white px-4 py-2 rounded-lg bg-gray-700"
+            <Button
+              type="button"
+              className="bg-gray-600 text-white"
+              onClick={() => setIsOpenForm({ formName: "", tableId: null })}
             >
-              <MdClose /> Close
-            </div>
-          </div>
-        </form>
-      </Modal>
-
-      {/* Edit modal */}
-      <Modal isOpen={isOpenForm.formName === "edit"} onClose={handleCloseForm} title="Edit Dining Table">
-        <form onSubmit={handleSubmit(handleEditTable)} className="flex flex-wrap flex-col justify-between p-4">
-          <div className="flex flex-col gap-1">
-            <Input label="Name" placeholder="Name" className="rounded-md py-2" defaultValue={editTableData?.name} {...register("name")} />
-            <Input label="Size" placeholder="Size" defaultValue={editTableData?.size} className="rounded-md py-2" type="number" {...register("size")} />
-            <label htmlFor="status">Status</label>
-            <div className="flex items-center gap-4">
-              <input type="radio" name="status" id="Active" value="Active" defaultChecked={editTableData?.status === "Active"} {...register("status")} />
-              <label htmlFor="Active">Active</label>
-              <input type="radio" name="status" id="InActive" value="Inactive" defaultChecked={editTableData?.status === "Inactive"} {...register("status")} />
-              <label htmlFor="InActive">Inactive</label>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-5 py-5">
-            <Button type="submit" className="bg-blue-700 flex items-center gap-1">
-              <FaSave /> Save
+              <MdClose /> Cancel
             </Button>
-            <div
-              onClick={() => {
-                reset();
-                handleCloseForm();
-              }}
-              className="flex items-center gap-1 text-white px-4 py-2 rounded-lg bg-gray-700"
-            >
-              <MdClose /> Close
-            </div>
           </div>
         </form>
       </Modal>

@@ -1,25 +1,45 @@
 /* Fade animation for the background overlay */
 .fade-in {
-    opacity: 1;
-  }
-  
-  .fade-out {
-    opacity: 0;
-  }
-  
-  /* Slide and scale animation for the modal content */
-  .slide-in {
-    transform: translateY(0) scale(1);
-    opacity: 1;
-  }
-  
-  .slide-out {
-    transform: translateY(-20px) scale(0.95);
-    opacity: 0;
-  }
-  
-  /* Ensure smooth transitions */
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+/* Slide and scale animation for the modal content */
+.slide-in {
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+
+.slide-out {
+  transform: translateY(-20px) scale(0.95);
+  opacity: 0;
+}
+
+/* Modal Content */
+.modal-content {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  /* Default padding and min-width for mobile */
+  padding: 1rem;
+}
+
+/* Responsive modal size */
+@media (min-width: 640px) {
   .modal-content {
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    padding: 1.5rem;
   }
-  
+}
+
+@media (min-width: 768px) {
+  .modal-content {
+    padding: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .modal-content {
+    padding: 2.5rem;
+  }
+}

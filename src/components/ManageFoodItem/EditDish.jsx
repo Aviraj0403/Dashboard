@@ -86,26 +86,28 @@ const EditDish = () => {
   if (!dish) return <p>Loading...</p>;
 
   return (
-    <div className="p-6 max-w-7xl mx-auto bg-white rounded-lg shadow-md border border-gray-200">
-      <h1 className="text-3xl font-bold text-gray-900">Edit Dish</h1>
-      <form className="mt-6">
-        {/* Input fields for editing the dish */}
+    <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto bg-white rounded-lg shadow-md border border-gray-200">
+      <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 text-center sm:text-left">Edit Dish</h1>
+      <form className="mt-6 space-y-6">
+        {/* Name */}
         <div className="mb-4">
           <label className="block text-gray-700">Name:</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
+
+        {/* Category */}
         <div className="mb-4">
           <label className="block text-gray-700">Category:</label>
           <select
             value={category}
             onChange={(e) => setCategory(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           >
             <option value="">Select Category</option>
@@ -115,50 +117,60 @@ const EditDish = () => {
             <option value="Dessert">Dessert</option>
           </select>
         </div>
+
+        {/* Price */}
         <div className="mb-4">
           <label className="block text-gray-700">Price:</label>
           <input
             type="number"
             value={price}
             onChange={(e) => setPrice(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           />
         </div>
+
+        {/* Description */}
         <div className="mb-4">
           <label className="block text-gray-700">Description:</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+
+        {/* Variety */}
         <div className="mb-4">
           <label className="block text-gray-700">Variety:</label>
           <input
             type="text"
             value={variety}
             onChange={(e) => setVariety(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
+
+        {/* Status */}
         <div className="mb-4">
           <label className="block text-gray-700">Status:</label>
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="Available">Available</option>
             <option value="Unavailable">Unavailable</option>
           </select>
         </div>
+
+        {/* Item Type */}
         <div className="mb-4">
           <label className="block text-gray-700">Item Type:</label>
           <select
             value={itemType}
             onChange={(e) => setItemType(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded"
+            className="mt-1 block w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             required
           >
             <option value="">Select Item Type</option>
@@ -166,6 +178,8 @@ const EditDish = () => {
             <option value="Non-Veg">Non-Veg</option>
           </select>
         </div>
+
+        {/* Featured */}
         <div className="mb-4">
           <label className="flex items-center">
             <input
@@ -177,6 +191,8 @@ const EditDish = () => {
             Featured
           </label>
         </div>
+
+        {/* Recommended */}
         <div className="mb-4">
           <label className="flex items-center">
             <input
@@ -188,13 +204,17 @@ const EditDish = () => {
             Recommended
           </label>
         </div>
-        <button
-          type="button"
-          onClick={handleSave}
-          className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-        >
-          Save
-        </button>
+
+        {/* Save Button */}
+        <div className="flex justify-center sm:justify-start">
+          <button
+            type="button"
+            onClick={handleSave}
+            className="px-6 py-3 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            Save
+          </button>
+        </div>
       </form>
     </div>
   );
