@@ -8,19 +8,20 @@ const RestaurantList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [filter, setFilter] = useState('');
+    const url = import.meta.env.BACKEND_URL_PROD ||import.meta.env.BACKEND_URL;
 
     const fetchRestaurants = async (page = 1, limit = 10, status = '') => {
         try {
-            const response = await axios.get('http://localhost:4000/api/users/restaurants', {
+            const response = await axios.get(`${url}/api/users/restaurants`, {
                 params: {
                     page,
                     limit,
-                    status
+                    status,
                 },
                 withCredentials: true,
                 headers: {
-                    "Content-Type": "application/json"
-                }
+                    "Content-Type": "application/json",
+                },
             });
 
             if (response.data.restaurants) {
@@ -50,7 +51,11 @@ const RestaurantList = () => {
     );
 
     if (loading) {
-        return <div className="flex items-center justify-center h-screen">Loading...</div>;
+        return (
+            <div className="flex items-center justify-center h-screen">
+                <div className="w-16 h-16 border-4 border-t-4 border-orange-500 rounded-full animate-spin"></div>
+            </div>
+        );
     }
 
     return (
@@ -74,7 +79,7 @@ const RestaurantList = () => {
                     placeholder="Filter restaurants..."
                     value={filter}
                     onChange={(e) => setFilter(e.target.value)}
-                    className="p-2 border border-gray-300 rounded"
+                    className="p-2 border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 w-full sm:w-80"
                 />
             </div>
 

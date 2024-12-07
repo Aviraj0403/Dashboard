@@ -93,8 +93,8 @@ const AddOffer = () => {
   };
 
   return (
-    <Box className="p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200">
-      <Typography variant="h4" className="text-center text-2xl font-bold mb-6">
+    <Box className="p-4 sm:p-6 md:p-8 max-w-full sm:max-w-4xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200">
+      <Typography variant="h4" className="text-center text-2xl sm:text-3xl font-bold mb-6">
         Add a New Offer
       </Typography>
       <Formik
@@ -111,6 +111,7 @@ const AddOffer = () => {
       >
         {() => (
           <Form className="flex flex-col gap-6">
+            {/* Image Upload Section */}
             <Box className="flex justify-center mb-6">
               <Box className="relative w-full max-w-md bg-yellow-50 border-2 border-orange-400 border-dashed rounded-lg p-4 flex flex-col items-center">
                 {imagePreview ? (
@@ -131,6 +132,7 @@ const AddOffer = () => {
               </Box>
             </Box>
 
+            {/* Form Fields */}
             <Box className="space-y-6">
               <Field as={TextField} label="Name" name="name" fullWidth variant="outlined" helperText={<ErrorMessage name="name" component="div" className="text-red-600" />} />
               <Field as={TextField} label="Discount Percentage" name="discountPercentage" type="number" fullWidth variant="outlined" helperText={<ErrorMessage name="discountPercentage" component="div" className="text-red-600" />} />
@@ -142,6 +144,7 @@ const AddOffer = () => {
               </Field>
             </Box>
 
+            {/* Submit Button */}
             <Box className="mt-6">
               <Button type="submit" variant="contained" color="primary" fullWidth>
                 Add Offer

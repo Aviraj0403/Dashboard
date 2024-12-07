@@ -49,7 +49,6 @@ const EditOffer = () => {
   const handleChange = (e) => {
     const updatedFormData = { ...formData, [e.target.name]: e.target.value };
     setFormData(updatedFormData);
-    console.log(updatedFormData); // This will log form data every time it changes
   };
 
   const handleSaveOffer = async (e) => {
@@ -81,76 +80,77 @@ const EditOffer = () => {
     }
   };
   
-
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading) return <div className="text-center text-gray-700">Loading...</div>;
 
   return (
-    <div className="p-6 max-w-6xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200">
-      <h1 className="text-2xl font-bold mb-4">Edit Offer</h1>
+    <div className="p-4 sm:p-6 md:p-8 max-w-full sm:max-w-lg lg:max-w-2xl mx-auto bg-white rounded-lg shadow-lg border border-gray-200">
+      <h1 className="text-2xl sm:text-3xl font-semibold mb-6 text-center text-gray-800">Edit Offer</h1>
       <form onSubmit={handleSaveOffer}>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Name</label>
+        <div className="mb-6">
+          <label className="block text-sm sm:text-base font-medium text-gray-700">Name</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             required
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 p-2 sm:p-3"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Discount Percentage</label>
+        <div className="mb-6">
+          <label className="block text-sm sm:text-base font-medium text-gray-700">Discount Percentage</label>
           <input
             type="number"
             name="discountPercentage"
             value={formData.discountPercentage}
             onChange={handleChange}
             required
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 p-2 sm:p-3"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Start Date</label>
+        <div className="mb-6">
+          <label className="block text-sm sm:text-base font-medium text-gray-700">Start Date</label>
           <input
             type="date"
             name="startDate"
             value={formData.startDate} // Format for input
             onChange={handleChange}
             required
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 p-2 sm:p-3"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">End Date</label>
+        <div className="mb-6">
+          <label className="block text-sm sm:text-base font-medium text-gray-700">End Date</label>
           <input
             type="date"
             name="endDate"
             value={formData.endDate} // Format for input
             onChange={handleChange}
             required
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 p-2 sm:p-3"
           />
         </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700">Status</label>
+        <div className="mb-6">
+          <label className="block text-sm sm:text-base font-medium text-gray-700">Status</label>
           <select
             name="status"
             value={formData.status}
             onChange={handleChange}
             required
-            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500"
+            className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:ring-orange-500 focus:border-orange-500 p-2 sm:p-3"
           >
             <option value="Active">Active</option>
             <option value="Inactive">Inactive</option>
           </select>
         </div>
-        <button
-          type="submit"
-          className="bg-orange-500 text-white hover:bg-orange-600 px-4 py-2 rounded-md"
-        >
-          Save Changes
-        </button>
+        <div className="flex justify-center mt-4">
+          <button
+            type="submit"
+            className="w-full sm:w-auto bg-orange-500 text-white hover:bg-orange-600 px-4 py-3 sm:px-6 sm:py-3 rounded-md transition-colors"
+          >
+            Save Changes
+          </button>
+        </div>
       </form>
     </div>
   );
