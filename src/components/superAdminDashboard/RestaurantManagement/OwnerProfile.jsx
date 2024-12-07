@@ -1,22 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, NavLink } from 'react-router-dom';
-import {
-    getRestaurantOwnerProfile,
-    updateSubscriptionRecord,
-    updateRestaurant
-} from '../../../service/userApi.js';
-import {
-    Card,
-    CardContent,
-    Typography,
-    Grid,
-    TextField,
-    Button,
-    Dialog,
-    DialogActions,
-    DialogContent,
-    DialogTitle,
-    CircularProgress
+import { getRestaurantOwnerProfile, updateSubscriptionRecord, updateRestaurant } from '../../../service/userApi.js';
+import { 
+    Card, 
+    CardContent, 
+    Typography, 
+    Grid, 
+    TextField, 
+    Button, 
+    Dialog, 
+    DialogActions, 
+    DialogContent, 
+    DialogTitle, 
+    CircularProgress, 
+    Slide 
 } from '@mui/material';
 
 const OwnerProfile = () => {
@@ -50,6 +47,7 @@ const OwnerProfile = () => {
         fetchOwnerProfile();
     }, [ownerId]);
 
+    // Handle Subscription Dialog open
     const handleClickOpenSubscription = (record) => {
         setCurrentRecord(record);
         setPlan(record.plan);
@@ -57,6 +55,7 @@ const OwnerProfile = () => {
         setOpenSubscriptionDialog(true);
     };
 
+    // Handle Restaurant Dialog open
     const handleClickOpenRestaurant = (restaurant) => {
         setCurrentRestaurant(restaurant);
         setRestaurantName(restaurant.name);
@@ -86,6 +85,7 @@ const OwnerProfile = () => {
         setRestaurantLocation('');
     };
 
+    // Update Subscription Record
     const handleUpdateSubscription = async () => {
         if (!plan || !paymentStatus) {
             setError('Please fill in all fields');
@@ -101,8 +101,8 @@ const OwnerProfile = () => {
             setError(error.response?.data?.message || 'Failed to update subscription record');
         }
     };
-    
 
+    // Update Restaurant Information
     const handleUpdateRestaurant = async () => {
         if (!restaurantName || !restaurantLocation) {
             setError('Please fill in all fields');
@@ -119,37 +119,36 @@ const OwnerProfile = () => {
         }
     };
 
+    // Loading State
     if (loading) return <div className="flex items-center justify-center h-screen"><CircularProgress /></div>;
     if (error) return <p className="text-red-500">{error}</p>;
     if (!ownerProfile) return <p>No profile data available.</p>;
 
     return (
         <div className="p-6 max-w-7xl mx-auto bg-white rounded-lg shadow-md border border-gray-200">
+            {/* Profile Header */}
             <div className="flex items-center justify-between mb-6">
-                <h2 className="text-4xl font-semibold text-gray-800 mb-4">
-                    {ownerProfile.username.charAt(0).toUpperCase() + ownerProfile.username.slice(1)}'s Profile
-                </h2>
-                <NavLink
-                    to="/admin"
-                    className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors"
-                >
-                    Back to Main
-                </NavLink>
+                <h2 className="text-4xl font-semibold text-gray-800 mb-4">{ownerProfile.username}'s Profile</h2>
+                <NavLink to="/Super-admin-dashboard" className="inline-flex items-center px-4 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600 transition-colors">Back to Main</NavLink>
             </div>
 
-            <p className="text-lg mb-4">Email: <span className="font-medium">{ownerProfile.email}</span></p>
-            <p className="text-lg mb-4">Role: <span className="font-medium">{ownerProfile.role}</span></p>
+            <div className="mb-4">
+                <p className="text-lg">Email: <span className="font-medium">{ownerProfile.email}</span></p>
+                <p className="text-lg">Role: <span className="font-medium">{ownerProfile.role}</span></p>
+            </div>
 
+            {/* Contact Info */}
             <h3 className="text-3xl mt-6 mb-4 text-gray-700">Contact Information</h3>
-            <p className="mb-4">Phone: <span className="font-medium">{ownerProfile.contactInfo.phone || 'N/A'}</span></p>
-            <p className="mb-4">Email: <span className="font-medium">{ownerProfile.contactInfo.email || 'N/A'}</span></p>
+            <p>Phone: <span className="font-medium">{ownerProfile.contactInfo.phone || 'N/A'}</span></p>
+            <p>Email: <span className="font-medium">{ownerProfile.contactInfo.email || 'N/A'}</span></p>
 
+            {/* Restaurants */}
             <h3 className="text-3xl mt-6 mb-4 text-gray-700">Restaurants</h3>
             <Grid container spacing={2}>
                 {ownerProfile.restaurants.length > 0 ? (
                     ownerProfile.restaurants.map(restaurant => (
                         <Grid item xs={12} sm={6} md={4} key={restaurant._id}>
-                            <Card className="hover:shadow-lg transition-shadow duration-200">
+                            <Card className="hover:shadow-lg transition-shadow duration-300 ease-in-out">
                                 <CardContent className="flex justify-between items-center">
                                     <div>
                                         <Typography variant="h6" className="font-semibold text-gray-800">{restaurant.name}</Typography>
@@ -165,21 +164,22 @@ const OwnerProfile = () => {
                 )}
             </Grid>
 
+            {/* Subscription Records */}
             <h3 className="text-3xl mt-6 mb-4 text-gray-700">Subscription Records</h3>
             <Grid container spacing={2}>
                 {ownerProfile.subscriptionRecords.length > 0 ? (
                     ownerProfile.subscriptionRecords.map(record => (
                         <Grid item xs={12} sm={6} md={4} key={record._id}>
-                            <Card className="hover:shadow-lg transition-shadow duration-200">
+                            <Card className="hover:shadow-lg transition-shadow duration-300 ease-in-out">
                                 <CardContent className="flex justify-between items-center">
                                     <div>
                                         <Typography variant="h6" className="font-semibold text-gray-800">{record.restaurantId?.name}</Typography>
                                         <Typography variant="body2" className="text-gray-600">
                                             Status: <span className={`font-medium ${record.status === 'Active' ? 'text-green-600' : 'text-red-600'}`}>{record.status}</span>
                                         </Typography>
-                                        <Typography variant="body2" className="text-gray-600">Valid until: <span className="font-medium">{new Date(record.endDate).toLocaleDateString()}</span></Typography>
-                                        <Typography variant="body2" className="text-gray-600">Plan: <span className="font-medium">{record.plan}</span></Typography>
-                                        <Typography variant="body2" className="text-gray-600">Payment Status: <span className="font-medium">{record.paymentStatus}</span></Typography>
+                                        <Typography variant="body2" className="text-gray-600">Valid until: {new Date(record.endDate).toLocaleDateString()}</Typography>
+                                        <Typography variant="body2" className="text-gray-600">Plan: {record.plan}</Typography>
+                                        <Typography variant="body2" className="text-gray-600">Payment Status: {record.paymentStatus}</Typography>
                                     </div>
                                     <Button variant="contained" color="primary" onClick={() => handleClickOpenSubscription(record)} className="ml-2">Edit</Button>
                                 </CardContent>
@@ -192,7 +192,7 @@ const OwnerProfile = () => {
             </Grid>
 
             {/* Subscription Dialog */}
-            <Dialog open={openSubscriptionDialog} onClose={handleCloseSubscription}>
+            <Dialog open={openSubscriptionDialog} onClose={handleCloseSubscription} TransitionComponent={(props) => <Slide direction="up" {...props} />}>
                 <DialogTitle>Edit Subscription Record</DialogTitle>
                 <DialogContent>
                     <TextField
@@ -222,7 +222,7 @@ const OwnerProfile = () => {
             </Dialog>
 
             {/* Restaurant Dialog */}
-            <Dialog open={openRestaurantDialog} onClose={handleCloseRestaurant}>
+            <Dialog open={openRestaurantDialog} onClose={handleCloseRestaurant} TransitionComponent={(props) => <Slide direction="up" {...props} />}>
                 <DialogTitle>Edit Restaurant</DialogTitle>
                 <DialogContent>
                     <TextField

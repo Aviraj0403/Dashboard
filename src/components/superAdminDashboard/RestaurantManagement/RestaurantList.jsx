@@ -8,7 +8,7 @@ const RestaurantList = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [filter, setFilter] = useState('');
-    const url = import.meta.env.BACKEND_URL_PROD ||import.meta.env.BACKEND_URL;
+    const url = import.meta.env.VITE_API_URL || "http://localhost:4000";
 
     const fetchRestaurants = async (page = 1, limit = 10, status = '') => {
         try {
