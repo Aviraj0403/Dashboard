@@ -14,17 +14,11 @@ const TodayOrders = ({ restaurantId }) => {
         }
         const data = await response.json();
         
-        // Debugging: Log the data received from the API
         console.log('Fetched Orders:', data);
         
-        // Check if 'diningTableName' is available in the data
-        if (data && data.length > 0) {
-          console.log('First Order Dining Table:', data[0].diningTableName); // Log diningTableName for the first order
-        }
-
         setOrders(data);
       } catch (err) {
-        console.error('Error fetching orders:', err); // Log error
+        console.error('Error fetching orders:', err);
         setError(err.message);
       } finally {
         setLoading(false);
@@ -54,17 +48,21 @@ const TodayOrders = ({ restaurantId }) => {
               className="bg-white p-4 rounded-lg shadow-lg transition-transform transform hover:scale-105"
               key={order._id}
             >
-              <h3 className="text-lg font-bold">Order ID: {order._id}</h3>
-              <p><strong>Customer Name:</strong> {order.customerName}</p>
+              <h3 className="text-lg font-bold">Order Number: {order.orderNumber}</h3> {/* Display order number */}
               <p><strong>Phone:</strong> {order.phone}</p>
               <p><strong>Status:</strong> {order.status}</p>
               <p><strong>Total Price:</strong> ₹{order.totalPrice.toLocaleString()}</p>
-              <p><strong>Dining Table:</strong> {order.diningTableName}</p> {/* Display the dining table name */}
+              
+              {/* Apply green color if table is active */}
+              <p className={`mt-2 text-lg font-semibold ${order.status === 'Active' ? 'text-green-500' : ''}`}>
+                <strong>Dining Table:</strong> {order.diningTableName}
+              </p>
+              
               <h4 className="mt-3 text-md font-semibold">Items:</h4>
               <ul className="list-none p-0">
                 {order.items.map((item, index) => (
                   <li key={index}>
-                    {item.quantity} x {item.foodId.name} - ₹{(item.foodId.price * item.quantity).toLocaleString()}
+                    {item.quantity} x {order.foodDetails?.name || 'Unknown Food'} - ₹{(order.foodDetails?.price * item.quantity).toLocaleString() || '0'}
                   </li>
                 ))}
               </ul>
