@@ -4,11 +4,11 @@ const TodayOrders = ({ restaurantId }) => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  const URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const response = await fetch(`http://localhost:4000/api/orders/today/${restaurantId}`);
+        const response = await fetch(`${URL}/api/orders/today/${restaurantId}`);
         if (!response.ok) {
           throw new Error('Failed to fetch orders');
         }
