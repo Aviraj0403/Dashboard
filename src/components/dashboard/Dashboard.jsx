@@ -18,6 +18,7 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import useNotification from '../../hooks/useNotification';
+import TodayOrders from './TableOrder';  // Import the TodayOrders component
 
 // Item data
 const items = [
@@ -197,13 +198,16 @@ function Dashboard() {
         />
       )}
 
+      {/* Integrate TodayOrders */}
+      <TodayOrders restaurantId={restaurantId} />
+
       <BookingChart title={"Sales Report"} url={"#"} />
       <Outlet />
     </main>
   );
 }
 
-// OverviewCard Component
+// OverviewCard Component (as before)
 const OverviewCard = ({ title, value, icon, color }) => (
   <div className="p-4 rounded shadow flex items-center justify-between" style={{ backgroundColor: color }}>
     {icon}
@@ -214,7 +218,7 @@ const OverviewCard = ({ title, value, icon, color }) => (
   </div>
 );
 
-// OrderCard Component
+// OrderCard Component (as before)
 const OrderCard = ({ order, onClick }) => (
   <motion.div
     onClick={onClick}
@@ -241,7 +245,7 @@ const OrderCard = ({ order, onClick }) => (
   </motion.div>
 );
 
-// TableOrders Component
+// TableOrders Component (as before)
 const TableOrders = ({ selectedTable, tableOrders, calculateTotalPrice, setShowMenu }) => (
   <div className="mb-4">
     <h2 className="text-2xl font-bold mb-4">Orders for Table {selectedTable}</h2>
@@ -263,7 +267,7 @@ const TableOrders = ({ selectedTable, tableOrders, calculateTotalPrice, setShowM
   </div>
 );
 
-// ItemSelectionMenu Component
+// ItemSelectionMenu Component (as before)
 const ItemSelectionMenu = ({ items, selectedItem, setSelectedItem, quantity, setQuantity, handleAddItem, closeMenu }) => (
   <div className="fixed top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 flex items-center justify-center">
     <div className="bg-white p-4 rounded shadow-lg w-full sm:w-96">
