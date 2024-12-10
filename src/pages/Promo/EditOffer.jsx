@@ -71,7 +71,7 @@ const EditOffer = () => {
   
       if (response.data.success) {
         toast.success('Offer updated successfully');
-        navigate('/admin/offers'); // Redirect to the offers list
+        navigate('/admin/OffersList'); // Redirect to the offers list
       } else {
         toast.error(response.data.message || 'Error updating offer');
       }
