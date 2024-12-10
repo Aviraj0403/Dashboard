@@ -248,6 +248,8 @@ const OrderCard = ({ order, onClick }) => (
   >
     <Typography variant="h6" component="h3" className="font-bold flex justify-between items-center">
       {order.tableName}
+      {order.customer}
+      
       {order.paymentStatus === 'Paid' && <Chip label="Paid" color="success" size="small" />}
       {order.paymentStatus === 'Pending' && <Chip label="Pending" color="error" size="small" />}
 
@@ -261,13 +263,14 @@ const OrderCard = ({ order, onClick }) => (
       order.orderDetails.map(item => (
         <Typography key={item.fooditemId} variant="body2">
           {item.name} (Quantity: {item.quantity})
+          
         </Typography>
       ))
     ) : (
       <Typography variant="body2">No items in the cart.</Typography>
     )}
 
-    {order.transactionId && <Typography variant="body1">Transaction ID: {order.transactionId}</Typography>}
+    <Typography variant="body1">Transaction ID: {order.transactionId}</Typography>
   </motion.div>
 );
 
