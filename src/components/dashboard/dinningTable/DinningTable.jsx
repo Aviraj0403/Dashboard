@@ -82,33 +82,45 @@ const DiningTable = () => {
     }
   }, [restaurantId]);
 
-  const handleAddTable = async (data) => {
-    if (!data) return;
+  const handleCloseForm = () => {
+    setIsOpenForm({ formName: "", tableId: null }); // Close the modal
+    reset(); // Optionally reset the form fields
+  };
+  
 
+  const handleAddTable = async (data) => {
+    console.log(data); // Log the form data
+    if (!data) return;
+  
     const tInfo = {
       name: data.tname,
       size: data.tsize,
       status: data.tstatus ? "Active" : "Inactive",
       restaurantId,
     };
-
+  
     try {
       const response = await axios.post(`${URL}/api/table/${restaurantId}`, tInfo, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-
-      if (response.data.success) {
+  
+      console.log(response); // Log the full response to check for success or error message
+  
+      if (response.status === 201) {
         fetchTables();
         toast.success("Table added successfully");
+        handleCloseForm();
         reset();
       } else {
         toast.error(response.data.message || "Error adding table");
       }
     } catch (error) {
-      toast.error(error.message || "Error adding table");
+      console.error(error); // Log the full error object
+      toast.error(error.response?.data?.message || error.message || "Error adding table");
     }
   };
+  
 
   const handleEditClick = (tableId) => {
     const tableToEdit = tables.find((table) => table.tableId === tableId);
@@ -123,22 +135,29 @@ const DiningTable = () => {
 
   const handleEditTable = async (data) => {
     const updatedTable = {
-      name: data.name,
-      size: data.size,
-      status: data.status ? "Active" : "Inactive",
+      name: data.tname,
+      size: data.tsize,
+      status: data.tstatus ? "Active" : "Inactive",
     };
-
+  
     if (window.confirm("Are you sure you want to update this table?")) {
       try {
-        const response = await axios.put(`${URL}/api/table/${restaurantId}/${editTableData.tableId}`, updatedTable, {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        });
-
-        if (response.data.success) {
+        const response = await axios.put(
+          `${URL}/api/table/${restaurantId}/${editTableData.tableId}`,
+          updatedTable,
+          {
+            headers: { "Content-Type": "application/json" },
+            withCredentials: true,
+          }
+        );
+  
+        console.log(response); // Check the response structure
+  
+        if (response.status === 200) {
           fetchTables();
           toast.success("Table updated successfully");
           handleCloseForm();
+          reset(); // Optionally reset form after successful update
         } else {
           toast.error(response.data.message || "Error updating table");
         }
@@ -147,6 +166,7 @@ const DiningTable = () => {
       }
     }
   };
+  
 
   const handleDeleteTable = async (tableId) => {
     if (window.confirm("Are you sure you want to delete this table?")) {
