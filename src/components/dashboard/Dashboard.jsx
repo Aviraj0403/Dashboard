@@ -105,7 +105,7 @@ function Dashboard() {
       orderDetails: cart.length > 0 
       ? cart.map(item => ({
           ...item,
-          name: items.find(i => i.id === item.fooditemId)?.name || 'Unknown Food', // Mapping fooditemId to name
+          // name: items.find(i => i.id === item.fooditemId)?.name || 'Unknown Food', // Mapping fooditemId to name
         })) 
       : [],
       paymentStatus: 'Pending',
