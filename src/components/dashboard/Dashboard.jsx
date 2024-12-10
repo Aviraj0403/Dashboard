@@ -42,13 +42,18 @@ function Dashboard() {
   const [showMenu, setShowMenu] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  
+
   // Socket connection
   useEffect(() => {
-    const socketURL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+    // const socketURL = import.meta.env.VITE_API_URL || "http://localhost:4000";
+    const socketURL = "https://backend-obet.onrender.com" || "http://localhost:4000";
     const socketConnection = io(socketURL);
-    socketConnection.emit("joinRestaurant", restaurantId);
-
+    socketConnection.on("connect", () => {
+      console.log(`Socket ${socketConnection.id} joined restaurant ${restaurantId}`);
+      socketConnection.emit("joinRestaurant", restaurantId);
+    });
+    // socketConnection.emit("joinRestaurant", restaurantId);
+    // console.log(`Socket ${socketConnection.id} joined restaurant ${restaurantId}`);
     socketConnection.on("orderUpdate", handleOrderUpdate);
     socketConnection.on("newOrder", handleNewOrder);
     socketConnection.on("tableUpdate", handleTableUpdate);
@@ -78,24 +83,39 @@ function Dashboard() {
   };
 
   const handleNewOrder = (data) => {
+    console.log("New order data received:", data);
     if (!data.orderDetails || !data.orderDetails.cart) {
       console.error("Invalid order data received:", data);
       return;
     }
 
     const { selectedTable, totalPrice, cart } = data.orderDetails;
-
+    // const isExistingOrder = orderData.some(order => order.tableId === selectedTable);
+    // if (!isExistingOrder) {
+    // const newOrder = {
+    //   tableId: selectedTable,
+    //   totalAmount: totalPrice,
+    //   orderDetails: cart,
+    //   paymentStatus: 'Pending',
+    //   tableName: data.tableName,
+    // };
     const newOrder = {
       tableId: selectedTable,
       totalAmount: totalPrice,
-      orderDetails: cart,
+      orderDetails: cart.length > 0 
+      ? cart.map(item => ({
+          ...item,
+          name: items.find(i => i.id === item.fooditemId)?.name || 'Unknown Food', // Mapping fooditemId to name
+        })) 
+      : [],
       paymentStatus: 'Pending',
       tableName: data.tableName,
     };
 
+
     setOrderData(prevData => [...prevData, newOrder]);
     setActiveTables(prev => new Set(prev).add(newOrder.tableName));
-    notify(`New order received for Table ${selectedTable}`);
+    notify(`New order received for ${data.tableName}`);
   };
 
   const handleTableUpdate = (data) => {
@@ -107,7 +127,7 @@ function Dashboard() {
   const handlePaymentProcessed = (data) => {
     setOrderData(prevData =>
       prevData.map(order =>
-        order.tableId === data.tableId ? { ...order, paymentStatus: 'Paid', transactionId: data.transactionId ,tableName: order.tableName } : order
+        order.tableId === data.tableId ? { ...order, paymentStatus: 'Paid', transactionId: data.transactionId, tableName: order.tableName } : order
       )
     );
     notify(`Payment confirmed from ${data.tableName}`);
@@ -229,17 +249,23 @@ const OrderCard = ({ order, onClick }) => (
     <Typography variant="h6" component="h3" className="font-bold flex justify-between items-center">
       {order.tableName}
       {order.paymentStatus === 'Paid' && <Chip label="Paid" color="success" size="small" />}
+      {order.paymentStatus === 'Pending' && <Chip label="Pending" color="error" size="small" />}
+
     </Typography>
     <Typography variant="body1">Order Total: ₹{(order.totalAmount || 0).toFixed(2)}</Typography>
     <Typography variant="body1">Payment Status: {order.paymentStatus || "Pending"}</Typography>
 
     {/* Display cart items */}
     <Typography variant="body2" className="mt-2">Order Details:</Typography>
-    {order.orderDetails.map(item => (
-      <Typography key={item.fooditemId} variant="body2">
-        {item.name} (Quantity: {item.quantity})
-      </Typography>
-    ))}
+    {order.orderDetails?.length > 0 ? (
+      order.orderDetails.map(item => (
+        <Typography key={item.fooditemId} variant="body2">
+          {item.name} (Quantity: {item.quantity})
+        </Typography>
+      ))
+    ) : (
+      <Typography variant="body2">No items in the cart.</Typography>
+    )}
 
     {order.transactionId && <Typography variant="body1">Transaction ID: {order.transactionId}</Typography>}
   </motion.div>
