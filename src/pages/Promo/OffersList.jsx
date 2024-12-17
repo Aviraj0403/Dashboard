@@ -74,8 +74,6 @@ const OffersList = () => {
 
   if (isLoading) return <div>Loading...</div>;
 
-  if (!offers.length) return <div>No offers available</div>;
-
   return (
     <div className="p-6 max-w-full mx-auto bg-white rounded-lg shadow-lg border border-gray-200">
       <div className="flex items-center justify-between mb-6">
@@ -90,56 +88,56 @@ const OffersList = () => {
       
       {/* Responsive Table with Cards for Mobile Screens */}
       <div className="overflow-x-auto sm:overflow-visible">
-  <div className="sm:hidden">
-    {/* Mobile version: List of Cards */}
-    {offers.map((offer) => (
-      <div
-        key={offer._id}
-        className="mb-4 p-4 border rounded-lg bg-gray-50 shadow-md transition transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
-      >
-       <h2 className="text-lg font-bold text-gray-800 inline-block bg-orange-500 text-white px-2 py-1 rounded">
-          {offer.name}
-        </h2>
-        <p className="text-sm text-gray-600">Discount: {offer.discountPercentage}%</p>
-        <p className="text-sm text-gray-600">Start Date: {new Date(offer.startDate).toLocaleString()}</p>
-        <p className="text-sm text-gray-600">End Date: {new Date(offer.endDate).toLocaleString()}</p>
-        
-        {/* Centered Status */}
-        <div className="mt-2 text-center">
-          <span
-            className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${
-              offer.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-            }`}
-          >
-            {offer.status}
-          </span>
+        <div className="sm:hidden">
+          {/* Mobile version: List of Cards */}
+          {offers.length === 0 ? (
+            <div>No offers available</div>
+          ) : (
+            offers.map((offer) => (
+              <div
+                key={offer._id}
+                className="mb-4 p-4 border rounded-lg bg-gray-50 shadow-md transition transform duration-300 ease-in-out hover:scale-105 hover:shadow-lg"
+              >
+                <h2 className="text-lg font-bold text-gray-800 inline-block bg-orange-500 text-white px-2 py-1 rounded">
+                  {offer.name}
+                </h2>
+                <p className="text-sm text-gray-600">Discount: {offer.discountPercentage}%</p>
+                <p className="text-sm text-gray-600">Start Date: {new Date(offer.startDate).toLocaleString()}</p>
+                <p className="text-sm text-gray-600">End Date: {new Date(offer.endDate).toLocaleString()}</p>
+
+                {/* Centered Status */}
+                <div className="mt-2 text-center">
+                  <span
+                    className={`inline-block px-3 py-1 text-xs font-medium rounded-full ${
+                      offer.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                    }`}
+                  >
+                    {offer.status}
+                  </span>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="mt-4 flex justify-between items-center">
+                  {/* Edit Button on the Left */}
+                  <button
+                    onClick={() => handleEditOffer(offer._id)}
+                    className="text-blue-500 hover:text-blue-700 transition transform duration-200 ease-in-out hover:scale-110"
+                  >
+                    <FaEdit />
+                  </button>
+
+                  {/* Delete Button on the Right */}
+                  <button
+                    onClick={() => handleRemoveOffer(offer._id)}
+                    className="text-red-500 hover:text-red-700 transition transform duration-200 ease-in-out hover:scale-110"
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
-
-        {/* Action Buttons */}
-        <div className="mt-4 flex justify-between items-center">
-          {/* Edit Button on the Left */}
-          <button
-            onClick={() => handleEditOffer(offer._id)}
-            className="text-blue-500 hover:text-blue-700 transition transform duration-200 ease-in-out hover:scale-110"
-          >
-            <FaEdit />
-          </button>
-
-          {/* Delete Button on the Right */}
-          <button
-            onClick={() => handleRemoveOffer(offer._id)}
-            className="text-red-500 hover:text-red-700 transition transform duration-200 ease-in-out hover:scale-110"
-          >
-            <FaTrash />
-          </button>
-        </div>
-      </div>
-    ))}
-  </div>
-
-
-
-
 
         {/* Desktop/Table version */}
         <div className="hidden sm:block">
@@ -155,29 +153,37 @@ const OffersList = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {offers.map((offer) => (
-                <tr key={offer._id}>
-                  <td className="px-4 py-4 text-sm font-medium text-gray-900">{offer.name}</td>
-                  <td className="px-4 py-4 text-sm font-medium text-gray-600">{offer.discountPercentage}%</td>
-                  <td className="px-4 py-4 text-sm font-medium text-gray-600">{new Date(offer.startDate).toLocaleString()}</td>
-                  <td className="px-4 py-4 text-sm font-medium text-gray-600">{new Date(offer.endDate).toLocaleString()}</td>
-                  <td className="px-4 py-4 text-sm font-medium">
-                    <span className={`px-3 py-1 text-xs font-medium rounded-full ${offer.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
-                      {offer.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-4 text-sm font-medium text-gray-500">
-                    <div className="flex gap-2">
-                      <button onClick={() => handleEditOffer(offer._id)} className="text-blue-500 hover:text-blue-700">
-                        <FaEdit />
-                      </button>
-                      <button onClick={() => handleRemoveOffer(offer._id)} className="text-red-500 hover:text-red-700">
-                        <FaTrash />
-                      </button>
-                    </div>
+              {offers.length === 0 ? (
+                <tr>
+                  <td colSpan="6" className="px-4 py-4 text-center text-sm font-medium text-gray-600">
+                    No offers available
                   </td>
                 </tr>
-              ))}
+              ) : (
+                offers.map((offer) => (
+                  <tr key={offer._id}>
+                    <td className="px-4 py-4 text-sm font-medium text-gray-900">{offer.name}</td>
+                    <td className="px-4 py-4 text-sm font-medium text-gray-600">{offer.discountPercentage}%</td>
+                    <td className="px-4 py-4 text-sm font-medium text-gray-600">{new Date(offer.startDate).toLocaleString()}</td>
+                    <td className="px-4 py-4 text-sm font-medium text-gray-600">{new Date(offer.endDate).toLocaleString()}</td>
+                    <td className="px-4 py-4 text-sm font-medium">
+                      <span className={`px-3 py-1 text-xs font-medium rounded-full ${offer.status === 'Active' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+                        {offer.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-4 text-sm font-medium text-gray-500">
+                      <div className="flex gap-2">
+                        <button onClick={() => handleEditOffer(offer._id)} className="text-blue-500 hover:text-blue-700">
+                          <FaEdit />
+                        </button>
+                        <button onClick={() => handleRemoveOffer(offer._id)} className="text-red-500 hover:text-red-700">
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
