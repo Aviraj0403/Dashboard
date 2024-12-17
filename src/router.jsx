@@ -53,7 +53,7 @@ RestaurantList
 import RestaurantList from "./components/superAdminDashboard/RestaurantManagement/RestaurantList.jsx";
 import OwnerProfile from "./components/superAdminDashboard/RestaurantManagement/OwnerProfile.jsx";  
 import FoodMenu from "./pages/FoodMenu/FoodeMenu.jsx";
-
+import ForgotPasswordPage from "./pages/Login/ForgotPasswordPage.jsx";
 // Assuming this component exists
 // Router setup
 const router = createBrowserRouter(
@@ -61,6 +61,8 @@ const router = createBrowserRouter(
     <>
       <Route path="/" element={<Landing />} />
       <Route path="login" element={<LoginPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
       {/* Super Admin Dashboard */}
       <Route path="/super-admin-dashboard" element={
         <ProtectedRoute allowedRoles={['superAdmin']} /> } >

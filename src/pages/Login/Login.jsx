@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../context/userContext';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
     const { handleLogin, userRole, isLoggedIn } = useAuth();
     const [formData, setFormData] = useState({ username: "", password: "" });
     const [loginError, setLoginError] = useState("");
     const [loading, setLoading] = useState(false); // Loading state
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -42,6 +43,10 @@ const LoginPage = () => {
             : '/admin/dashboard';
         return <Navigate to={redirectPath} replace />;
     }
+
+    const handleForgotPassword = () => {
+        navigate('/forgot-password');  // Navigate to forgot-password page
+    };
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
@@ -83,6 +88,12 @@ const LoginPage = () => {
                         {loading ? "Logging in..." : "Login"}
                     </button>
                 </form>
+                <button 
+                    onClick={handleForgotPassword} 
+                    className="mt-4 text-blue-500 text-sm"
+                >
+                    Forgot Password?
+                </button>
             </div>
         </div>
     );
